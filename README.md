@@ -51,6 +51,6 @@ Ce portfolio est une application full-stack conçue avec une approche "Security-
 
 ## 👤 Contact
 
-- **Email** : samuelmeyissa635@gmail.com
-- **LinkedIn** : [Samuel Meyisso](https://www.linkedin.com/in/samuel-meyisso/)
+- **Email** : samuelmeyisso635@gmail.com
+- **LinkedIn** : [Samuel Meyisso](https://www.linkedin.com/in/samuel-emmanuel-meyisso-91980b330/)
 - **Localisation** : Coulommiers, 77120
