@@ -817,6 +817,7 @@ export default function App() {
             <button onClick={() => up('skills', [...data.skills, { id: 's' + Date.now(), name: 'Nouvelle Compétence', level: 50 }])} style={S.aBtn}>+ Skill</button>
             <button onClick={resetPositions} style={{ ...S.aBtn, borderColor: '#ffaa0033', color: '#ffaa00' }}>📍 Reset positions</button>
             <button onClick={reset} style={{ ...S.aBtn, borderColor: '#ff444433', color: '#ff4444' }}>↺ Reset tout</button>
+            <button onClick={() => window.prompt("COPIEZ CE TEXTE (CTRL+C) :", JSON.stringify(data))} style={{ ...S.aBtn, borderColor: '#00aaff33', color: '#00aaff' }}>📤 Exporter</button>
             <button onClick={save} style={{ ...S.aSave, background: saved ? '#003300' : '#00ff88', color: saved ? '#00ff88' : '#000', border: saved ? '1px solid #00ff88' : 'none' }}>
               {saved ? '✅ Sauvegardé !' : '💾 Sauvegarder'}
             </button>
