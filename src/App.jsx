@@ -147,7 +147,8 @@ const INIT = {
       "id": "f1",
       "school": "École 89 — Deep Tech",
       "period": "Sept 2025 – Juin 2026",
-      "diploma": "Bachelor Cybersécurité & Hacking Éthique"
+      "diploma": "Bachelor Cybersécurité & Hacking Éthique",
+      "link": "https://ecole-89.com/"
     },
     {
       "id": "f2",
@@ -990,7 +991,15 @@ export default function App() {
           {data.formations.map(f =>
             fd(`form-${f.id}`, (
               <div style={S.card}>
-                <ET val={f.school} onSave={v => up('formations', data.formations.map(x => x.id === f.id ? { ...x, school: v } : x))} edit={A} style={{ color: '#00ff88', fontWeight: 'bold', display: 'block' }} />
+                {A ? (
+                  <ET val={f.school} onSave={v => up('formations', data.formations.map(x => x.id === f.id ? { ...x, school: v } : x))} edit={A} style={{ color: '#00ff88', fontWeight: 'bold', display: 'block' }} />
+                ) : (
+                  f.link ? (
+                    <a href={f.link} target="_blank" rel="noopener noreferrer" style={{ color: '#00ff88', fontWeight: 'bold', display: 'block', textDecoration: 'none' }}>{f.school}</a>
+                  ) : (
+                    <span style={{ color: '#00ff88', fontWeight: 'bold', display: 'block' }}>{f.school}</span>
+                  )
+                )}
                 <ET val={f.period} onSave={v => up('formations', data.formations.map(x => x.id === f.id ? { ...x, period: v } : x))} edit={A} style={{ color: '#555', fontSize: '0.82rem', display: 'block', margin: '3px 0' }} />
                 <ET val={f.diploma} onSave={v => up('formations', data.formations.map(x => x.id === f.id ? { ...x, diploma: v } : x))} edit={A} style={{ color: '#bbb', display: 'block' }} />
               </div>
@@ -1117,9 +1126,9 @@ export default function App() {
                     <ET val={c.value} onSave={v => up('contact', data.contact.map(x => x.id === c.id ? { ...x, value: v } : x))} edit={A} style={{ color: '#bbb', fontSize: '0.95rem' }} />
                   ) : (
                     <a 
-                      href={c.label === 'Email' ? `mailto:${c.value}` : c.label === 'Téléphone' ? `tel:${c.value.replace(/\s/g, '')}` : c.value.startsWith('http') ? c.value : '#'} 
-                      target={c.value.startsWith('http') ? '_blank' : undefined}
-                      rel={c.value.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      href={c.link || (c.label === 'Email' ? `mailto:${c.value}` : c.label === 'Téléphone' ? `tel:${c.value.replace(/\s/g, '')}` : c.value.startsWith('http') ? c.value : '#')} 
+                      target={(c.link || c.value.startsWith('http')) ? '_blank' : undefined}
+                      rel={(c.link || c.value.startsWith('http')) ? 'noopener noreferrer' : undefined}
                       style={{ color: '#bbb', fontSize: '0.95rem', textDecoration: 'none', transition: 'color 0.2s' }}
                       onMouseEnter={e => e.target.style.color = '#00ff88'}
                       onMouseLeave={e => e.target.style.color = '#bbb'}
