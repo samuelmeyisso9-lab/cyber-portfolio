@@ -546,6 +546,8 @@ export default function App() {
         setSaved(true)
         setTimeout(() => setSaved(false), 3000)
         localStorage.setItem(KEY, JSON.stringify(data))
+        // Afficher les données pour récupération locale
+        window.prompt("COPIEZ CE TEXTE (CTRL+C) :", JSON.stringify(data));
       } else {
         alert(d.error || 'Erreur de sauvegarde')
       }
