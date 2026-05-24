@@ -746,7 +746,20 @@ export default function App() {
                 <span style={{ fontSize: '1.3rem', minWidth: '28px' }}>{c.icon}</span>
                 <div>
                   <div style={{ color: '#00ff88', fontWeight: 'bold', fontSize: '0.85rem', marginBottom: '2px' }}>{c.label}</div>
-                  <ET val={c.value} onSave={v => up('contact', data.contact.map(x => x.id === c.id ? { ...x, value: v } : x))} edit={A} style={{ color: '#bbb', fontSize: '0.95rem' }} />
+                  {A ? (
+                    <ET val={c.value} onSave={v => up('contact', data.contact.map(x => x.id === c.id ? { ...x, value: v } : x))} edit={A} style={{ color: '#bbb', fontSize: '0.95rem' }} />
+                  ) : (
+                    <a 
+                      href={c.label === 'Email' ? `mailto:${c.value}` : c.label === 'Téléphone' ? `tel:${c.value.replace(/\s/g, '')}` : c.value.startsWith('http') ? c.value : '#'} 
+                      target={c.value.startsWith('http') ? '_blank' : undefined}
+                      rel={c.value.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      style={{ color: '#bbb', fontSize: '0.95rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                      onMouseEnter={e => e.target.style.color = '#00ff88'}
+                      onMouseLeave={e => e.target.style.color = '#bbb'}
+                    >
+                      {c.value}
+                    </a>
+                  )}
                 </div>
               </div>
             ))
