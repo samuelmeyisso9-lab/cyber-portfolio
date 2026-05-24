@@ -978,13 +978,13 @@ export default function App() {
                 <SortableItem key={sk.id} id={sk.id} disabled={!A}>
                   {(listeners) =>
                     fd(`skill-${sk.id}`, (
-                      <div style={A ? { border: '1px dashed #00ff8815', borderRadius: '8px', padding: '10px' } : {}}>
+                      <div style={{ border: `1px ${A ? 'dashed #00ff8815' : 'solid transparent'}`, borderRadius: '8px', padding: '10px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '7px', gap: '8px' }}>
-                          {A && <span {...listeners} style={{ color: '#00ff8844', cursor: 'grab', fontSize: '1.1rem', userSelect: 'none' }}>⠿</span>}
+                          <span {...(A ? listeners : {})} style={{ color: '#00ff8844', cursor: 'grab', fontSize: '1.1rem', userSelect: 'none', width: '20px', display: A ? 'inline-block' : 'none' }}>⠿</span>
                           <ET val={sk.name} onSave={v => up('skills', data.skills.map(x => x.id === sk.id ? { ...x, name: v } : x))} edit={A} style={{ color: '#ccc', flex: 1, fontSize: '0.88rem' }} />
                           <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                             {A && <input type="range" min="0" max="100" value={sk.level} onChange={e => up('skills', data.skills.map(x => x.id === sk.id ? { ...x, level: +e.target.value } : x))} style={{ width: '80px', accentColor: '#00ff88' }} />}
-                            <span style={{ color: '#00ff88', minWidth: '36px', fontSize: '0.85rem' }}>{sk.level}%</span>
+                            <span style={{ color: '#00ff88', minWidth: '36px', fontSize: '0.85rem', textAlign: 'right' }}>{sk.level}%</span>
                             {A && <button onClick={() => up('skills', data.skills.filter(x => x.id !== sk.id))} style={S.del}>✕</button>}
                           </span>
                         </div>
