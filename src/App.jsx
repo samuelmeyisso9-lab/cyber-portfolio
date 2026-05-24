@@ -1130,36 +1130,31 @@ export default function App() {
             Disponible pour une <strong style={{ color: '#00ff88' }}>alternance SOC Junior / Analyste Cyber</strong> — Juin–Juillet 2026
           </p>
         ))}
-        <div style={{ 
-          ...S.card, 
-          maxWidth: '850px', 
-          padding: '24px', 
-          display: 'grid', 
-          gridTemplateColumns: '1fr 1fr', 
-          gap: '20px 40px' 
-        }}>
-          {data.contact.map(c => (
-            <div key={c.id} style={{ display: 'flex', gap: '14px', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #161616' }}>
-              <span style={{ fontSize: '1.3rem', minWidth: '28px' }}>{c.icon}</span>
-              <div>
-                <div style={{ color: '#00ff88', fontWeight: 'bold', fontSize: '0.85rem', marginBottom: '2px' }}>{c.label}</div>
-                {A ? (
-                  <ET val={c.value} onSave={v => up('contact', data.contact.map(x => x.id === c.id ? { ...x, value: v } : x))} edit={A} style={{ color: '#bbb', fontSize: '0.95rem' }} />
-                ) : (
-                  <a 
-                    href={c.link || (c.label === 'Email' ? `mailto:${c.value}` : c.label === 'Téléphone' ? `tel:${c.value.replace(/\s/g, '')}` : c.value.startsWith('http') ? c.value : '#')} 
-                    target={(c.link || c.value.startsWith('http')) ? '_blank' : undefined}
-                    rel={(c.link || c.value.startsWith('http')) ? 'noopener noreferrer' : undefined}
-                    style={{ color: '#bbb', fontSize: '0.95rem', textDecoration: 'none', transition: 'color 0.2s' }}
-                    onMouseEnter={e => e.target.style.color = '#00ff88'}
-                    onMouseLeave={e => e.target.style.color = '#bbb'}
-                  >
-                    {c.value}
-                  </a>
-                )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          {data.contact.map(c =>
+            fd(`contact-${c.id}`, (
+              <div style={{ display: 'flex', gap: '14px', alignItems: 'center', padding: '12px 0' }}>
+                <span style={{ fontSize: '1.3rem', minWidth: '28px' }}>{c.icon}</span>
+                <div>
+                  <div style={{ color: '#00ff88', fontWeight: 'bold', fontSize: '0.85rem', marginBottom: '2px' }}>{c.label}</div>
+                  {A ? (
+                    <ET val={c.value} onSave={v => up('contact', data.contact.map(x => x.id === c.id ? { ...x, value: v } : x))} edit={A} style={{ color: '#bbb', fontSize: '0.95rem' }} />
+                  ) : (
+                    <a 
+                      href={c.link || (c.label === 'Email' ? `mailto:${c.value}` : c.label === 'Téléphone' ? `tel:${c.value.replace(/\s/g, '')}` : c.value.startsWith('http') ? c.value : '#')} 
+                      target={(c.link || c.value.startsWith('http')) ? '_blank' : undefined}
+                      rel={(c.link || c.value.startsWith('http')) ? 'noopener noreferrer' : undefined}
+                      style={{ color: '#bbb', fontSize: '0.95rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                      onMouseEnter={e => e.target.style.color = '#00ff88'}
+                      onMouseLeave={e => e.target.style.color = '#bbb'}
+                    >
+                      {c.value}
+                    </a>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ), { borderBottom: '1px solid #161616', width: 'fit-content' })
+          )}
         </div>
       </div>
     )
