@@ -530,9 +530,36 @@ export default function App() {
     if (clickCount.current >= 5) { clickCount.current = 0; setShowModal(true) }
   }
 
-  const save = async () => { alert("La modification de contenu est désactivée pour sécuriser le portfolio."); return; }
+  const save = async () => {
+    try {
+      setSaved(false)
+      const r = await fetch(`${API_URL}/api/save-content`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ content: data })
+      })
+      const d = await r.json()
+      if (d.success) {
+        setSaved(true)
+        setTimeout(() => setSaved(false), 3000)
+        localStorage.setItem(KEY, JSON.stringify(data))
+      } else {
+        alert(d.error || 'Erreur de sauvegarde')
+      }
+    } catch (err) {
+      alert('Serveur injoignable')
+    }
+  }
 
-  const reset = () => { alert("La réinitialisation est désactivée."); return; }
+  const reset = () => {
+    if (window.confirm('Réinitialiser tout le contenu par défaut ?')) {
+      setData(INIT)
+      localStorage.removeItem(KEY)
+    }
+  }
 
   const makeDragEnd = (key) => ({ active, over }) => {
     if (!over || active.id === over.id) return

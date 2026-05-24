@@ -130,7 +130,8 @@ app.post('/api/track', async (req, res) => {
     res.json({ success: true });
 });
 
-app.post('/api/save-content', authenticate, async (req, res) => { return res.status(403).json({ error: 'MODE DEMO : Les modifications sont désactivées pour la sécurité du portfolio.' }); try {
+app.post('/api/save-content', authenticate, async (req, res) => { 
+    try {
         const { content } = req.body;
         addLog({ type: 'ADMIN_ACTION', user: req.user.username, action: 'MODIFIED_WEBSITE_CONTENT', ip: req.ip });
         let fileContent = await fs.readFile(DATA_FILE, 'utf-8');
