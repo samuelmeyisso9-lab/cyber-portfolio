@@ -12,45 +12,207 @@ const API_URL = import.meta.env.PROD ? '' : import.meta.env.VITE_API_URL || 'htt
 const KEY = 'portfolio_samuel_v3'
 
 const INIT = {
-  badge: '🟢 DISPONIBLE — Alternance Cybersécurité/SOC Junior · Juin-Juil 2026',
-  name: 'Samuel Meyisso',
-  subtitle: 'Analyste Cybersécurité · SOC Junior · Hacking Éthique',
-  desc: "Étudiant en Bachelor Cybersécurité à l'École 89. Spécialisé en sécurité offensive & défensive, analyse réseau, détection de vulnérabilités et tests d'intrusion (SQLi, OWASP).",
-  sectionOrder: ['home', 'skills', 'projets', 'soc', 'contact'],
-  positions: {},
-  skills: [
-    { id: 's1', name: 'Network Security (Wireshark, Nmap, BurpSuite)', level: 82 },
-    { id: 's2', name: 'Penetration Testing (SQLi, OWASP)', level: 80 },
-    { id: 's3', name: 'SIEM / Log Analysis / SOC', level: 78 },
-    { id: 's4', name: 'Virtualisation (Kali, VMware, Docker)', level: 85 },
-    { id: 's5', name: 'Python / Scripting', level: 72 },
-    { id: 's6', name: 'Cloud & IAM (RBAC, RLS)', level: 68 },
+  "badge": "🟢 DISPONIBLE — Stage Cybersécurité/SOC Junior · Juin-Juil 2026",
+  "name": "Samuel MEYISSO",
+  "subtitle": "Analyste Cybersécurité · SOC Junior · Hacking Éthique",
+  "desc": "Étudiant en Bachelor Cybersécurité à l'École 89. Spécialisé en sécurité offensive & défensive, analyse réseau, détection de vulnérabilités et tests d'intrusion (SQLi, OWASP).",
+  "sectionOrder": [
+    "home",
+    "skills",
+    "projets",
+    "soc",
+    "contact"
   ],
-  projects: [
-    { id: 'p1', title: '🖥️ VM Vulnérable — Audit & Surveillance', desc: "Création d'une VM vulnérable, audit de sécurité complet et surveillance active des OS.", tags: 'Kali Linux · VirtualBox · Audit' },
-    { id: 'p2', title: '🗄️ Base de Données Éducative (10 000+)', desc: "Conception et déploiement d'un logiciel de gestion éducative à grande échelle.", tags: 'SQL · Docker · Database' },
-    { id: 'p3', title: '🔐 Virtualisation & Cryptographie', desc: 'Virtualisation avancée, cryptographie, stéganographie et chiffrement de données.', tags: 'VMware · Cryptographie · Stégano' },
-    { id: 'p4', title: "🏢 Réseau d'Entreprise Segmenté", desc: "Conception, implémentation et audit d'un réseau d'entreprise entièrement segmenté.", tags: 'Stormshield · LAN/WAN · Pentest' },
+  "positions": {
+    "desc": {
+      "x": 196,
+      "y": 6,
+      "w": 708,
+      "s": 1
+    },
+    "stats": {
+      "x": 265,
+      "y": 3,
+      "w": 603,
+      "s": 1
+    },
+    "soft-card": {
+      "x": 168,
+      "y": 27,
+      "w": 486,
+      "s": 1.2603250201324543
+    },
+    "langs-card": {
+      "x": 14,
+      "y": 27,
+      "w": 202.48419189453125,
+      "s": 1.2793348700083689
+    },
+    "skill-s2": {
+      "x": 525,
+      "y": 366,
+      "w": 429.3184814453125,
+      "s": 1.2494789456694582
+    },
+    "skill-s3": {
+      "x": 4,
+      "y": 33,
+      "w": 337.1119689941406,
+      "s": 1.168271461870516
+    },
+    "skill-s4": {
+      "x": 539,
+      "y": -299,
+      "w": 424.66436767578125,
+      "s": 1.2140010491596211
+    },
+    "skill-s1": {
+      "x": 7,
+      "y": 57,
+      "w": 390.7618103027344,
+      "s": 1.007595670958985
+    },
+    "tools-title": {
+      "x": -2,
+      "y": -2,
+      "w": null,
+      "s": 1
+    },
+    "skill-s5": {
+      "x": 0,
+      "y": 35,
+      "w": 338
+    }
+  },
+  "skills": [
+    {
+      "id": "s1",
+      "name": "Network Security (Wireshark, Nmap, BurpSuite)",
+      "level": 82
+    },
+    {
+      "id": "s2",
+      "name": "Penetration Testing (SQLi, OWASP)",
+      "level": 80
+    },
+    {
+      "id": "s3",
+      "name": "SIEM / Log Analysis / SOC",
+      "level": 78
+    },
+    {
+      "id": "s4",
+      "name": "Virtualisation (Kali, VMware, Docker)",
+      "level": 85
+    },
+    {
+      "id": "s5",
+      "name": "Python / Scripting",
+      "level": 72
+    },
+    {
+      "id": "s6",
+      "name": "Cloud & IAM (RBAC, RLS)",
+      "level": 68
+    }
   ],
-  formations: [
-    { id: 'f1', school: 'École 89 — Deep Tech', period: 'Sept 2025 – Juin 2026', diploma: 'Bachelor Cybersécurité & Hacking Éthique' },
-    { id: 'f2', school: 'F.L.S.H Limoges', period: 'Sept 2024 – Juil 2025', diploma: 'L1 Langues Étrangères Appliquées (EN/ES/IT)' },
-    { id: 'f3', school: 'Lycée International Cours Lumière', period: 'Sept 2023 – Juil 2024', diploma: 'Baccalauréat Général — Ses, LLcer' },
+  "projects": [
+    {
+      "id": "p1",
+      "title": "🖥️ VM Vulnérable — Audit & Surveillance",
+      "desc": "Création d'une VM vulnérable, audit de sécurité complet et surveillance active des OS.",
+      "tags": "Kali Linux · VirtualBox · Audit"
+    },
+    {
+      "id": "p2",
+      "title": "🗄️ Base de Données Éducative (10 000+)",
+      "desc": "Conception et déploiement d'un logiciel de gestion éducative à grande échelle.",
+      "tags": "SQL · Docker · Database"
+    },
+    {
+      "id": "p3",
+      "title": "🔐 Virtualisation & Cryptographie",
+      "desc": "Virtualisation avancée, cryptographie, stéganographie et chiffrement de données.",
+      "tags": "VMware · Cryptographie · Stégano"
+    },
+    {
+      "id": "p4",
+      "title": "🏢 Réseau d'Entreprise Segmenté",
+      "desc": "Conception, implémentation et audit d'un réseau d'entreprise entièrement segmenté.",
+      "tags": "Stormshield · LAN/WAN · Pentest"
+    }
   ],
-  contact: [
-    { id: 'c1', icon: '📞', label: 'Téléphone', value: '06 99 58 20 51' },
-    { id: 'c2', icon: '📧', label: 'Email', value: 'samuelmeyisso635@gmail.com' },
-    { id: 'c3', icon: '📍', label: 'Localisation', value: 'Coulommiers, 77120' },
-    { id: 'c4', icon: '🎓', label: 'École', value: 'École 89 — Deep Tech · Bachelor Cybersécurité' },
-    { id: 'c5', icon: '🔗', label: 'LinkedIn', value: 'https://www.linkedin.com/in/samuel-emmanuel-meyisso-91980b330/' },
+  "formations": [
+    {
+      "id": "f1",
+      "school": "École 89 — Deep Tech",
+      "period": "Sept 2025 – Juin 2026",
+      "diploma": "Bachelor Cybersécurité & Hacking Éthique"
+    },
+    {
+      "id": "f2",
+      "school": "F.L.S.H Limoges",
+      "period": "Sept 2024 – Juil 2025",
+      "diploma": "L1 Langues Étrangères Appliquées (EN/G/ESP/ITAL)"
+    },
+    {
+      "id": "f3",
+      "school": "Lycée International Cours Lumière",
+      "period": "Sept 2023 – Juil 2024",
+      "diploma": "Baccalauréat Général — Ses, LLcer"
+    }
   ],
-  langs: [
-    { id: 'l1', lang: 'Anglais', level: 'B2' },
-    { id: 'l2', lang: 'Espagnol', level: 'B2' },
-    { id: 'l3', lang: 'Italien', level: 'A1' },
+  "contact": [
+    {
+      "id": "c1",
+      "icon": "📞",
+      "label": "Téléphone",
+      "value": "06 99 58 20 51"
+    },
+    {
+      "id": "c2",
+      "icon": "📧",
+      "label": "Email",
+      "value": "samuelmeyisso635@gmail.com"
+    },
+    {
+      "id": "c3",
+      "icon": "📍",
+      "label": "Localisation",
+      "value": "Coulommiers, 77120"
+    },
+    {
+      "id": "c4",
+      "icon": "🎓",
+      "label": "École",
+      "value": "École 89 — Deep Tech · Bachelor Cybersécurité"
+    },
+    {
+      "id": "c5",
+      "icon": "🔗",
+      "label": "LinkedIn",
+      "value": "https://www.linkedin.com/in/samuel-emmanuel-meyisso-91980b330/"
+    }
   ],
-  softSkills: 'Autodidacte · Adaptabilité & réactivité · Travail en équipe · Organisation & autonomie · Résilience',
-  tools: 'Wireshark · Nmap · BurpSuite · Kali Linux · VMware · Docker · Stormshield · Hashcat · Sqlmap · Metasploit · Packet Tracer · Windows Server',
+  "langs": [
+    {
+      "id": "l1",
+      "lang": "Anglais",
+      "level": "B2"
+    },
+    {
+      "id": "l2",
+      "lang": "Espagnol",
+      "level": "B2"
+    },
+    {
+      "id": "l3",
+      "lang": "Italien",
+      "level": "A1"
+    }
+  ],
+  "softSkills": "Autodidacte · Adaptabilité & réactivité · Travail en équipe · Organisation & autonomie · Résilience",
+  "tools": "Wireshark · Nmap · BurpSuite · Kali Linux · VMware · Docker · Stormshield · Hashcat · Sqlmap · Metasploit · Packet Tracer · Windows Server"
 }
 
 const LOGS = [
@@ -546,8 +708,6 @@ export default function App() {
         setSaved(true)
         setTimeout(() => setSaved(false), 3000)
         localStorage.setItem(KEY, JSON.stringify(data))
-        // Afficher les données pour récupération locale
-        window.prompt("COPIEZ CE TEXTE (CTRL+C) :", JSON.stringify(data));
       } else {
         alert(d.error || 'Erreur de sauvegarde')
       }
@@ -817,7 +977,6 @@ export default function App() {
             <button onClick={() => up('skills', [...data.skills, { id: 's' + Date.now(), name: 'Nouvelle Compétence', level: 50 }])} style={S.aBtn}>+ Skill</button>
             <button onClick={resetPositions} style={{ ...S.aBtn, borderColor: '#ffaa0033', color: '#ffaa00' }}>📍 Reset positions</button>
             <button onClick={reset} style={{ ...S.aBtn, borderColor: '#ff444433', color: '#ff4444' }}>↺ Reset tout</button>
-            <button onClick={() => window.prompt("COPIEZ CE TEXTE (CTRL+C) :", JSON.stringify(data))} style={{ ...S.aBtn, borderColor: '#00aaff33', color: '#00aaff' }}>📤 Exporter</button>
             <button onClick={save} style={{ ...S.aSave, background: saved ? '#003300' : '#00ff88', color: saved ? '#00ff88' : '#000', border: saved ? '1px solid #00ff88' : 'none' }}>
               {saved ? '✅ Sauvegardé !' : '💾 Sauvegarder'}
             </button>
