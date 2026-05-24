@@ -567,6 +567,78 @@ function AdminDashboard({ logs, onClose }) {
 }
 
 
+function CyberBackground() {
+  const [streams, setStreams] = useState([])
+
+  useEffect(() => {
+    const spawn = () => {
+      const id = Date.now()
+      const isGreen = Math.random() > 0.5
+      const newStream = {
+        id,
+        type: isGreen ? 'green' : 'blue',
+        text: isGreen 
+          ? Array(12).fill(0).map(() => String.fromCharCode(0x30A0 + Math.random() * 96)).join('') 
+          : '0x' + Math.floor(Math.random() * 0xFFFFFFFF).toString(16).toUpperCase(),
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        speed: 8 + Math.random() * 12
+      }
+      setStreams(s => [...s.slice(-10), newStream])
+    }
+    const interval = setInterval(spawn, 3000)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0, opacity: 0.12 }}>
+      <div className="scanlines" />
+      <div className="noise" />
+      {streams.map(s => (
+        <div key={s.id} style={{
+          position: 'absolute',
+          left: `${s.x}%`,
+          top: `${s.y}%`,
+          color: s.type === 'green' ? '#00ff88' : '#00aaff',
+          fontFamily: 'monospace',
+          fontSize: '0.8rem',
+          textShadow: `0 0 5px ${s.type === 'green' ? '#00ff88' : '#00aaff'}`,
+          whiteSpace: 'nowrap',
+          animation: `flow-${s.type} ${s.speed}s linear forwards`,
+        }}>
+          {s.text}
+        </div>
+      ))}
+      <style>{`
+        @keyframes flow-green {
+          0% { transform: translate(-100%, -100%); opacity: 0; }
+          20% { opacity: 1; }
+          80% { opacity: 1; }
+          100% { transform: translate(200%, 200%); opacity: 0; }
+        }
+        @keyframes flow-blue {
+          0% { transform: translate(100%, -50%); opacity: 0; }
+          20% { opacity: 1; }
+          80% { opacity: 1; }
+          100% { transform: translate(-300%, 150%); opacity: 0; }
+        }
+        .scanlines {
+          position: absolute; inset: 0;
+          background: linear-gradient(to bottom, transparent 50%, rgba(0, 255, 136, 0.02) 50%);
+          background-size: 100% 4px;
+          z-index: 1;
+        }
+        .noise {
+          position: absolute; inset: 0;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+          opacity: 0.05;
+          z-index: 2;
+        }
+      `}</style>
+    </div>
+  )
+}
+
 export default function App() {
   const [data, setData] = useState(() => {
     try { const s = localStorage.getItem(KEY); return s ? { ...INIT, ...JSON.parse(s) } : INIT }
@@ -976,6 +1048,7 @@ export default function App() {
 
   return (
     <div style={S.root}>
+      <CyberBackground />
       {showModal && <PwModal onLogin={handleLogin} onClose={() => setShowModal(false)} error={loginError} form={loginForm} setForm={setLoginForm} />}
       {showFileManager && <FileManager onClose={() => setShowFileManager(false)} />}
       {showDashboard && <AdminDashboard logs={liveLogs} onClose={() => setShowDashboard(false)} />}
@@ -1033,6 +1106,7 @@ export default function App() {
     </div>
   )
 }
+
 
 const S = {
   root: { minHeight: '100vh', background: '#0a0a0a', color: '#fff', fontFamily: "'Courier New', monospace", paddingBottom: '80px' },
