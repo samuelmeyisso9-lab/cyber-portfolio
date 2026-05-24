@@ -39,9 +39,10 @@ const INIT = {
   ],
   contact: [
     { id: 'c1', icon: '📞', label: 'Téléphone', value: '06 99 58 20 51' },
-    { id: 'c2', icon: '📧', label: 'Email', value: 'samuelmeyissa635@gmail.com' },
+    { id: 'c2', icon: '📧', label: 'Email', value: 'samuelmeyisso635@gmail.com' },
     { id: 'c3', icon: '📍', label: 'Localisation', value: 'Coulommiers, 77120' },
     { id: 'c4', icon: '🎓', label: 'École', value: 'École 89 — Deep Tech · Bachelor Cybersécurité' },
+    { id: 'c5', icon: '🔗', label: 'LinkedIn', value: 'https://www.linkedin.com/in/samuel-emmanuel-meyisso-91980b330/' },
   ],
   langs: [
     { id: 'l1', lang: 'Anglais', level: 'B2' },
