@@ -24,3 +24,8 @@ dist-ssr
 *.sw?
 
 .env
+*.lnk
+*.LNK
+[Dd]esktop.ini
+[Tt]humbs.db
+
