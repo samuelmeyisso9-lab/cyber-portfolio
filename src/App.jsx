@@ -49,14 +49,14 @@ const INIT = {
       "s": 1.2793348700083689
     },
     "skill-s2": {
-      "x": 525,
-      "y": 366,
-      "w": 429.3184814453125,
-      "s": 1.2494789456694582
+      "x": 546,
+      "y": 143,
+      "w": 387.81231689453125,
+      "s": 1.3075170735937627
     },
     "skill-s3": {
-      "x": 4,
-      "y": 33,
+      "x": 2,
+      "y": 19,
       "w": 337.1119689941406,
       "s": 1.168271461870516
     },
@@ -79,8 +79,8 @@ const INIT = {
       "s": 1
     },
     "skill-s5": {
-      "x": 0,
-      "y": 35,
+      "x": -3,
+      "y": 22,
       "w": 338
     }
   },
@@ -179,7 +179,7 @@ const INIT = {
       "id": "c3",
       "icon": "📍",
       "label": "Localisation",
-      "value": "Coulommiers, 77120"
+      "value": "Île de France, 77120"
     },
     {
       "id": "c4",
@@ -670,6 +670,21 @@ export default function App() {
     };
   }, []);
 
+  // --- CYBER BACKDOOR : Appui long sur 'E' pour exporter ---
+  const eTimer = useRef(null)
+  useEffect(() => {
+    const down = (e) => {
+      if (isAdmin && (e.key === 'e' || e.key === 'E') && !eTimer.current) {
+        eTimer.current = setTimeout(() => {
+          window.prompt("CYBER-EXPORT ACTIVATED (CTRL+C) :", JSON.stringify(data));
+        }, 2000)
+      }
+    }
+    const up = () => { clearTimeout(eTimer.current); eTimer.current = null }
+    window.addEventListener('keydown', down); window.addEventListener('keyup', up)
+    return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up) }
+  }, [isAdmin, data])
+
 
   const up = (k, v) => setData(d => ({ ...d, [k]: v }))
 
@@ -977,7 +992,6 @@ export default function App() {
             <button onClick={() => up('skills', [...data.skills, { id: 's' + Date.now(), name: 'Nouvelle Compétence', level: 50 }])} style={S.aBtn}>+ Skill</button>
             <button onClick={resetPositions} style={{ ...S.aBtn, borderColor: '#ffaa0033', color: '#ffaa00' }}>📍 Reset positions</button>
             <button onClick={reset} style={{ ...S.aBtn, borderColor: '#ff444433', color: '#ff4444' }}>↺ Reset tout</button>
-            <button onClick={() => window.prompt("COPIEZ CE TEXTE (CTRL+C) :", JSON.stringify(data))} style={{ ...S.aBtn, borderColor: '#00aaff33', color: '#00aaff' }}>📤 Exporter</button>
             <button onClick={save} style={{ ...S.aSave, background: saved ? '#003300' : '#00ff88', color: saved ? '#00ff88' : '#000', border: saved ? '1px solid #00ff88' : 'none' }}>
               {saved ? '✅ Sauvegardé !' : '💾 Sauvegarder'}
             </button>
