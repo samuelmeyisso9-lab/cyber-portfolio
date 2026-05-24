@@ -3,11 +3,11 @@ services:
     name: cyber-portfolio-api
     env: node
     plan: free
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && npx vite build
     startCommand: node server.js
     envVars:
       - key: NODE_VERSION
-        value: 20.0.0
+        value: 20
       - key: NODE_ENV
         value: production
       - key: JWT_SECRET
