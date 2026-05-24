@@ -971,34 +971,35 @@ export default function App() {
     if (id === 'skills') return (
       <div style={{ ...S.section, position: 'relative' }}>
         {fd('skills-title', <h2 style={S.h2}>⚡ Compétences Techniques</h2>, { marginBottom: '26px' })}
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={makeDragEnd('skills')}>
-          <SortableContext items={data.skills.map(s => s.id)} strategy={verticalListSortingStrategy}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxWidth: '740px', marginBottom: '36px' }}>
-              {data.skills.map(sk => (
-                <SortableItem key={sk.id} id={sk.id} disabled={!A}>
-                  {(listeners) =>
-                    fd(`skill-${sk.id}`, (
-                      <div style={{ border: `1px ${A ? 'dashed #00ff8815' : 'solid transparent'}`, borderRadius: '8px', padding: '10px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '7px', gap: '8px' }}>
-                          <span {...(A ? listeners : {})} style={{ color: '#00ff8844', cursor: 'grab', fontSize: '1.1rem', userSelect: 'none', width: '20px', display: A ? 'inline-block' : 'none' }}>⠿</span>
-                          <ET val={sk.name} onSave={v => up('skills', data.skills.map(x => x.id === sk.id ? { ...x, name: v } : x))} edit={A} style={{ color: '#ccc', flex: 1, fontSize: '0.88rem' }} />
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            {A && <input type="range" min="0" max="100" value={sk.level} onChange={e => up('skills', data.skills.map(x => x.id === sk.id ? { ...x, level: +e.target.value } : x))} style={{ width: '80px', accentColor: '#00ff88' }} />}
-                            <span style={{ color: '#00ff88', minWidth: '36px', fontSize: '0.85rem', textAlign: 'right' }}>{sk.level}%</span>
-                            {A && <button onClick={() => up('skills', data.skills.filter(x => x.id !== sk.id))} style={S.del}>✕</button>}
-                          </span>
-                        </div>
-                        <div style={{ background: '#181818', borderRadius: '4px', height: '7px', overflow: 'hidden' }}>
-                          <div style={{ background: 'linear-gradient(90deg,#00ff88,#00aaff)', height: '100%', width: `${sk.level}%`, transition: 'width 0.6s ease' }} />
-                        </div>
-                      </div>
-                    ))
-                  }
-                </SortableItem>
-              ))}
+        
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: '1fr 1fr', 
+          gap: '20px 40px', 
+          maxWidth: '900px', 
+          marginBottom: '40px',
+          alignItems: 'start'
+        }}>
+          {data.skills.map(sk => (
+            <div key={sk.id} style={{ 
+              border: `1px ${A ? 'dashed #00ff8815' : 'solid transparent'}`, 
+              borderRadius: '8px', 
+              padding: '10px',
+              minHeight: '60px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '7px', gap: '8px' }}>
+                <ET val={sk.name} onSave={v => up('skills', data.skills.map(x => x.id === sk.id ? { ...x, name: v } : x))} edit={A} style={{ color: '#ccc', flex: 1, fontSize: '0.88rem' }} />
+                <span style={{ color: '#00ff88', minWidth: '36px', fontSize: '0.85rem', textAlign: 'right' }}>{sk.level}%</span>
+              </div>
+              <div style={{ background: '#181818', borderRadius: '4px', height: '7px', overflow: 'hidden' }}>
+                <div style={{ background: 'linear-gradient(90deg,#00ff88,#00aaff)', height: '100%', width: `${sk.level}%`, transition: 'width 0.6s ease' }} />
+              </div>
             </div>
-          </SortableContext>
-        </DndContext>
+          ))}
+        </div>
 
         {fd('formations-title', <h3 style={S.h3}>🎓 Formations</h3>, { marginBottom: '14px' })}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
