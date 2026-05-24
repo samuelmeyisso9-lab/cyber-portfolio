@@ -639,6 +639,66 @@ function CyberBackground() {
   )
 }
 
+function CustomCursor() {
+  const dot = useRef(null)
+  const ring = useRef(null)
+  const [hovering, setHovering] = useState(false)
+
+  useEffect(() => {
+    const move = (e) => {
+      if (dot.current) {
+        dot.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`
+      }
+      if (ring.current) {
+        ring.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`
+      }
+    }
+    const down = () => ring.current && (ring.current.style.transform += ' scale(0.6)')
+    const up = () => ring.current && (ring.current.style.transform = ring.current.style.transform.replace(' scale(0.6)', ''))
+    
+    const over = (e) => {
+      const tag = e.target.tagName
+      const isBtn = tag === 'BUTTON' || tag === 'A' || e.target.closest('button') || e.target.closest('a') || e.target.contentEditable === 'true'
+      setHovering(!!isBtn)
+    }
+
+    window.addEventListener('mousemove', move)
+    window.addEventListener('mousedown', down); window.addEventListener('mouseup', up)
+    window.addEventListener('mouseover', over)
+    return () => {
+      window.removeEventListener('mousemove', move); window.removeEventListener('mousedown', down)
+      window.removeEventListener('mouseup', up); window.removeEventListener('mouseover', over)
+    }
+  }, [])
+
+  return (
+    <>
+      <div ref={dot} style={{
+        position: 'fixed', top: -4, left: -4, width: 8, height: 8,
+        background: '#00ff88', borderRadius: '50%', pointerEvents: 'none',
+        zIndex: 99999, transition: 'transform 0.05s linear',
+        boxShadow: '0 0 10px #00ff88'
+      }} />
+      <div ref={ring} style={{
+        position: 'fixed', top: -15, left: -15, width: 30, height: 30,
+        border: `1px solid ${hovering ? '#00aaff' : '#00ff88'}`,
+        borderRadius: '50%', pointerEvents: 'none', zIndex: 99998,
+        transition: 'transform 0.15s ease-out, width 0.3s, height 0.3s, border-color 0.3s',
+        width: hovering ? 50 : 30, height: hovering ? 50 : 30,
+        top: hovering ? -25 : -15, left: hovering ? -25 : -15,
+        opacity: 0.5
+      }} />
+      <style>{`
+        body, button, a { cursor: none !important; }
+        @media (max-width: 768px) {
+          #dot, #ring { display: none !important; }
+          body, button, a { cursor: auto !important; }
+        }
+      `}</style>
+    </>
+  )
+}
+
 export default function App() {
   const [data, setData] = useState(() => {
     try { const s = localStorage.getItem(KEY); return s ? { ...INIT, ...JSON.parse(s) } : INIT }
@@ -1049,6 +1109,7 @@ export default function App() {
   return (
     <div style={S.root}>
       <CyberBackground />
+      <CustomCursor />
       {showModal && <PwModal onLogin={handleLogin} onClose={() => setShowModal(false)} error={loginError} form={loginForm} setForm={setLoginForm} />}
       {showFileManager && <FileManager onClose={() => setShowFileManager(false)} />}
       {showDashboard && <AdminDashboard logs={liveLogs} onClose={() => setShowDashboard(false)} />}
