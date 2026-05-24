@@ -1021,7 +1021,18 @@ export default function App() {
                       <div style={{ ...S.card, ...(A ? { borderColor: '#00ff8818' } : {}) }}>
                         {A && (
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                            <span {...listeners} style={{ color: '#00ff8844', cursor: 'grab', fontSize: '1.1rem', userSelect: 'none' }}>⠿ ordre</span>
+                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                              <span {...listeners} style={{ color: '#00ff8844', cursor: 'grab', fontSize: '1.1rem', userSelect: 'none' }}>⠿</span>
+                              <button 
+                                onClick={() => {
+                                  const f = window.prompt("Nom du fichier dans public/docs/ (ex: rapport.pdf) :", p.file || "");
+                                  if (f !== null) up('projects', data.projects.map(x => x.id === p.id ? { ...x, file: f } : x))
+                                }}
+                                style={{ ...S.del, borderColor: '#00aaff44', color: '#00aaff' }}
+                              >
+                                📎 {p.file ? 'Lien OK' : 'Lier PDF'}
+                              </button>
+                            </div>
                             <button onClick={() => up('projects', data.projects.filter(x => x.id !== p.id))} style={S.del}>✕</button>
                           </div>
                         )}
@@ -1029,12 +1040,32 @@ export default function App() {
                           style={{ color: '#00ff88', fontSize: '1rem', fontWeight: 'bold', display: 'block', marginBottom: '8px' }} />
                         <ET val={p.desc} onSave={v => up('projects', data.projects.map(x => x.id === p.id ? { ...x, desc: v } : x))} edit={A}
                           style={{ color: '#777', fontSize: '0.88rem', lineHeight: '1.6', display: 'block', marginBottom: '14px' }} />
-                        {A
-                          ? <ET val={p.tags} onSave={v => up('projects', data.projects.map(x => x.id === p.id ? { ...x, tags: v } : x))} edit style={{ color: '#00aaff', fontSize: '0.82rem', display: 'block' }} />
-                          : <div style={{ display: 'flex', gap: '7px', flexWrap: 'wrap' }}>
-                              {p.tags.split('·').map(t => <span key={t} style={{ background: '#0a1428', border: '1px solid #00aaff33', color: '#00aaff', padding: '3px 10px', borderRadius: '12px', fontSize: '0.74rem' }}>{t.trim()}</span>)}
-                            </div>
-                        }
+                        
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 'auto' }}>
+                          {A
+                            ? <ET val={p.tags} onSave={v => up('projects', data.projects.map(x => x.id === p.id ? { ...x, tags: v } : x))} edit style={{ color: '#00aaff', fontSize: '0.82rem', display: 'block' }} />
+                            : <div style={{ display: 'flex', gap: '7px', flexWrap: 'wrap' }}>
+                                {p.tags.split('·').map(t => <span key={t} style={{ background: '#0a1428', border: '1px solid #00aaff33', color: '#00aaff', padding: '3px 10px', borderRadius: '12px', fontSize: '0.74rem' }}>{t.trim()}</span>)}
+                              </div>
+                          }
+                          {!A && p.file && (
+                            <a 
+                              href={`/docs/${p.file}`} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              style={{ 
+                                background: '#0a1a0a', border: '1px solid #00ff8844', color: '#00ff88', 
+                                padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', 
+                                textDecoration: 'none', fontWeight: 'bold', whiteSpace: 'nowrap',
+                                transition: 'all 0.2s'
+                              }}
+                              onMouseEnter={e => { e.target.style.background = '#00ff88'; e.target.style.color = '#000' }}
+                              onMouseLeave={e => { e.target.style.background = '#0a1a0a'; e.target.style.color = '#00ff88' }}
+                            >
+                              📄 PDF
+                            </a>
+                          )}
+                        </div>
                       </div>
                     ))
                   }
