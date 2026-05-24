@@ -186,7 +186,8 @@ const INIT = {
       "id": "c4",
       "icon": "🎓",
       "label": "École",
-      "value": "École 89 — Deep Tech · Bachelor Cybersécurité"
+      "value": "École 89 — Deep Tech · Bachelor Cybersécurité",
+      "link": "https://ecole-89.com/"
     },
     {
       "id": "c5",
@@ -574,66 +575,79 @@ function CyberBackground() {
   useEffect(() => {
     const spawn = () => {
       const id = Date.now()
-      const isGreen = Math.random() > 0.5
+      const type = Math.random() > 0.7 ? 'holo' : (Math.random() > 0.5 ? 'green' : 'blue')
+      
+      let text = ""
+      if (type === 'green') {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*#@$!%/\\"
+        text = Array(15).fill(0).map(() => chars[Math.floor(Math.random() * chars.length)]).join('')
+      } else if (type === 'blue') {
+        text = '0x' + Math.floor(Math.random() * 0xFFFFFFFF).toString(16).toUpperCase()
+      } else {
+        text = " [ HUD_SCAN_ACTIVE ] "
+      }
+
       const newStream = {
         id,
-        type: isGreen ? 'green' : 'blue',
-        text: isGreen 
-          ? Array(12).fill(0).map(() => String.fromCharCode(0x30A0 + Math.random() * 96)).join('') 
-          : '0x' + Math.floor(Math.random() * 0xFFFFFFFF).toString(16).toUpperCase(),
+        type,
+        text,
         x: Math.random() * 100,
         y: Math.random() * 100,
-        speed: 8 + Math.random() * 12
+        speed: type === 'holo' ? 2 + Math.random() * 3 : 5 + Math.random() * 10
       }
-      setStreams(s => [...s.slice(-10), newStream])
+      setStreams(s => [...s.slice(-15), newStream])
     }
-    const interval = setInterval(spawn, 3000)
+    const interval = setInterval(spawn, 1500)
     return () => clearInterval(interval)
   }, [])
 
   return (
-    <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0, opacity: 0.12 }}>
+    <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: -1, opacity: 0.3 }}>
       <div className="scanlines" />
-      <div className="noise" />
+      <div className="grid-bg" />
       {streams.map(s => (
         <div key={s.id} style={{
           position: 'absolute',
           left: `${s.x}%`,
           top: `${s.y}%`,
-          color: s.type === 'green' ? '#00ff88' : '#00aaff',
+          color: s.type === 'green' ? '#00ff88' : (s.type === 'blue' ? '#00aaff' : '#ffffff'),
           fontFamily: 'monospace',
-          fontSize: '0.8rem',
-          textShadow: `0 0 5px ${s.type === 'green' ? '#00ff88' : '#00aaff'}`,
+          fontSize: s.type === 'holo' ? '1.2rem' : '0.7rem',
+          fontWeight: s.type === 'holo' ? 'bold' : 'normal',
+          textShadow: `0 0 8px ${s.type === 'green' ? '#00ff88' : (s.type === 'blue' ? '#00aaff' : '#fff')}`,
           whiteSpace: 'nowrap',
-          animation: `flow-${s.type} ${s.speed}s linear forwards`,
+          animation: `flow-${s.type === 'holo' ? 'blue' : s.type} ${s.speed}s linear forwards`,
+          border: s.type === 'holo' ? '1px solid rgba(255,255,255,0.3)' : 'none',
+          padding: s.type === 'holo' ? '4px 10px' : '0',
+          borderRadius: '4px'
         }}>
           {s.text}
         </div>
       ))}
       <style>{`
         @keyframes flow-green {
-          0% { transform: translate(-100%, -100%); opacity: 0; }
-          20% { opacity: 1; }
-          80% { opacity: 1; }
-          100% { transform: translate(200%, 200%); opacity: 0; }
+          0% { transform: translateY(-100%); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(100vh); opacity: 0; }
         }
         @keyframes flow-blue {
-          0% { transform: translate(100%, -50%); opacity: 0; }
-          20% { opacity: 1; }
-          80% { opacity: 1; }
-          100% { transform: translate(-300%, 150%); opacity: 0; }
+          0% { transform: translateX(100%); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateX(-100vw); opacity: 0; }
+        }
+        .grid-bg {
+          position: absolute; inset: 0;
+          background-image: linear-gradient(rgba(0, 255, 136, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
+          background-size: 50px 50px;
+          z-index: 0;
         }
         .scanlines {
           position: absolute; inset: 0;
           background: linear-gradient(to bottom, transparent 50%, rgba(0, 255, 136, 0.02) 50%);
           background-size: 100% 4px;
           z-index: 1;
-        }
-        .noise {
-          position: absolute; inset: 0;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-          opacity: 0.05;
-          z-index: 2;
         }
       `}</style>
     </div>
