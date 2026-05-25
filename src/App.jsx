@@ -252,11 +252,13 @@ function FreeDrag({ id, isAdmin, positions, onMove, children, style = {} }) {
   const resizing = useRef(false)
   const origin = useRef({})
   const elRef = useRef()
-  const pos = positions?.[id] || { x: 0, y: 0, w: null, s: 1 }
+  
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
+  const pos = isMobile ? { x: 0, y: 0, w: null, s: 1 } : (positions?.[id] || { x: 0, y: 0, w: null, s: 1 })
 
   // ── DRAG ────────────────────────────────────────────
   const onMouseDown = (e) => {
-    if (!isAdmin) return
+    if (!isAdmin || isMobile) return
     if (e.target.dataset.resize || e.target.contentEditable === 'true' || e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return
     e.preventDefault(); e.stopPropagation()
     dragging.current = true
@@ -1221,12 +1223,23 @@ export default function App() {
 
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #0a0a0a; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; } @media print { body { display: none !important; } }
+        html, body { overflow-x: hidden; width: 100%; position: relative; }
+        body { background: #0a0a0a; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; } 
+        @media print { body { display: none !important; } }
         .cursor { animation: blink 1s steps(1) infinite; }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #00ff8822; }
         [contenteditable]:focus { outline: 1px solid #00ff88 !important; background: #0a140a !important; border-radius: 3px; }
+        
+        /* RESPONSIVE FIXES */
+        @media (max-width: 768px) {
+          main { padding: 20px 15px !important; overflow-x: hidden; }
+          h1 { font-size: 2.2rem !important; }
+          .grid-2 { grid-template-columns: 1fr !important; }
+          div[style*="display: flex"] { flex-wrap: wrap !important; }
+          div[style*="transform"] { transform: none !important; left: 0 !important; top: 0 !important; width: 100% !important; }
+        }
       `}</style>
     </div>
   )
