@@ -156,7 +156,7 @@ const INIT = {
       "id": "f2",
       "school": "F.L.S.H Limoges",
       "period": "Sept 2024 – Juil 2025",
-      "diploma": "L1 Langues Étrangères Appliquées (EN/G/ESP/ITAL)",
+      "diploma": "L1 Langues Étrangères Appliquées (ENG/ESP/ITAL)",
       "link": "https://www.flsh.unilim.fr/"
     },
     {
