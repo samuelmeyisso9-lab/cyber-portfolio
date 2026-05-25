@@ -197,7 +197,8 @@ const INIT = {
       "id": "c5",
       "icon": "🔗",
       "label": "LinkedIn",
-      "value": "https://www.linkedin.com/in/samuel-emmanuel-meyisso-91980b330/"
+      "value": "Samuel Meyisso",
+      "link": "https://www.linkedin.com/in/samuel-emmanuel-meyisso-91980b330/"
     }
   ],
   "langs": [
@@ -1145,17 +1146,16 @@ export default function App() {
                     <ET val={c.value} onSave={v => up('contact', data.contact.map(x => x.id === c.id ? { ...x, value: v } : x))} edit={A} style={{ color: '#bbb', fontSize: '0.95rem' }} />
                   ) : (
                     <a 
-                      href={c.link || (c.label === 'Email' ? `mailto:${c.value}` : c.label === 'Téléphone' ? `tel:${c.value.replace(/\s/g, '')}` : c.value.startsWith('http') ? c.value : '#')} 
-                      target={(c.link || c.value.startsWith('http')) ? '_blank' : undefined}
-                      rel={(c.link || c.value.startsWith('http')) ? 'noopener noreferrer' : undefined}
+                      href={c.link || INIT.contact.find(x => x.id === c.id)?.link || (c.label === 'Email' ? `mailto:${c.value}` : c.label === 'Téléphone' ? `tel:${c.value.replace(/\s/g, '')}` : c.value.startsWith('http') ? c.value : '#')} 
+                      target={(c.link || INIT.contact.find(x => x.id === c.id)?.link || c.value.startsWith('http')) ? '_blank' : undefined}
+                      rel={(c.link || INIT.contact.find(x => x.id === c.id)?.link || c.value.startsWith('http')) ? 'noopener noreferrer' : undefined}
                       style={{ color: '#bbb', fontSize: '0.95rem', textDecoration: 'none', transition: 'color 0.2s' }}
                       onMouseEnter={e => e.target.style.color = '#00ff88'}
                       onMouseLeave={e => e.target.style.color = '#bbb'}
                     >
                       {c.value}
                     </a>
-                  )}
-                </div>
+                  )}                </div>
               </div>
             ), { borderBottom: '1px solid #161616', width: 'fit-content' })
           )}
