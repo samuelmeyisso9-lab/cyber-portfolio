@@ -41,6 +41,33 @@ app.use(helmet({
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
+// --- BOUCLIER DE SÉCURITÉ (ANTI-SCAN & ANTI-BOT) ---
+const BLACKLISTED_UA = ["sqlmap", "nmap", "nikto", "dirbuster", "goby", "python-requests", "curl", "wget", "scan"];
+app.use((req, res, next) => {
+    const ua = req.headers['user-agent']?.toLowerCase() || '';
+    if (BLACKLISTED_UA.some(k => ua.includes(k))) {
+        addLog({ type: 'ALERT', user: 'BOT/SCANNER', action: `BLOCKED_SCANNER_UA: ${ua.substring(0, 20)}...`, ip: req.ip, severity: 'HIGH' });
+        return res.status(403).json({ error: "Security Policy Violation: Access Denied" });
+    }
+    next();
+});
+
+// Protection spécifique pour les PDF
+app.get('/docs/:file', (req, res, next) => {
+    const referer = req.headers['referer'];
+    const isInternal = referer && referer.includes(req.get('host'));
+    
+    if (!isInternal) {
+        addLog({ type: 'SECURITY', user: 'UNAUTHORIZED', action: `DIRECT_ACCESS_ATTEMPT: ${req.params.file}`, ip: req.ip, severity: 'MEDIUM' });
+        // On autorise quand même l'affichage mais on logue la tentative d'accès direct
+    }
+    
+    // Empêche le téléchargement forcé et suggère l'affichage dans le navigateur
+    res.setHeader('Content-Disposition', 'inline');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    next();
+});
+
 // SERVIR LE FRONTEND (BUILD DE PRODUCTION)
 app.use(express.static(path.join(__dirname, 'dist')));
 

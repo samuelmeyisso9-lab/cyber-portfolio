@@ -1076,10 +1076,10 @@ export default function App() {
                           }
                           {!A && p.file && (
                             <a 
-                              href={`/docs/${p.file}`} 
+                              href={`/docs/${p.file}#toolbar=0`} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              download={p.file}
+                              onContextMenu={e => e.preventDefault()}
                               style={{ 
                                 background: '#0a1a0a', border: '1px solid #00ff8844', color: '#00ff88', 
                                 padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', 
