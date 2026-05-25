@@ -53,19 +53,19 @@ app.use((req, res, next) => {
 });
 
 // Protection spécifique pour les PDF
-app.get('/docs/:file', (req, res, next) => {
-    const referer = req.headers['referer'];
-    const isInternal = referer && referer.includes(req.get('host'));
+app.get('/docs/:file', (req, res) => {
+    const filePath = path.join(__dirname, 'dist', 'docs', req.params.file);
     
-    if (!isInternal) {
-        addLog({ type: 'SECURITY', user: 'UNAUTHORIZED', action: `DIRECT_ACCESS_ATTEMPT: ${req.params.file}`, ip: req.ip, severity: 'MEDIUM' });
-        // On autorise quand même l'affichage mais on logue la tentative d'accès direct
-    }
-    
-    // Empêche le téléchargement forcé et suggère l'affichage dans le navigateur
+    // Headers de sécurité
     res.setHeader('Content-Disposition', 'inline');
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    next();
+    
+    // Envoi direct pour supporter le streaming (Range Requests)
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            res.status(404).send('Document non trouvé');
+        }
+    });
 });
 
 // SERVIR LE FRONTEND (BUILD DE PRODUCTION)

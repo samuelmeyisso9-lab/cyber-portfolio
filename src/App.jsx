@@ -906,8 +906,13 @@ export default function App() {
   }
 
   const A = isAdmin
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
+
   const fd = (id, children, style) => (
-    <FreeDrag id={id} isAdmin={A} positions={data.positions} onMove={moveEl} style={style}>
+    <FreeDrag id={id} isAdmin={A && !isMobile} positions={data.positions} onMove={moveEl} style={{
+      ...style,
+      ...(isMobile ? { transform: 'none !important', position: 'relative !important', width: '100% !important', x: 0, y: 0 } : {})
+    }}>
       {children}
     </FreeDrag>
   )
