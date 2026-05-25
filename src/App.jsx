@@ -1079,13 +1079,13 @@ export default function App() {
                               href={`/docs/${p.file}`} 
                               target="_blank" 
                               rel="noopener noreferrer"
+                              download={p.file}
                               style={{ 
                                 background: '#0a1a0a', border: '1px solid #00ff8844', color: '#00ff88', 
                                 padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', 
                                 textDecoration: 'none', fontWeight: 'bold', whiteSpace: 'nowrap',
                                 transition: 'all 0.2s'
-                              }}
-                              onMouseEnter={e => { e.target.style.background = '#00ff88'; e.target.style.color = '#000' }}
+                              }}                              onMouseEnter={e => { e.target.style.background = '#00ff88'; e.target.style.color = '#000' }}
                               onMouseLeave={e => { e.target.style.background = '#0a1a0a'; e.target.style.color = '#00ff88' }}
                             >
                               📄 PDF
