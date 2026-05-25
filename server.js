@@ -152,7 +152,11 @@ app.get('/api/logs', authenticate, (req, res) => {
 });
 
 // ROUTE CATCH-ALL POUR LE SPA (REACT)
-app.get('/', (req, res) => {
+app.get('*', (req, res) => {
+    // Si c'est une requête pour un fichier (avec extension) qui n'a pas été trouvé par express.static
+    if (req.path.includes('.')) {
+        return res.status(404).send('Fichier non trouvé');
+    }
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
