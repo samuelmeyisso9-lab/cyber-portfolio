@@ -176,13 +176,15 @@ const INIT = {
       "id": "c2",
       "icon": "📧",
       "label": "Email",
-      "value": "samuelmeyisso635@gmail.com"
+      "value": "samuelmeyisso635@gmail.com",
+      "link": "https://mail.google.com/mail/?view=cm&fs=1&to=samuelmeyisso635@gmail.com"
     },
     {
       "id": "c3",
       "icon": "📍",
       "label": "Localisation",
-      "value": "Île de France, 77120"
+      "value": "Île de France, 77120",
+      "link": "https://www.regions-departements-france.fr/region-ile-de-france.html"
     },
     {
       "id": "c4",
