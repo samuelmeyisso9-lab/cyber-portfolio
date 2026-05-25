@@ -925,7 +925,7 @@ export default function App() {
         {fd('badge', <div style={S.badge}><ET val={data.badge} onSave={v => up('badge', v)} edit={A} style={{ color: '#00ff88' }} /></div>, { display: 'inline-block', marginBottom: '22px' })}
         {fd('name', (
           <h1 style={S.h1}>
-            {A ? <ET val={data.name} onSave={v => up('name', v)} edit style={{ color: '#00ff88', fontSize: 'inherit', fontWeight: 'inherit' }} />
+            { (A || isMobile) ? <ET val={data.name} onSave={v => up('name', v)} edit={A} style={{ color: '#00ff88', fontSize: 'inherit', fontWeight: 'inherit' }} />
                : <TypeWriter text={data.name} />}
           </h1>
         ), { marginBottom: '10px' })}
