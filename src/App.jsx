@@ -1086,7 +1086,7 @@ export default function App() {
                                 {p.tags.split('·').map(t => <span key={t} style={{ background: '#0a1428', border: '1px solid #00aaff33', color: '#00aaff', padding: '3px 10px', borderRadius: '12px', fontSize: '0.74rem' }}>{t.trim()}</span>)}
                               </div>
                           }
-                          {!A && p.file && (
+                          {!A && (p.file ? (
                             <a 
                               href={`/docs/${p.file}#toolbar=0`} 
                               target="_blank" 
@@ -1097,12 +1097,30 @@ export default function App() {
                                 padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', 
                                 textDecoration: 'none', fontWeight: 'bold', whiteSpace: 'nowrap',
                                 transition: 'all 0.2s'
-                              }}                              onMouseEnter={e => { e.target.style.background = '#00ff88'; e.target.style.color = '#000' }}
+                              }}
+                              onMouseEnter={e => { e.target.style.background = '#00ff88'; e.target.style.color = '#000' }}
                               onMouseLeave={e => { e.target.style.background = '#0a1a0a'; e.target.style.color = '#00ff88' }}
                             >
                               📄 PDF
                             </a>
-                          )}
+                          ) : (
+                            <div style={{
+                              padding: '4px 10px',
+                              borderRadius: '6px',
+                              fontSize: '0.65rem',
+                              fontWeight: 'bold',
+                              color: '#00aaff',
+                              border: '1px solid #00aaff44',
+                              background: 'rgba(0, 170, 255, 0.05)',
+                              boxShadow: '0 0 10px rgba(0, 170, 255, 0.2)',
+                              animation: 'holoFlicker 3s infinite ease-in-out',
+                              whiteSpace: 'nowrap',
+                              textTransform: 'uppercase',
+                              letterSpacing: '1px'
+                            }}>
+                              🛰️ À venir
+                            </div>
+                          ))}
                         </div>
                       </div>
                     ))
@@ -1234,6 +1252,15 @@ export default function App() {
         ::-webkit-scrollbar-thumb { background: #00ff8822; }
         [contenteditable]:focus { outline: 1px solid #00ff88 !important; background: #0a140a !important; border-radius: 3px; }
         
+        @keyframes holoFlicker {
+          0% { opacity: 0.8; transform: skewX(0deg); filter: hue-rotate(0deg); }
+          5% { opacity: 0.5; transform: skewX(2deg); }
+          10% { opacity: 0.8; transform: skewX(0deg); }
+          15% { opacity: 1; transform: skewX(-1deg); filter: hue-rotate(10deg); }
+          20% { opacity: 0.8; transform: skewX(0deg); }
+          100% { opacity: 0.8; transform: skewX(0deg); filter: hue-rotate(0deg); }
+        }
+
         /* RESPONSIVE FIXES */
         @media (max-width: 768px) {
           main { padding: 20px 15px !important; overflow-x: hidden; }
