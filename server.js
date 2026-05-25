@@ -152,12 +152,12 @@ app.get('/api/logs', authenticate, (req, res) => {
 });
 
 // ROUTE CATCH-ALL POUR LE SPA (REACT)
-app.get('(.*)', (req, res) => {
-    // Si c'est une requête pour un fichier (avec extension) qui n'a pas été trouvé par express.static
-    if (req.path.includes('.')) {
-        return res.status(404).send('Fichier non trouvé');
+app.use((req, res) => {
+    // On ne sert l'index que pour les requêtes GET qui ne sont pas des fichiers
+    if (req.method === 'GET' && !req.path.includes('.')) {
+        return res.sendFile(path.join(__dirname, 'dist', 'index.html'));
     }
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    res.status(404).send('Non trouvé');
 });
 
 // --- SOCKET.IO ---
