@@ -121,13 +121,15 @@ const INIT = {
       "id": "p1",
       "title": "🖥️ VM Vulnérable — Audit & Surveillance",
       "desc": "Création d'une VM vulnérable, audit de sécurité complet et surveillance active des OS.",
-      "tags": "Kali Linux · VirtualBox · Audit"
+      "tags": "Kali Linux · VirtualBox · Audit",
+      "file": "audit-vm.pdf"
     },
     {
       "id": "p2",
       "title": "🗄️ Base de Données Éducative (10 000+)",
       "desc": "Conception et déploiement d'un logiciel de gestion éducative à grande échelle.",
-      "tags": "SQL · Docker · Database"
+      "tags": "SQL · Docker · Database",
+      "file": "db-educative.pdf"
     },
     {
       "id": "p3",
