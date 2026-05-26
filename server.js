@@ -199,5 +199,18 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(PORT, () => console.log(`FORTERESSE ACTIVE : Écoute sur le port ${PORT}`));
+server.listen(PORT, () => {
+    console.log(`FORTERESSE ACTIVE : Écoute sur le port ${PORT}`);
+    
+    // Système Keep-Alive pour éviter la mise en veille sur Render
+    const RENDER_URL = `https://samuel-meyisso-portfolio.onrender.com/api/track`;
+    setInterval(async () => {
+        try {
+            await axios.post(RENDER_URL);
+            console.log('KEEP_ALIVE: Ping envoyé avec succès');
+        } catch (error) {
+            console.error('KEEP_ALIVE_ERROR:', error.message);
+        }
+    }, 13 * 60 * 1000); // Ping toutes les 13 minutes (Render dort après 15 min)
+});
 
