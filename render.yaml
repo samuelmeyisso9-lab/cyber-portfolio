@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: cyber-portfolio-api
+    name: samuel-meyisso-portfolio
     env: node
     plan: free
     buildCommand: npm install && npx vite build
