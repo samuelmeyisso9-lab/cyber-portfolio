@@ -1022,7 +1022,7 @@ export default function App() {
         
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: '1fr 1fr', 
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
           gap: '20px 40px', 
           maxWidth: '900px', 
           marginBottom: '40px',
@@ -1171,7 +1171,7 @@ export default function App() {
     if (id === 'soc') return (
       <div style={{ ...S.section, position: 'relative' }}>
         {fd('soc-title', <h2 style={S.h2}>🖥️ SOC Dashboard — Live Demo</h2>, { marginBottom: '26px' })}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '20px' }}>
           {fd('soc-feed', <LogFeed />)}
           {fd('soc-attack', (
             <div style={S.card}>
