@@ -12,7 +12,7 @@ const API_URL = import.meta.env.PROD ? '' : import.meta.env.VITE_API_URL || 'htt
 const KEY = 'portfolio_samuel_v3'
 
 const INIT = {
-  "badge": "🟢 DISPONIBLE — Stage Cybersécurité/SOC Junior · Juin-Juil 2026",
+  "badge": "🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès la rentrée septembre 2026",
   "name": "Samuel MEYISSO",
   "subtitle": "Analyste Cybersécurité · SOC Junior · Hacking Éthique",
   "desc": "Étudiant en Bachelor Cybersécurité à l'École 89. Spécialisé en sécurité offensive & défensive, analyse réseau, détection de vulnérabilités et tests d'intrusion (SQLi, OWASP).",
