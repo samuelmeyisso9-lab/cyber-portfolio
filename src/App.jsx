@@ -144,6 +144,13 @@ const INIT = {
       "desc": "Conception, implémentation et audit d'un réseau d'entreprise entièrement segmenté.",
       "tags": "Stormshield · LAN/WAN · Pentest",
       "file": "reseau-segmente.pdf"
+    },
+    {
+      "id": "p5",
+      "title": "🚴 Novabike — Audit & Remédiation",
+      "desc": "Audit de sécurité et remédiation basés sur le CIS Benchmark avec Wazuh, sur machines virtuelles VirtualBox.",
+      "tags": "Wazuh · CIS Benchmark · VirtualBox",
+      "file": "novabike-attack.pdf"
     }
   ],
   "formations": [
@@ -945,7 +952,7 @@ export default function App() {
         ), { marginBottom: '32px' })}
         {fd('stats', (
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-            {[{ l: 'Projets cyber', v: '4' }, { l: 'Outils maîtrisés', v: '12+' }, { l: 'Simulations lancées', v: String(threats) }].map(x => (
+            {[{ l: 'Projets cyber', v: '5' }, { l: 'Outils maîtrisés', v: '12+' }, { l: 'Simulations lancées', v: String(threats) }].map(x => (
               <div key={x.l} style={S.stat}><div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#00ff88' }}>{x.v}</div><div style={{ color: '#444', fontSize: '0.8rem', marginTop: '3px' }}>{x.l}</div></div>
             ))}
           </div>
