@@ -135,13 +135,15 @@ const INIT = {
       "id": "p3",
       "title": "🔐 Virtualisation & Cryptographie",
       "desc": "Virtualisation avancée, cryptographie, stéganographie et chiffrement de données.",
-      "tags": "VMware · Cryptographie · Stégano"
+      "tags": "VMware · Cryptographie · Stégano",
+      "file": "rapport-fortress.pdf"
     },
     {
       "id": "p4",
       "title": "🏢 Réseau d'Entreprise Segmenté",
       "desc": "Conception, implémentation et audit d'un réseau d'entreprise entièrement segmenté.",
-      "tags": "Stormshield · LAN/WAN · Pentest"
+      "tags": "Stormshield · LAN/WAN · Pentest",
+      "file": "reseau-segmente.pdf"
     }
   ],
   "formations": [
