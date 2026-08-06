@@ -1191,10 +1191,10 @@ export default function App() {
 
     if (id === 'contact') return (
       <div style={{ ...S.section, position: 'relative' }}>
-        {fd('contact-title', <h2 style={S.h2}>📡 Contact</h2>, { marginBottom: '26px' })}
+        {fd('contact-title', <h2 style={S.h2}>📡 Contactez-moi</h2>, { marginBottom: '26px' })}
         {fd('contact-intro', (
           <p style={{ color: '#666', marginBottom: '22px', lineHeight: '1.6', maxWidth: '500px' }}>
-            Disponible pour une <strong style={{ color: '#00ff88' }}>alternance SOC Junior / Analyste Cyber</strong> — Juin–Juillet 2026
+            Disponible pour une <strong style={{ color: '#00ff88' }}>alternance SOC Junior / Analyste Cyber</strong> dès la rentrée septembre 2026
           </p>
         ))}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
