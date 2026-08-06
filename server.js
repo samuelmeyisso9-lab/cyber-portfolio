@@ -59,6 +59,8 @@ app.get('/docs/:file', (req, res) => {
     // Headers de sécurité
     res.setHeader('Content-Disposition', 'inline');
     res.setHeader('X-Content-Type-Options', 'nosniff');
+    // Cache long pour un chargement instantané des PDF déjà préchargés
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     
     // Envoi direct pour supporter le streaming (Range Requests)
     res.sendFile(filePath, (err) => {

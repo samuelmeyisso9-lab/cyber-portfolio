@@ -453,60 +453,29 @@ function LogFeed() {
   )
 }
 
-function SmartPdfLink({ file }) {
-  const [pct, setPct] = useState(null)
-  const [hover, setHover] = useState(false)
-  const hoverTimer = useRef(null)
-  const xhr = useRef(null)
+function PreloadDocs({ files }) {
+  const ref = useRef(null)
 
-  useEffect(() => () => {
-    clearTimeout(hoverTimer.current)
-    xhr.current?.abort()
-  }, [])
-
-  const prefetch = () => {
-    if (pct !== null) return
-    clearTimeout(hoverTimer.current)
-    hoverTimer.current = setTimeout(() => {
-      const x = new XMLHttpRequest()
-      xhr.current = x
-      x.open('GET', `/docs/${file}`)
-      x.onprogress = (e) => {
-        if (e.lengthComputable) setPct(Math.min(99, Math.round((e.loaded / e.total) * 100)))
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !files.length) return
+    let started = false
+    const io = new IntersectionObserver((entries) => {
+      if (!started && entries.some(e => e.isIntersecting)) {
+        started = true
+        files.forEach(f => {
+          const x = new XMLHttpRequest()
+          x.open('GET', `/docs/${f}`)
+          x.send()
+        })
+        io.disconnect()
       }
-      x.onload = () => { setPct(100); xhr.current = null }
-      x.onerror = () => { setPct(null); xhr.current = null }
-      x.send()
-    }, 350)
-  }
+    }, { threshold: 0.15 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [files])
 
-  const cancelTimer = () => clearTimeout(hoverTimer.current)
-
-  return (
-    <a
-      href={`/docs/${file}#toolbar=0`}
-      target="_blank"
-      rel="noopener noreferrer"
-      onContextMenu={e => e.preventDefault()}
-      onMouseEnter={() => { setHover(true); prefetch() }}
-      onMouseLeave={() => { setHover(false); cancelTimer() }}
-      style={{
-        background: hover ? '#00ff88' : '#0a1a0a',
-        border: '1px solid #00ff8844',
-        color: hover ? '#000' : '#00ff88',
-        padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem',
-        textDecoration: 'none', fontWeight: 'bold', whiteSpace: 'nowrap',
-        transition: 'all 0.2s', minWidth: '70px', textAlign: 'center',
-        display: 'inline-block'
-      }}
-    >
-      {pct !== null && pct < 100
-        ? `⬇️ ${pct}%`
-        : pct === 100
-          ? '⚡ Prêt'
-          : '📄 PDF'}
-    </a>
-  )
+  return <span ref={ref} style={{ position: 'absolute', bottom: 0, width: 1, height: 1, pointerEvents: 'none' }} />
 }
 
 function PwModal({ onLogin, onClose, error, form, setForm }) {
@@ -1114,6 +1083,7 @@ export default function App() {
     if (id === 'projets') return (
       <div style={{ ...S.section, position: 'relative' }}>
         {fd('projets-title', <h2 style={S.h2}>📁 Projets Cybersécurité 2025–2026</h2>, { marginBottom: '26px' })}
+        <PreloadDocs files={data.projects.filter(p => p.file).map(p => p.file)} />
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={makeDragEnd('projects')}>
           <SortableContext items={data.projects.map(p => p.id)} strategy={verticalListSortingStrategy}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
@@ -1152,7 +1122,22 @@ export default function App() {
                               </div>
                           }
                           {!A && (p.file ? (
-                            <SmartPdfLink file={p.file} />
+                            <a 
+                              href={`/docs/${p.file}#toolbar=0`} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              onContextMenu={e => e.preventDefault()}
+                              style={{ 
+                                background: '#0a1a0a', border: '1px solid #00ff8844', color: '#00ff88', 
+                                padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', 
+                                textDecoration: 'none', fontWeight: 'bold', whiteSpace: 'nowrap',
+                                transition: 'all 0.2s'
+                              }}
+                              onMouseEnter={e => { e.target.style.background = '#00ff88'; e.target.style.color = '#000' }}
+                              onMouseLeave={e => { e.target.style.background = '#0a1a0a'; e.target.style.color = '#00ff88' }}
+                            >
+                              📄 PDF
+                            </a>
                           ) : (
                             <div style={{
                               padding: '4px 10px',
