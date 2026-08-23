@@ -48,7 +48,7 @@ app.use((req, res, next) => {
     if (BLACKLISTED_UA.some(k => ua.includes(k))) {
         addLog({ type: 'ALERT', user: 'BOT/SCANNER', action: `BLOCKED_SCANNER_UA: ${ua.substring(0, 20)}...`, ip: req.ip, severity: 'HIGH' });
         emitSoc('CRIT', req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-            parseClient(req.headers['user-agent']), geoCache.get(cleanIp(req.headers['x-forwarded-for'] || '')) || '',
+            parseClient(req.headers['user-agent']), geoCache.get(cleanIp(req.headers['x-forwarded-for'] || ''))?.place || '',
             `Scanner bloqué (${ua.split(/[\/\s]/)[0]})`);
         return res.status(403).json({ error: "Security Policy Violation: Access Denied" });
     }
@@ -110,6 +110,9 @@ const maskIp = (raw) => {
 };
 
 // --- GÉOLOCALISATION AVEC CACHE (limite : 45 req/min sur ip-api.com) ---
+// NB : une IP pointe vers le nœud du FAI, pas l'adresse réelle du visiteur.
+// On n'affiche donc JAMAIS la ville (souvent fausse) mais région/pays + FAI,
+// comme le font les dashboards professionnels (Cloudflare, AWS…).
 const geoCache = new Map();
 const cleanIp = (raw) => {
     let ip = String(raw || '').split(',')[0].trim();
@@ -118,16 +121,24 @@ const cleanIp = (raw) => {
 };
 async function lookupGeo(rawIp) {
     const ip = cleanIp(rawIp);
-    if (!ip) return 'Réseau local';
+    if (!ip) return { place: 'Réseau local', isp: '', country: '' };
     if (geoCache.has(ip)) return geoCache.get(ip);
     try {
-        const r = await axios.get(`http://ip-api.com/json/${ip}?fields=status,city,country`, { timeout: 3000 });
-        const loc = r.data?.status === 'success'
-            ? [r.data.city, r.data.country].filter(Boolean).join(', ') || 'Inconnue'
-            : 'Inconnue';
-        geoCache.set(ip, loc);
-        return loc;
-    } catch { return 'Inconnue'; }
+        const r = await axios.get(
+            `http://ip-api.com/json/${ip}?fields=status,regionName,country,countryCode,isp`,
+            { timeout: 3000 }
+        );
+        const d = r.data || {};
+        const geo = d.status === 'success'
+            ? {
+                place: [d.regionName, d.countryCode].filter(Boolean).join(', ') || d.country || 'Inconnue',
+                isp: (d.isp || '').split(/\s*[-,(]/)[0].trim(), // ex. "Orange France" → "Orange"
+                country: d.country || '',
+            }
+            : { place: 'Inconnue', isp: '', country: '' };
+        geoCache.set(ip, geo);
+        return geo;
+    } catch { return { place: 'Inconnue', isp: '', country: '' }; }
 }
 
 // --- ANALYSE DU USER-AGENT ---
@@ -186,7 +197,7 @@ app.use((req, res, next) => {
         if (now - b.start < 60_000 && b.count > 80 && !b.warned) {
             b.warned = true;
             emitSoc('WARN', fullIp, parseClient(req.headers['user-agent']),
-                geoCache.get(ip) || '', `Rafale détectée : ${b.count} requêtes/min`);
+                geoCache.get(ip)?.place || '', `Rafale détectée : ${b.count} requêtes/min`);
         }
         burstMap.set(ip, b);
     }
@@ -247,10 +258,10 @@ app.post('/api/track', async (req, res) => {
     const isKeepAlive = /^axios|^node|^undici/i.test(ua);
 
     if (!isKeepAlive) {
-        const location = await lookupGeo(fullIp);
+        const geo = await lookupGeo(fullIp);
         const client = parseClient(ua);
-        addLog({ type: 'VISIT', user: 'Visitor', ip: fullIp, location, action: 'Viewed Portfolio' });
-        emitSoc('INFO', fullIp, client, location, 'Nouvelle connexion au portfolio');
+        addLog({ type: 'VISIT', user: 'Visitor', ip: fullIp, location: geo.place, action: 'Viewed Portfolio' });
+        emitSoc('INFO', fullIp, client, geo.place, 'Nouvelle connexion au portfolio');
     }
     res.json({ success: true });
 });
@@ -285,7 +296,7 @@ app.use((req, res) => {
     // 404 réel = sonde/scan d'un bot ou fichier manquant : événement SOC authentique
     const fullIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     emitSoc('WARN', fullIp, parseClient(req.headers['user-agent']),
-        geoCache.get(cleanIp(fullIp)) || '', `Sonde détectée : ${req.method} ${String(req.path).slice(0, 48)}`);
+        geoCache.get(cleanIp(fullIp))?.place || '', `Sonde détectée : ${req.method} ${String(req.path).slice(0, 48)}`);
     res.status(404).send('Non trouvé');
 });
 
@@ -307,8 +318,12 @@ io.on('connection', (socket) => {
             socket.join('soc-room');
             const fullIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
             const ua = socket.handshake.headers['user-agent'] || '';
-            const location = await lookupGeo(fullIp);
-            socket.emit('you', { ip: maskIp(fullIp), client: parseClient(ua), location });
+            const geo = await lookupGeo(fullIp);
+            socket.emit('you', {
+                ip: maskIp(fullIp),
+                client: parseClient(ua),
+                location: geo.isp ? `${geo.place} · ${geo.isp}` : geo.place,
+            });
             socket.emit('soc-init', socFeed.slice(0, 12));
         } catch { /* la salle reste joignable même si l'enrichissement échoue */ }
     });
