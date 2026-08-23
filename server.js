@@ -47,6 +47,9 @@ app.use((req, res, next) => {
     const ua = req.headers['user-agent']?.toLowerCase() || '';
     if (BLACKLISTED_UA.some(k => ua.includes(k))) {
         addLog({ type: 'ALERT', user: 'BOT/SCANNER', action: `BLOCKED_SCANNER_UA: ${ua.substring(0, 20)}...`, ip: req.ip, severity: 'HIGH' });
+        emitSoc('CRIT', req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+            parseClient(req.headers['user-agent']), geoCache.get(cleanIp(req.headers['x-forwarded-for'] || '')) || '',
+            `Scanner bloqué (${ua.split(/[\/\s]/)[0]})`);
         return res.status(403).json({ error: "Security Policy Violation: Access Denied" });
     }
     next();
@@ -80,6 +83,9 @@ const loginLimiter = rateLimit({
     message: { error: "Trop de tentatives. Accès bloqué pour 15 minutes." },
     handler: (req, res, next, options) => {
         addLog({ type: 'ALERT', user: 'SYSTEM', action: 'BRUTE_FORCE_DETECTED', ip: req.ip, severity: 'HIGH' });
+        emitSoc('CRIT', req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+            parseClient(req.headers['user-agent']), '',
+            'Brute force sur /api/login — IP bloquée 15 min');
         res.status(options.statusCode).send(options.message);
     }
 });
@@ -89,7 +95,73 @@ const DATA_FILE = path.join(PORTFOLIO_PATH, 'src', 'App.jsx');
 
 let liveLogs = [];
 let securityAlerts = [];
+let socFeed = []; // flux public temps réel (données réelles, IP masquées RGPD)
 const MAX_LOGS = 500;
+const MAX_SOC = 40;
+
+// --- ANONYMISATION RGPD : on ne diffuse jamais une IP complète ---
+const maskIp = (raw) => {
+    let ip = String(raw || '').split(',')[0].trim();
+    if (ip.startsWith('::ffff:')) ip = ip.slice(7);
+    if (ip === '::1' || ip === '127.0.0.1') return 'localhost';
+    const v4 = ip.split('.');
+    if (v4.length === 4) return `${v4[0]}.${v4[1]}.xxx.xxx`;
+    return ip.split(':').slice(0, 4).join(':') + ':xxxx';
+};
+
+// --- GÉOLOCALISATION AVEC CACHE (limite : 45 req/min sur ip-api.com) ---
+const geoCache = new Map();
+const cleanIp = (raw) => {
+    let ip = String(raw || '').split(',')[0].trim();
+    if (ip.startsWith('::ffff:')) ip = ip.slice(7);
+    return (ip === '::1' || ip === '127.0.0.1') ? '' : ip;
+};
+async function lookupGeo(rawIp) {
+    const ip = cleanIp(rawIp);
+    if (!ip) return 'Réseau local';
+    if (geoCache.has(ip)) return geoCache.get(ip);
+    try {
+        const r = await axios.get(`http://ip-api.com/json/${ip}?fields=status,city,country`, { timeout: 3000 });
+        const loc = r.data?.status === 'success'
+            ? [r.data.city, r.data.country].filter(Boolean).join(', ') || 'Inconnue'
+            : 'Inconnue';
+        geoCache.set(ip, loc);
+        return loc;
+    } catch { return 'Inconnue'; }
+}
+
+// --- ANALYSE DU USER-AGENT ---
+function parseClient(ua = '') {
+    const browser = /Edg\//.test(ua) ? 'Edge'
+        : /OPR\/|Opera/.test(ua) ? 'Opera'
+        : /Firefox\//.test(ua) ? 'Firefox'
+        : /Chrome\//.test(ua) ? 'Chrome'
+        : /Safari\//.test(ua) ? 'Safari'
+        : /bot|crawl|spider|slurp|bingpreview/i.test(ua) ? 'Bot/Indexeur'
+        : 'Inconnu';
+    const os = /Windows/.test(ua) ? 'Windows'
+        : /Android/.test(ua) ? 'Android'
+        : /iPhone|iPad|iPod/.test(ua) ? 'iOS'
+        : /Mac OS X|Macintosh/.test(ua) ? 'macOS'
+        : /Linux/.test(ua) ? 'Linux' : '—';
+    return `${browser} · ${os}`;
+}
+
+// Diffusion publique vers la salle SOC (événements RÉELS, anonymisés)
+function emitSoc(sev, ipRaw, client, location, action) {
+    const entry = {
+        id: Date.now() + Math.random(),
+        timestamp: new Date().toISOString(),
+        sev, // 'INFO' | 'WARN' | 'CRIT'
+        ip: maskIp(ipRaw),
+        client,
+        location,
+        action,
+    };
+    socFeed.unshift(entry);
+    if (socFeed.length > MAX_SOC) socFeed.pop();
+    io.to('soc-room').emit('soc-event', entry);
+}
 
 const addLog = (log) => {
     const entry = { ...log, id: Date.now(), timestamp: new Date().toISOString() };
@@ -100,6 +172,26 @@ const addLog = (log) => {
     if (liveLogs.length > MAX_LOGS) liveLogs.pop();
     io.to('admin-room').emit('new-log', entry);
 };
+
+// Détecteur de rafales (trop de requêtes depuis une même IP)
+const burstMap = new Map(); // ip -> { count, start, warned }
+setInterval(() => burstMap.clear(), 5 * 60 * 1000);
+app.use((req, res, next) => {
+    const fullIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const ip = cleanIp(fullIp);
+    if (ip && !ip.startsWith('localhost')) {
+        const now = Date.now();
+        const b = burstMap.get(ip) || { count: 0, start: now, warned: false };
+        b.count++;
+        if (now - b.start < 60_000 && b.count > 80 && !b.warned) {
+            b.warned = true;
+            emitSoc('WARN', fullIp, parseClient(req.headers['user-agent']),
+                geoCache.get(ip) || '', `Rafale détectée : ${b.count} requêtes/min`);
+        }
+        burstMap.set(ip, b);
+    }
+    next();
+});
 
 // Middleware RBAC
 const authenticate = (req, res, next) => {
@@ -129,6 +221,8 @@ app.post('/api/login', loginLimiter, async (req, res) => {
     const sqlKeywords = ["SELECT", "UNION", "DROP", "OR 1=1", "--"];
     if (sqlKeywords.some(k => JSON.stringify(req.body).toUpperCase().includes(k))) {
         addLog({ type: 'ALERT', user: username || 'attacker', action: 'SQL_INJECTION_PATTERN', ip: req.ip, severity: 'CRITICAL' });
+        emitSoc('CRIT', req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+            parseClient(req.headers['user-agent']), '', 'Pattern SQLi détecté sur /api/login');
     }
 
     if (username === ADMIN_USERNAME && bcrypt.compareSync(password, ADMIN_PASSWORD_HASH)) {
@@ -147,15 +241,17 @@ app.post('/api/login', loginLimiter, async (req, res) => {
 });
 
 app.post('/api/track', async (req, res) => {
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    let location = 'Inconnue';
-    try {
-        const response = await axios.get(`http://ip-api.com/json/${ip === '::1' ? '' : ip}`);
-        if (response.data.status === 'success') {
-            location = `${response.data.city}, ${response.data.country}`;
-        }
-    } catch (e) {}
-    addLog({ type: 'VISIT', user: 'Visitor', ip, location, action: 'Viewed Portfolio' });
+    const fullIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const ua = String(req.headers['user-agent'] || '');
+    // Le ping Keep-Alive interne (axios) n'est pas un visiteur : on le tait dans le flux public
+    const isKeepAlive = /^axios|^node|^undici/i.test(ua);
+
+    if (!isKeepAlive) {
+        const location = await lookupGeo(fullIp);
+        const client = parseClient(ua);
+        addLog({ type: 'VISIT', user: 'Visitor', ip: fullIp, location, action: 'Viewed Portfolio' });
+        emitSoc('INFO', fullIp, client, location, 'Nouvelle connexion au portfolio');
+    }
     res.json({ success: true });
 });
 
@@ -186,6 +282,10 @@ app.use((req, res) => {
     if (req.method === 'GET' && !req.path.includes('.')) {
         return res.sendFile(path.join(__dirname, 'dist', 'index.html'));
     }
+    // 404 réel = sonde/scan d'un bot ou fichier manquant : événement SOC authentique
+    const fullIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    emitSoc('WARN', fullIp, parseClient(req.headers['user-agent']),
+        geoCache.get(cleanIp(fullIp)) || '', `Sonde détectée : ${req.method} ${String(req.path).slice(0, 48)}`);
     res.status(404).send('Non trouvé');
 });
 
@@ -198,6 +298,19 @@ io.on('connection', (socket) => {
                 socket.emit('init-logs', { all: liveLogs, alerts: securityAlerts });
             }
         });
+    });
+
+    // Salle publique du SOC : le visiteur reçoit les VRAIS événements
+    // (IP masquées RGPD) + ses propres informations de connexion.
+    socket.on('join-soc', async () => {
+        try {
+            socket.join('soc-room');
+            const fullIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
+            const ua = socket.handshake.headers['user-agent'] || '';
+            const location = await lookupGeo(fullIp);
+            socket.emit('you', { ip: maskIp(fullIp), client: parseClient(ua), location });
+            socket.emit('soc-init', socFeed.slice(0, 12));
+        } catch { /* la salle reste joignable même si l'enrichissement échoue */ }
     });
 });
 

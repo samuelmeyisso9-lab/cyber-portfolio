@@ -233,19 +233,6 @@ const INIT = {
   "tools": "Wireshark · Nmap · BurpSuite · Kali Linux · VMware · Docker · Stormshield · Hashcat · Sqlmap · Metasploit · Packet Tracer · Windows Server"
 }
 
-const LOGS = [
-  '[INFO]  192.168.1.1  → Port scan detected on 443',
-  '[WARN]  10.0.0.45   → Brute force attempt on SSH',
-  '[CRIT]  172.16.0.8  → SQL Injection pattern found',
-  '[INFO]  192.168.2.3 → Firewall rule triggered #4421',
-  '[WARN]  10.0.1.12   → Unusual outbound traffic (8.8 MB)',
-  '[CRIT]  192.168.1.9 → Privilege escalation attempt',
-  '[INFO]  10.0.0.2    → VPN tunnel established',
-  '[WARN]  172.16.1.5  → Failed login x5 on /admin',
-  '[CRIT]  192.168.3.1 → Malware signature: Trojan.GenX',
-  '[INFO]  10.0.2.18   → IDS alert: CVE-2024-1234',
-]
-
 const ATTACK_STEPS = [
   '> Initialisation du scan réseau...',
   '> Découverte des hôtes actifs: 14 trouvés',
@@ -436,18 +423,46 @@ function TypeWriter({ text, speed = 60 }) {
 }
 
 function LogFeed() {
-  const [logs, setLogs] = useState([LOGS[0]])
+  const [logs, setLogs] = useState([])
+  const [you, setYou] = useState(null)
   const bot = useRef()
   useEffect(() => {
-    let i = 1
-    const t = setInterval(() => setLogs(p => [...p.slice(-8), LOGS[i++ % LOGS.length]]), 1400)
-    return () => clearInterval(t)
+    // Vraie télémétrie : chaque visiteur voit le flux RÉEL du site (IP masquées RGPD)
+    const socket = io(API_URL)
+    socket.emit('join-soc')
+    socket.on('soc-init', (rows) => setLogs(rows || []))
+    socket.on('soc-event', (row) => setLogs(p => [...p.slice(-11), row]))
+    socket.on('you', (info) => setYou(info))
+    return () => socket.close()
   }, [])
   useEffect(() => { bot.current?.scrollIntoView({ behavior: 'smooth' }) }, [logs])
+  const color = (sev) => sev === 'CRIT' ? '#ff4444' : sev === 'WARN' ? '#ffaa00' : '#00ff88'
+  const fmt = (l) =>
+    `[${l.sev}]  ${l.ip.padEnd(16)} ${String(l.client).padEnd(18)} ${(l.location || '—').padEnd(20)} ${l.action}`
   return (
     <div style={S.logBox}>
-      <div style={S.logH}>● LIVE SOC FEED</div>
-      {logs.map((l, i) => <div key={i} style={{ ...S.logLine, color: l.includes('CRIT') ? '#ff4444' : l.includes('WARN') ? '#ffaa00' : '#00ff88' }}>{l}</div>)}
+      <div style={{ ...S.logH, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span>● LIVE SOC FEED — trafic réel</span>
+        <span style={{ color: '#00ff8888', fontSize: '0.6rem' }}>télémétrie serveur · IP masquées</span>
+      </div>
+      {you && (
+        <div style={{
+          margin: '6px 8px', padding: '6px 10px',
+          border: '1px solid #00ff8855', borderRadius: 4,
+          background: '#00ff8808', fontSize: '0.72rem', lineHeight: 1.5,
+        }}>
+          <span style={{ color: '#00ff88' }}>▶ VOTRE CONNEXION </span>
+          <span style={{ color: '#9fe8c0' }}>
+            {you.ip} · {you.client} · {you.location}
+          </span>
+        </div>
+      )}
+      {logs.length === 0 && (
+        <div style={{ ...S.logLine, color: '#00ff8866' }}>[ .... ] connexion au flux sécurisé…</div>
+      )}
+      {logs.map((l) => (
+        <div key={l.id} style={{ ...S.logLine, color: color(l.sev) }}>{fmt(l)}</div>
+      ))}
       <div ref={bot} />
     </div>
   )
