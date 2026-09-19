@@ -173,9 +173,9 @@ const INIT = {
   ],
   "formations": [
     {
-      "id": "f1",
+"id": "f1",
       "school": "École 89 — Deep Tech",
-      "period": "Sept 2025 – Juin 2026",
+      "period": "2ème Année en cours",
       "diploma": "Bachelor Cybersécurité & Hacking Éthique",
       "link": "https://ecole-89.com/"
     },
@@ -824,6 +824,10 @@ export default function App() {
       const langs = Array.isArray(merged.langs) ? merged.langs : []
       if (!langs.some(l => String(l.lang).toLowerCase() === 'allemand')) {
         merged.langs = [...langs, { id: 'l' + (langs.reduce((m, l) => Math.max(m, parseInt(String(l.id).replace(/\D/g, '') || 0, 10)), 0) + 1), lang: 'Allemand', level: 'A1' }]
+      }
+      if (Array.isArray(merged.formations)) {
+        const f1 = merged.formations.find(x => x.id === 'f1')
+        if (f1 && f1.period === 'Sept 2025 – Juin 2026') f1.period = INIT.formations.find(x => x.id === 'f1').period
       }
       return merged
     } catch { return INIT }
