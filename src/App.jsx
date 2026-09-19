@@ -1012,7 +1012,7 @@ export default function App() {
           </div>
         ), { marginBottom: '16px' })}
         <div style={{ width: '100%', marginBottom: '38px' }}>
-          <div style={{ color: '#777', width: '100%', lineHeight: '1.9', fontSize: '1.02rem' }}>
+          <div style={{ color: '#777', width: '100%', lineHeight: '1.9', fontSize: '1.02rem', textAlign: 'justify' }}>
             <ET val={data.desc} edit={false} style={{ color: '#777' }} />
           </div>
         </div>
