@@ -832,7 +832,7 @@ function CustomCursor() {
       }}>
         <svg viewBox="0 0 16 46" width="100%" height="100%" aria-hidden="true"
           style={{ transform: 'rotate(-25deg)', filter: 'drop-shadow(0 0 5px #00ff88) drop-shadow(0 0 12px rgba(0,255,136,0.55))' }}>
-          <path d="M8 0 L1 22 H5.5 L4 46 L15 18 H10 L11 0 Z" fill="#00ff88" stroke="#baffdb" strokeWidth="0.35" />
+          <path d="M8 0 L2 20 H6.5 L5.5 44 L15 22 H10.5 Z" fill="#00ff88" stroke="#baffdb" strokeWidth="0.35" />
         </svg>
       </div>
       <style>{`
