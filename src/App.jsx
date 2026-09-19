@@ -14,7 +14,7 @@ const KEY = 'portfolio_samuel_v4'
 const INIT = {
   "badge": "🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès maintenant",
   "name": "Samuel MEYISSO",
-  "subtitle": "Analyste Cybersécurité · SOC Junior · Hacking Éthique · Administrateur d'infrastructure sécurisée",
+  "subtitle": "Administrateur d'infrastructure sécurisée· SOC Junior · Hacking Éthique · Analyste Cybersécurité ",
   "desc": "Étudiant en Bachelor Cybersécurité & Hacking Éthique à l'École 89. Spécialisé en administration infrastructure sécurisée, déploiement et configuration de solutions SIEM/EDR (Wazuh, CrowdStrike Falcon), durcissement Microsoft 365 (CIS Benchmarks), audit de conformité RGPD/CNIL et incident response. Approche rigoureuse, documentation complète, impact opérationnel.",
   "sectionOrder": [
     "home",
@@ -43,10 +43,10 @@ const INIT = {
       "s": 1.2393775826288351
     },
     "langs-card": {
-      "x": 14,
-      "y": 27,
-      "w": 202.48419189453125,
-      "s": 1.2793348700083689
+      "x": -15,
+      "y": 26,
+      "w": 195.97442626953125,
+      "s": 1.250838795509523
     },
     "skill-s2": {
       "x": 546,
@@ -241,7 +241,7 @@ const INIT = {
       "lang": "Espagnol",
       "level": "B2"
     },
-{
+    {
       "id": "l3",
       "lang": "Italien",
       "level": "A1"
@@ -252,7 +252,7 @@ const INIT = {
       "level": "A1"
     }
   ],
-  "softSkills": "Autodidacte · Adaptabilité & réactivité · Travail en équipe · Organisation & autonomie · Résilience · Polyvalence   Persévérance · Diligence ·  Détermination",
+  "softSkills": "Autodidacte · Adaptabilité & réactivité · Travail en équipe · Organisation & autonomie · Résilience · Polyvalence · Persévérance · Diligence · Détermination",
   "tools": "Wireshark · Nmap · BurpSuite · Kali Linux · VMware · Docker · Stormshield · Hashcat · Sqlmap · Metasploit · Packet Tracer · Windows Server"
 }
 
@@ -1160,7 +1160,7 @@ const persistData = (next) => {
               <div style={S.cardT}>🧠 Soft Skills</div>
               {A
                 ? <ET val={data.softSkills} onSave={v => up('softSkills', v)} edit style={{ color: '#888', fontSize: '0.9rem', display: 'block', lineHeight: '1.9' }} />
-                : data.softSkills.split('·').map((s, i) => <div key={i} style={{ color: '#888', padding: '3px 0', fontSize: '0.88rem' }}>→ {s.trim()}</div>)
+                : <div style={{ color: '#888', fontSize: '0.9rem', display: 'block', lineHeight: '1.9' }}>{data.softSkills.split('·').map((s, i, arr) => <span key={i}>• {s.trim()}{i < arr.length - 1 ? '   ·   ' : ''}</span>)}</div>
               }
             </div>
           ))}
