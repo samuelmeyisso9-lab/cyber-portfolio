@@ -1000,7 +1000,7 @@ export default function App() {
           </div>
         ), { marginBottom: '16px' })}
         {fd('desc', (
-          <div style={{ color: '#777', maxWidth: '920px', lineHeight: '1.9', fontSize: '1.02rem', margin: '0 auto' }}>
+          <div style={{ color: '#777', width: '100%', lineHeight: '1.9', fontSize: '1.02rem' }}>
             <ET val={data.desc} onSave={v => up('desc', v)} edit={A} style={{ color: '#777' }} />
           </div>
         ), { marginBottom: '38px' })}
