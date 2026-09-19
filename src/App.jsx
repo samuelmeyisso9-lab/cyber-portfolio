@@ -12,7 +12,7 @@ const API_URL = import.meta.env.PROD ? '' : import.meta.env.VITE_API_URL || 'htt
 const KEY = 'portfolio_samuel_v4'
 
 const INIT = {
-  "badge": "🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès la rentrée septembre 2026",
+  "badge": "🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès maintenant",
   "name": "Samuel MEYISSO",
   "subtitle": "Analyste Cybersécurité · SOC Junior · Hacking Éthique · Administrateur d'infrastructure sécurisée",
   "desc": "Étudiant en Bachelor Cybersécurité & Hacking Éthique à l'École 89. Spécialisé en administration infrastructure sécurisée, déploiement et configuration de solutions SIEM/EDR (Wazuh, CrowdStrike Falcon), durcissement Microsoft 365 (CIS Benchmarks), audit de conformité RGPD/CNIL et incident response. Approche rigoureuse, documentation complète, impact opérationnel.",
@@ -37,10 +37,10 @@ const INIT = {
       "s": 1
     },
     "soft-card": {
-      "x": 168,
-      "y": 27,
-      "w": 486,
-      "s": 1.2603250201324543
+      "x": 23,
+      "y": 26,
+      "w": 637.9617309570312,
+      "s": 1.2393775826288351
     },
     "langs-card": {
       "x": 14,
@@ -82,6 +82,12 @@ const INIT = {
       "x": -3,
       "y": 22,
       "w": 338
+    },
+    "photo": {
+      "x": -32,
+      "y": -48,
+      "w": null,
+      "s": 1.1779242174629325
     }
   },
   "skills": [
@@ -229,7 +235,7 @@ const INIT = {
       "level": "A1"
     }
   ],
-  "softSkills": "Autodidacte · Adaptabilité & réactivité · Travail en équipe · Organisation & autonomie · Résilience",
+  "softSkills": "Autodidacte · Adaptabilité & réactivité · Travail en équipe · Organisation & autonomie · Résilience · Polyvalence   Persévérance · Diligence ·  Détermination",
   "tools": "Wireshark · Nmap · BurpSuite · Kali Linux · VMware · Docker · Stormshield · Hashcat · Sqlmap · Metasploit · Packet Tracer · Windows Server"
 }
 
@@ -774,7 +780,7 @@ function CustomCursor() {
 
 export default function App() {
   const [data, setData] = useState(() => {
-    try { const s = localStorage.getItem(KEY); return s ? { ...INIT, ...JSON.parse(s), desc: INIT.desc, subtitle: INIT.subtitle } : INIT }
+    try { const s = localStorage.getItem(KEY); return s ? { ...INIT, ...JSON.parse(s), desc: INIT.desc, subtitle: INIT.subtitle, badge: INIT.badge } : INIT }
     catch { return INIT }
   })
   const [section, setSection] = useState('home')
@@ -921,13 +927,13 @@ export default function App() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ content: { ...data, desc: INIT.desc, subtitle: INIT.subtitle } })
+        body: JSON.stringify({ content: { ...data, desc: INIT.desc, subtitle: INIT.subtitle, badge: INIT.badge } })
       })
       const d = await r.json()
       if (d.success) {
         setSaved(true)
         setTimeout(() => setSaved(false), 3000)
-        localStorage.setItem(KEY, JSON.stringify({ ...data, desc: INIT.desc, subtitle: INIT.subtitle }))
+        localStorage.setItem(KEY, JSON.stringify({ ...data, desc: INIT.desc, subtitle: INIT.subtitle, badge: INIT.badge }))
       } else if (r.status === 401 || r.status === 403) {
         localStorage.removeItem('admin_token')
         setToken(null)
@@ -979,7 +985,7 @@ export default function App() {
   const renderSection = (id) => {
     if (id === 'home') return (
       <div style={{ padding: '44px 0', position: 'relative' }}>
-        {fd('badge', <div style={S.badge}><ET val={data.badge} onSave={v => up('badge', v)} edit={A} style={{ color: '#00ff88' }} /></div>, { display: 'inline-block', marginBottom: '22px' })}
+        {fd('badge', <div style={S.badge}><ET val={data.badge} edit={false} style={{ color: '#00ff88' }} /></div>, { display: 'inline-block', marginBottom: '22px' })}
         {fd('name', (
           <h1 style={S.h1}>
             { (A || isMobile) ? <ET val={data.name} onSave={v => up('name', v)} edit={A} style={{ color: '#00ff88', fontSize: 'inherit', fontWeight: 'inherit' }} />
@@ -1229,7 +1235,7 @@ export default function App() {
         {fd('contact-title', <h2 style={S.h2}>📡 Contactez-moi</h2>, { marginBottom: '26px' })}
         {fd('contact-intro', (
           <p style={{ color: '#666', marginBottom: '22px', lineHeight: '1.6', maxWidth: '500px' }}>
-            Disponible pour une <strong style={{ color: '#00ff88' }}>alternance SOC Junior / Analyste Cyber</strong> dès la rentrée septembre 2026
+            Disponible pour une <strong style={{ color: '#00ff88' }}>alternance SOC Junior / Analyste Cyber</strong> dès maintenant
           </p>
         ))}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
