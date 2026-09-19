@@ -1192,7 +1192,6 @@ const persistData = (next) => {
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
                 <ET val={sk.name} onSave={v => up('skills', data.skills.map(x => x.id === sk.id ? { ...x, name: v } : x))} edit={A} style={{ color: '#ccc', flex: 1, fontSize: '0.88rem' }} />
-                <span style={{ color: '#00ff88', minWidth: '36px', fontSize: '0.85rem', textAlign: 'right' }}>{sk.level}%</span>
               </div>
             </div>
           ))}
