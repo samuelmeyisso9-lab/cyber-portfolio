@@ -825,14 +825,14 @@ function CustomCursor() {
   return (
     <>
       <div ref={bolt} style={{
-        position: 'fixed', top: -40, left: -14,
-        width: hovering ? 28 : 22, height: hovering ? 52 : 40,
+        position: 'fixed', top: -48, left: -10,
+        width: hovering ? 22 : 17, height: hovering ? 62 : 50,
         pointerEvents: 'none', zIndex: 99999,
         transition: 'width 0.2s, height 0.2s, transform 0.05s linear',
       }}>
-        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden="true"
-          style={{ filter: 'drop-shadow(0 0 6px #00ff88) drop-shadow(0 0 14px rgba(0,255,136,0.6))' }}>
-          <path d="M13 2 L4 14 h5.5 L9.5 22 L20 9.5 h-6 z" fill="#00ff88" stroke="#baffdb" strokeWidth="0.6" />
+        <svg viewBox="0 0 16 44" width="100%" height="100%" aria-hidden="true"
+          style={{ filter: 'drop-shadow(0 0 5px #00ff88) drop-shadow(0 0 12px rgba(0,255,136,0.55))' }}>
+          <path d="M10 0 L2 22 H6.5 L5 44 L14 20 H9.5 L12.5 0 Z" fill="#00ff88" stroke="#baffdb" strokeWidth="0.35" />
         </svg>
       </div>
       <style>{`
