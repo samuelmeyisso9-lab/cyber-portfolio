@@ -106,6 +106,42 @@ const INIT = {
       "y": -1,
       "w": 376.0378112792969,
       "s": 0.9115377841949388
+    },
+    "contact-c4": {
+      "x": -57,
+      "y": 232,
+      "w": 558.7843627929688,
+      "s": 1.1998097079437242
+    },
+    "contact-c5": {
+      "x": -63,
+      "y": 7,
+      "w": 369.01397705078125,
+      "s": 1.3164556962025316
+    },
+    "contact-c3": {
+      "x": -83,
+      "y": 51,
+      "w": null,
+      "s": 1.5696202531645569
+    },
+    "contact-c2": {
+      "x": -57,
+      "y": 18,
+      "w": null,
+      "s": 1.2784810126582278
+    },
+    "contact-intro": {
+      "x": 0,
+      "y": 0,
+      "w": 1294.8298950195312,
+      "s": 0.6701389019963913
+    },
+    "contact-c1": {
+      "x": -33,
+      "y": -16,
+      "w": null,
+      "s": 1.2531645569620253
     }
   },
   "skills": [
@@ -1363,9 +1399,9 @@ const persistData = (next) => {
           {data.contact.map(c =>
             fd(`contact-${c.id}`, (
               <div style={{ display: 'flex', gap: '14px', alignItems: 'center', justifyContent: 'center', padding: '12px 4px' }}>
-                <span style={{ fontSize: '1.3rem', minWidth: '28px' }}>{c.icon}</span>
-                <div style={{ textAlign: 'left' }}>
-                  <div style={{ color: '#00ff88', fontWeight: 'bold', fontSize: '0.85rem', marginBottom: '2px' }}>{c.label}</div>
+                <span style={{ fontSize: '1.3rem', width: '32px', minWidth: '32px', textAlign: 'center', lineHeight: 1 }}>{c.icon}</span>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ color: '#00ff88', fontWeight: 'bold', fontSize: '0.95rem', letterSpacing: '0.5px', marginBottom: '3px' }}>{c.label}</div>
                   {A ? (
                     <ET val={c.value} onSave={v => up('contact', data.contact.map(x => x.id === c.id ? { ...x, value: v } : x))} edit={A} style={{ color: '#bbb', fontSize: '0.95rem' }} />
                   ) : (
