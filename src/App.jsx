@@ -311,6 +311,7 @@ function FreeDrag({ id, isAdmin, positions, onMove, children, style = {} }) {
 
   const onDblClick = (e) => {
     if (!isAdmin) return
+    if (e.target && e.target.closest && e.target.closest('[contenteditable="true"]')) return
     e.stopPropagation()
     onMove(id, { x: 0, y: 0, w: null, s: 1 })
   }
@@ -403,6 +404,16 @@ function ET({ val, onSave, edit, style, tag: Tag = 'span' }) {
   return (
     <span ref={ref} contentEditable suppressContentEditableWarning
       style={{ ...style, outline: '1px dashed #00ff8855', borderRadius: '3px', padding: '0 3px', cursor: 'text' }}
+      onDoubleClick={e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const range = document.createRange()
+        range.selectNodeContents(e.currentTarget)
+        const sel = window.getSelection()
+        sel.removeAllRanges()
+        sel.addRange(range)
+        e.currentTarget.focus()
+      }}
       onBlur={e => onSave(e.target.innerText)} />
   )
 }
@@ -780,8 +791,21 @@ function CustomCursor() {
 
 export default function App() {
   const [data, setData] = useState(() => {
-    try { const s = localStorage.getItem(KEY); return s ? { ...INIT, ...JSON.parse(s), desc: INIT.desc, subtitle: INIT.subtitle, badge: INIT.badge } : INIT }
-    catch { return INIT }
+    try {
+      const s = localStorage.getItem(KEY)
+      if (!s) return INIT
+      const stored = JSON.parse(s)
+      const LEGACY = {
+        desc: "Étudiant en Bachelor Cybersécurité à l'École 89. Spécialisé en sécurité offensive & défensive, analyse réseau, détection de vulnérabilités et tests d'intrusion (SQLi, OWASP).",
+        subtitle: 'Analyste Cybersécurité · SOC Junior · Hacking Éthique',
+        badge: '🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès la rentrée septembre 2026',
+      }
+      const merged = { ...INIT, ...stored }
+      if (stored.desc === LEGACY.desc) merged.desc = INIT.desc
+      if (stored.subtitle === LEGACY.subtitle) merged.subtitle = INIT.subtitle
+      if (stored.badge === LEGACY.badge || String(stored.badge || '').includes('septembre 2026')) merged.badge = INIT.badge
+      return merged
+    } catch { return INIT }
   })
   const [section, setSection] = useState('home')
   const [isAdmin, setIsAdmin] = useState(false)
@@ -936,13 +960,13 @@ export default function App() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ content: { ...data, desc: INIT.desc, subtitle: INIT.subtitle, badge: INIT.badge } })
+        body: JSON.stringify({ content: data })
       })
       const d = await r.json()
       if (d.success) {
         setSaved(true)
         setTimeout(() => setSaved(false), 3000)
-        localStorage.setItem(KEY, JSON.stringify({ ...data, desc: INIT.desc, subtitle: INIT.subtitle, badge: INIT.badge }))
+        localStorage.setItem(KEY, JSON.stringify(data))
       } else if (r.status === 401 || r.status === 403) {
         localStorage.removeItem('admin_token')
         setToken(null)
@@ -966,7 +990,7 @@ export default function App() {
   }
 
 const persistData = (next) => {
-    const restored = { ...INIT, ...next, desc: INIT.desc, subtitle: INIT.subtitle, badge: INIT.badge }
+    const restored = { ...INIT, ...next }
     setData(restored)
     localStorage.setItem(KEY, JSON.stringify(restored))
   }
@@ -1051,7 +1075,7 @@ const persistData = (next) => {
   const renderSection = (id) => {
     if (id === 'home') return (
       <div style={{ padding: '44px 0', position: 'relative' }}>
-        {fd('badge', <div style={S.badge}><ET val={data.badge} edit={false} style={{ color: '#00ff88' }} /></div>, { display: 'inline-block', marginBottom: '22px' })}
+        {fd('badge', <div style={S.badge}><ET val={data.badge} onSave={v => up('badge', v)} edit={A} style={{ color: '#00ff88' }} /></div>, { display: 'inline-block', marginBottom: '22px' })}
         {fd('name', (
           <h1 style={S.h1}>
             { (A || isMobile) ? <ET val={data.name} onSave={v => up('name', v)} edit={A} style={{ color: '#00ff88', fontSize: 'inherit', fontWeight: 'inherit' }} />
@@ -1074,12 +1098,12 @@ const persistData = (next) => {
         ), { display: 'inline-block', marginBottom: '18px' })}
         {fd('subtitle', (
           <div style={{ fontSize: '1.05rem', color: '#00aaff', fontWeight: 'bold' }}>
-            <ET val={data.subtitle} edit={false} style={{ color: '#00aaff' }} />
+            <ET val={data.subtitle} onSave={v => up('subtitle', v)} edit={A} style={{ color: '#00aaff' }} />
           </div>
         ), { marginBottom: '16px' })}
         <div style={{ width: '100%', marginBottom: '38px' }}>
           <div style={{ color: '#777', width: '100%', lineHeight: '1.9', fontSize: '1.02rem', textAlign: 'justify' }}>
-            <ET val={data.desc} edit={false} style={{ color: '#777' }} />
+            <ET val={data.desc} onSave={v => up('desc', v)} edit={A} style={{ color: '#777' }} />
           </div>
         </div>
         {fd('stats', (
