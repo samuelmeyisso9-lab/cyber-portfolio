@@ -301,7 +301,7 @@ const INIT = {
     }
   ],
   "softSkills": "Autodidacte · Adaptabilité & réactivité · Travail en équipe · Organisation & autonomie · Résilience · Polyvalence   Persévérance · Diligence ·  Détermination",
-  "tools": "Wireshark · Nmap · BurpSuite · Kali Linux · VMware · Docker · Stormshield · Hashcat · Sqlmap · Metasploit · Packet Tracer · Windows Server"
+  "tools": "Wireshark · Nmap · BurpSuite · Kali Linux · VMware · Docker · Stormshield · Hashcat · Sqlmap · Metasploit · Packet Tracer · Windows Server · CrowdStrike Falcon · Microsoft 365 · Wazuh · SharePoint · Excel"
 }
 
 const ATTACK_STEPS = [
