@@ -1000,10 +1000,10 @@ export default function App() {
           </div>
         ), { marginBottom: '16px' })}
         {fd('desc', (
-          <div style={{ color: '#777', maxWidth: '680px', lineHeight: '1.75' }}>
+          <div style={{ color: '#777', maxWidth: '920px', lineHeight: '1.9', fontSize: '1.02rem', margin: '0 auto' }}>
             <ET val={data.desc} onSave={v => up('desc', v)} edit={A} style={{ color: '#777' }} />
           </div>
-        ), { marginBottom: '32px' })}
+        ), { marginBottom: '38px' })}
         {fd('stats', (
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
             {[{ l: 'Projets cyber', v: '5' }, { l: 'Outils maîtrisés', v: '12+' }, { l: 'Simulations lancées', v: String(threats) }].map(x => (
