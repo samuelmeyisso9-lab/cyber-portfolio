@@ -999,11 +999,11 @@ export default function App() {
             <ET val={data.subtitle} onSave={v => up('subtitle', v)} edit={A} style={{ color: '#00aaff' }} />
           </div>
         ), { marginBottom: '16px' })}
-        {fd('desc', (
+        <div style={{ width: '100%', marginBottom: '38px' }}>
           <div style={{ color: '#777', width: '100%', lineHeight: '1.9', fontSize: '1.02rem' }}>
             <ET val={data.desc} onSave={v => up('desc', v)} edit={A} style={{ color: '#777' }} />
           </div>
-        ), { marginBottom: '38px' })}
+        </div>
         {fd('stats', (
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
             {[{ l: 'Projets cyber', v: '5' }, { l: 'Outils maîtrisés', v: '12+' }, { l: 'Simulations lancées', v: String(threats) }].map(x => (
