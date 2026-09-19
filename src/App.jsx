@@ -14,7 +14,7 @@ const KEY = 'portfolio_samuel_v4'
 const INIT = {
   "badge": "🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès la rentrée septembre 2026",
   "name": "Samuel MEYISSO",
-  "subtitle": "Analyste Cybersécurité · SOC Junior · Hacking Éthique",
+  "subtitle": "Analyste Cybersécurité · SOC Junior · Hacking Éthique · Administrateur d'infrastructure sécurisée",
   "desc": "Étudiant en Bachelor Cybersécurité & Hacking Éthique à l'École 89. Spécialisé en administration infrastructure sécurisée, déploiement et configuration de solutions SIEM/EDR (Wazuh, CrowdStrike Falcon), durcissement Microsoft 365 (CIS Benchmarks), audit de conformité RGPD/CNIL et incident response. Approche rigoureuse, documentation complète, impact opérationnel.",
   "sectionOrder": [
     "home",
@@ -774,7 +774,7 @@ function CustomCursor() {
 
 export default function App() {
   const [data, setData] = useState(() => {
-    try { const s = localStorage.getItem(KEY); return s ? { ...INIT, ...JSON.parse(s), desc: INIT.desc } : INIT }
+    try { const s = localStorage.getItem(KEY); return s ? { ...INIT, ...JSON.parse(s), desc: INIT.desc, subtitle: INIT.subtitle } : INIT }
     catch { return INIT }
   })
   const [section, setSection] = useState('home')
@@ -921,13 +921,13 @@ export default function App() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ content: { ...data, desc: INIT.desc } })
+        body: JSON.stringify({ content: { ...data, desc: INIT.desc, subtitle: INIT.subtitle } })
       })
       const d = await r.json()
       if (d.success) {
         setSaved(true)
         setTimeout(() => setSaved(false), 3000)
-        localStorage.setItem(KEY, JSON.stringify({ ...data, desc: INIT.desc }))
+        localStorage.setItem(KEY, JSON.stringify({ ...data, desc: INIT.desc, subtitle: INIT.subtitle }))
       } else if (r.status === 401 || r.status === 403) {
         localStorage.removeItem('admin_token')
         setToken(null)
@@ -1002,7 +1002,7 @@ export default function App() {
         ), { display: 'inline-block', marginBottom: '18px' })}
         {fd('subtitle', (
           <div style={{ fontSize: '1.05rem', color: '#00aaff', fontWeight: 'bold' }}>
-            <ET val={data.subtitle} onSave={v => up('subtitle', v)} edit={A} style={{ color: '#00aaff' }} />
+            <ET val={data.subtitle} edit={false} style={{ color: '#00aaff' }} />
           </div>
         ), { marginBottom: '16px' })}
         <div style={{ width: '100%', marginBottom: '38px' }}>
