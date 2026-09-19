@@ -1253,7 +1253,7 @@ const persistData = (next) => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
           {data.formations.map(f =>
             fd(`form-${f.id}`, (
-              <div style={S.card}>
+<div style={{ padding: '14px 4px', borderBottom: '1px solid #161616' }}>
                 {A ? (
                   <ET val={f.school} onSave={v => up('formations', data.formations.map(x => x.id === f.id ? { ...x, school: v } : x))} edit={A} style={{ color: '#00ff88', fontWeight: 'bold', display: 'block' }} />
                 ) : (
