@@ -15,7 +15,7 @@ const INIT = {
   "badge": "🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès la rentrée septembre 2026",
   "name": "Samuel MEYISSO",
   "subtitle": "Analyste Cybersécurité · SOC Junior · Hacking Éthique",
-  "desc": "Étudiant en Bachelor Cybersécurité à l'École 89. Spécialisé en sécurité offensive & défensive, analyse réseau, détection de vulnérabilités et tests d'intrusion (SQLi, OWASP).",
+  "desc": "Étudiant en Bachelor Cybersécurité & Hacking Éthique à l'École 89. Spécialisé en administration infrastructure sécurisée, déploiement et configuration de solutions SIEM/EDR (Wazuh, CrowdStrike Falcon), durcissement Microsoft 365 (CIS Benchmarks), audit de conformité RGPD/CNIL et incident response. Approche rigoureuse, documentation complète, impact opérationnel.",
   "sectionOrder": [
     "home",
     "skills",
@@ -980,6 +980,20 @@ export default function App() {
                : <TypeWriter text={data.name} />}
           </h1>
         ), { marginBottom: '10px' })}
+        {fd('photo', (
+          <img
+            src="/photo-samuel.jpg"
+            alt="Samuel MEYISSO"
+            style={{
+              width: '220px', height: '295px',
+              objectFit: 'cover',
+              borderRadius: '14px',
+              border: '3px solid #00ff88',
+              boxShadow: '0 0 20px rgba(0, 255, 136, 0.45), 0 0 50px rgba(0, 255, 136, 0.15), inset 0 0 0 4px #0a0a0a',
+              background: '#0f0f0f',
+            }}
+          />
+        ), { display: 'inline-block', marginBottom: '18px' })}
         {fd('subtitle', (
           <div style={{ fontSize: '1.05rem', color: '#00aaff', fontWeight: 'bold' }}>
             <ET val={data.subtitle} onSave={v => up('subtitle', v)} edit={A} style={{ color: '#00aaff' }} />
