@@ -774,7 +774,7 @@ function CustomCursor() {
 
 export default function App() {
   const [data, setData] = useState(() => {
-    try { const s = localStorage.getItem(KEY); return s ? { ...INIT, ...JSON.parse(s) } : INIT }
+    try { const s = localStorage.getItem(KEY); return s ? { ...INIT, ...JSON.parse(s), desc: INIT.desc } : INIT }
     catch { return INIT }
   })
   const [section, setSection] = useState('home')
@@ -921,13 +921,13 @@ export default function App() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ content: data })
+        body: JSON.stringify({ content: { ...data, desc: INIT.desc } })
       })
       const d = await r.json()
       if (d.success) {
         setSaved(true)
         setTimeout(() => setSaved(false), 3000)
-        localStorage.setItem(KEY, JSON.stringify(data))
+        localStorage.setItem(KEY, JSON.stringify({ ...data, desc: INIT.desc }))
       } else if (r.status === 401 || r.status === 403) {
         localStorage.removeItem('admin_token')
         setToken(null)
@@ -1007,7 +1007,7 @@ export default function App() {
         ), { marginBottom: '16px' })}
         <div style={{ width: '100%', marginBottom: '38px' }}>
           <div style={{ color: '#777', width: '100%', lineHeight: '1.9', fontSize: '1.02rem' }}>
-            <ET val={data.desc} onSave={v => up('desc', v)} edit={A} style={{ color: '#777' }} />
+            <ET val={data.desc} edit={false} style={{ color: '#777' }} />
           </div>
         </div>
         {fd('stats', (
