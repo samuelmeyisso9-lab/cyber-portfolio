@@ -9,7 +9,7 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 
 const API_URL = import.meta.env.PROD ? '' : import.meta.env.VITE_API_URL || 'http://localhost:3001'
-const KEY = 'portfolio_samuel_v3'
+const KEY = 'portfolio_samuel_v4'
 
 const INIT = {
   "badge": "🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès la rentrée septembre 2026",
