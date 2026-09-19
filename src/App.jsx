@@ -100,6 +100,12 @@ const INIT = {
       "y": 6,
       "w": 1144,
       "s": 0.9648654239063762
+    },
+    "proj-p5": {
+      "x": -3,
+      "y": -1,
+      "w": 376.0378112792969,
+      "s": 0.9115377841949388
     }
   },
   "skills": [
@@ -173,7 +179,7 @@ const INIT = {
   ],
   "formations": [
     {
-"id": "f1",
+      "id": "f1",
       "school": "École 89 — Deep Tech",
       "period": "2ème Année en cours",
       "diploma": "Bachelor Cybersécurité & Hacking Éthique",
@@ -1342,19 +1348,23 @@ const persistData = (next) => {
     )
 
     if (id === 'contact') return (
-      <div style={{ ...S.section, position: 'relative' }}>
+      <div style={{ ...S.section, position: 'relative', textAlign: 'center' }}>
         {fd('contact-title', <h2 style={S.h2}>📡 Contactez-moi</h2>, { marginBottom: '26px' })}
         {fd('contact-intro', (
-          <p style={{ color: '#666', marginBottom: '22px', lineHeight: '1.6', maxWidth: '500px' }}>
+          <p style={{ color: '#666', marginBottom: '26px', lineHeight: '1.6', maxWidth: '520px', margin: '0 auto 26px' }}>
             Disponible pour une <strong style={{ color: '#00ff88' }}>alternance Administrateur d'infrastructure sécurisée</strong> dès maintenant
           </p>
         ))}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <div style={{
+          display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center',
+          maxWidth: '560px', margin: '0 auto', padding: '16px 28px',
+          background: 'rgba(255,255,255,0.015)', border: '1px solid #1d221d', borderRadius: '16px',
+        }}>
           {data.contact.map(c =>
             fd(`contact-${c.id}`, (
-              <div style={{ display: 'flex', gap: '14px', alignItems: 'center', padding: '12px 0' }}>
+              <div style={{ display: 'flex', gap: '14px', alignItems: 'center', justifyContent: 'center', padding: '12px 4px' }}>
                 <span style={{ fontSize: '1.3rem', minWidth: '28px' }}>{c.icon}</span>
-                <div>
+                <div style={{ textAlign: 'left' }}>
                   <div style={{ color: '#00ff88', fontWeight: 'bold', fontSize: '0.85rem', marginBottom: '2px' }}>{c.label}</div>
                   {A ? (
                     <ET val={c.value} onSave={v => up('contact', data.contact.map(x => x.id === c.id ? { ...x, value: v } : x))} edit={A} style={{ color: '#bbb', fontSize: '0.95rem' }} />
@@ -1371,7 +1381,7 @@ const persistData = (next) => {
                     </a>
                   )}                </div>
               </div>
-            ), { borderBottom: '1px solid #161616', width: 'fit-content' })
+            ), { borderBottom: '1px solid #161616', width: 'fit-content', margin: '4px 0' })
           )}
         </div>
       </div>
