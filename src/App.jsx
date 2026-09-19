@@ -795,21 +795,17 @@ function CyberBackground() {
 }
 
 function CustomCursor() {
-  const dot = useRef(null)
-  const ring = useRef(null)
+  const bolt = useRef(null)
   const [hovering, setHovering] = useState(false)
 
   useEffect(() => {
     const move = (e) => {
-      if (dot.current) {
-        dot.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`
-      }
-      if (ring.current) {
-        ring.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`
+      if (bolt.current) {
+        bolt.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`
       }
     }
-    const down = () => ring.current && (ring.current.style.transform += ' scale(0.6)')
-    const up = () => ring.current && (ring.current.style.transform = ring.current.style.transform.replace(' scale(0.6)', ''))
+    const down = () => bolt.current && (bolt.current.style.transform += ' scale(0.8)')
+    const up = () => bolt.current && (bolt.current.style.transform = bolt.current.style.transform.replace(' scale(0.8)', ''))
     
     const over = (e) => {
       const tag = e.target.tagName
@@ -828,25 +824,21 @@ function CustomCursor() {
 
   return (
     <>
-      <div ref={dot} style={{
-        position: 'fixed', top: -4, left: -4, width: 8, height: 8,
-        background: '#00ff88', borderRadius: '50%', pointerEvents: 'none',
-        zIndex: 99999, transition: 'transform 0.05s linear',
-        boxShadow: '0 0 10px #00ff88'
-      }} />
-      <div ref={ring} style={{
-        position: 'fixed', top: -15, left: -15, width: 30, height: 30,
-        border: `1px solid ${hovering ? '#00aaff' : '#00ff88'}`,
-        borderRadius: '50%', pointerEvents: 'none', zIndex: 99998,
-        transition: 'transform 0.15s ease-out, width 0.3s, height 0.3s, border-color 0.3s',
-        width: hovering ? 50 : 30, height: hovering ? 50 : 30,
-        top: hovering ? -25 : -15, left: hovering ? -25 : -15,
-        opacity: 0.5
-      }} />
+      <div ref={bolt} style={{
+        position: 'fixed', top: -40, left: -14,
+        width: hovering ? 28 : 22, height: hovering ? 52 : 40,
+        pointerEvents: 'none', zIndex: 99999,
+        transition: 'width 0.2s, height 0.2s, transform 0.05s linear',
+      }}>
+        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden="true"
+          style={{ filter: 'drop-shadow(0 0 6px #00ff88) drop-shadow(0 0 14px rgba(0,255,136,0.6))' }}>
+          <path d="M13 2 L4 14 h5.5 L9.5 22 L20 9.5 h-6 z" fill="#00ff88" stroke="#baffdb" strokeWidth="0.6" />
+        </svg>
+      </div>
       <style>{`
         body, button, a { cursor: none !important; }
         @media (max-width: 768px) {
-          #dot, #ring { display: none !important; }
+          #bolt { display: none !important; }
           body, button, a { cursor: auto !important; }
         }
       `}</style>
