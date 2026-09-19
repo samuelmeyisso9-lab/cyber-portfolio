@@ -797,6 +797,9 @@ export default function App() {
 
   const [token, setToken] = useState(localStorage.getItem('admin_token'))
   const undoRef = useRef([])
+  const redoRef = useRef([])
+  const cutRef = useRef(null)
+  const lastAddedRef = useRef(null)
   const [loginForm, setLoginForm] = useState({ username: '', password: '' })
   const [loginError, setLoginError] = useState('')
 
@@ -901,6 +904,7 @@ export default function App() {
   const up = (k, v) => {
     undoRef.current.push(data)
     if (undoRef.current.length > 30) undoRef.current.shift()
+    redoRef.current.length = 0
     setData(d => ({ ...d, [k]: v }))
   }
 
@@ -961,13 +965,61 @@ export default function App() {
     }
   }
 
-const undo = () => {
-    const prev = undoRef.current.pop()
-    if (!prev) return
-    const restored = { ...INIT, ...prev, desc: INIT.desc, subtitle: INIT.subtitle, badge: INIT.badge }
+const persistData = (next) => {
+    const restored = { ...INIT, ...next, desc: INIT.desc, subtitle: INIT.subtitle, badge: INIT.badge }
     setData(restored)
     localStorage.setItem(KEY, JSON.stringify(restored))
   }
+
+  const undo = () => {
+    if (!undoRef.current.length) return
+    redoRef.current.push(data)
+    const prev = undoRef.current.pop()
+    persistData(prev)
+  }
+
+  const redo = () => {
+    if (!redoRef.current.length) return
+    undoRef.current.push(data)
+    const next = redoRef.current.pop()
+    persistData(next)
+  }
+
+  const cutLast = () => {
+    if (!lastAddedRef.current) { alert('Rien à couper : ajoutez d\'abord un projet ou une skill'); return }
+    const { key, id } = lastAddedRef.current
+    const list = data[key] || []
+    const idx = list.findIndex(x => x.id === id)
+    if (idx === -1) { lastAddedRef.current = null; return }
+    cutRef.current = { key, item: list[idx], index: idx }
+    lastAddedRef.current = null
+    up(key, list.filter((_, i) => i !== idx))
+  }
+
+  const pasteCut = () => {
+    if (!cutRef.current) { alert('Presse-papiers vide'); return }
+    const { key, item } = cutRef.current
+    up(key, [...(data[key] || []), { ...item, id: 'p' + item.id.replace(/\D/g, '') + Date.now() }])
+    cutRef.current = null
+  }
+
+  useEffect(() => {
+    if (!isAdmin) return
+    const h = (e) => {
+      const t = e.target
+      const editing = t && (t.isContentEditable || t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')
+      if (editing) return
+      const c = e.ctrlKey || e.metaKey
+      if (!c) return
+      const k = (e.key || '').toLowerCase()
+      if (k === 'z') { e.preventDefault(); if (e.shiftKey) redo(); else undo() }
+      else if (k === 'y') { e.preventDefault(); redo() }
+      else if (k === 'x') { e.preventDefault(); cutLast() }
+      else if (k === 'v') { e.preventDefault(); pasteCut() }
+    }
+    window.addEventListener('keydown', h)
+    return () => window.removeEventListener('keydown', h)
+  }, [isAdmin, data])
 
   const makeDragEnd = (key) => ({ active, over }) => {
     if (!over || active.id === over.id) return
@@ -1298,10 +1350,11 @@ const undo = () => {
           </div>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             <button onClick={() => setShowFileManager(true)} style={S.aBtn}>📁 Fichiers</button>
-            <button onClick={() => up('projects', [...data.projects, { id: 'p' + Date.now(), title: '🆕 Nouveau Projet', desc: 'Description...', tags: 'Tag1 · Tag2' }])} style={S.aBtn}>+ Projet</button>
-            <button onClick={() => up('skills', [...data.skills, { id: 's' + Date.now(), name: 'Nouvelle Compétence', level: 50 }])} style={S.aBtn}>+ Skill</button>
+            <button onClick={() => { const id = 'p' + Date.now(); up('projects', [...data.projects, { id, title: '🆕 Nouveau Projet', desc: 'Description...', tags: 'Tag1 · Tag2' }]); lastAddedRef.current = { key: 'projects', id } }} style={S.aBtn}>+ Projet</button>
+            <button onClick={() => { const id = 's' + Date.now(); up('skills', [...data.skills, { id, name: 'Nouvelle Compétence', level: 50 }]); lastAddedRef.current = { key: 'skills', id } }} style={S.aBtn}>+ Skill</button>
             <button onClick={resetPositions} style={{ ...S.aBtn, borderColor: '#ffaa0033', color: '#ffaa00' }}>📍 Reset positions</button>
             <button onClick={undo} style={{ ...S.aBtn, borderColor: '#00aaff33', color: '#00aaff' }}>⟲ Annuler{undoRef.current.length ? ` (${undoRef.current.length})` : ''}</button>
+            <button onClick={redo} style={{ ...S.aBtn, borderColor: '#ffaa0033', color: '#ffaa00' }}>⟳ Refaire{redoRef.current.length ? ` (${redoRef.current.length})` : ''}</button>
             <button onClick={reset} style={{ ...S.aBtn, borderColor: '#ff444433', color: '#ff4444' }}>↺ Reset tout</button>
             <button onClick={save} style={{ ...S.aSave, background: saved ? '#003300' : '#00ff88', color: saved ? '#00ff88' : '#000', border: saved ? '1px solid #00ff88' : 'none' }}>
               {saved ? '✅ Sauvegardé !' : '💾 Sauvegarder'}
