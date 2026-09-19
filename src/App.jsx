@@ -12,10 +12,10 @@ const API_URL = import.meta.env.PROD ? '' : import.meta.env.VITE_API_URL || 'htt
 const KEY = 'portfolio_samuel_v4'
 
 const INIT = {
-  "badge": "🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès maintenant",
+  "badge": "🟢 DISPONIBLE pour une alternance Administrateur d'infrastructure sécurisée · dès maintenant",
   "name": "Samuel MEYISSO",
-  "subtitle": "Administrateur d'infrastructure sécurisée · Analyste Cybersécurité · SOC Junior · Hacking Éthique",
-  "desc": "Étudiant en Bachelor Cybersécurité & Hacking Éthique à l'École 89. Spécialisé en administration infrastructure sécurisée, déploiement et configuration de solutions SIEM/EDR (Wazuh, CrowdStrike Falcon), durcissement Microsoft 365 (CIS Benchmarks), audit de conformité RGPD/CNIL et réponse aux incidents. Approche rigoureuse, documentation complète, impact opérationnel.",
+  "subtitle": "Analyste Cybersécurité · SOC Junior · Hacking Éthique · Administrateur d'infrastructure sécurisée",
+  "desc": "Étudiant en Bachelor Cybersécurité & Hacking Éthique à l'École 89. Spécialisé en administration infrastructure sécurisée, déploiement et configuration de solutions SIEM/EDR (Wazuh, CrowdStrike Falcon), durcissement Microsoft 365 (CIS Benchmarks), audit de conformité RGPD/CNIL et incident response. Approche rigoureuse, documentation complète, impact opérationnel.",
   "sectionOrder": [
     "home",
     "skills",
@@ -88,6 +88,12 @@ const INIT = {
       "y": -48,
       "w": null,
       "s": 1.1779242174629325
+    },
+    "badge": {
+      "x": 0,
+      "y": 0,
+      "w": null,
+      "s": 1
     }
   },
   "skills": [
@@ -1325,7 +1331,7 @@ const persistData = (next) => {
         {fd('contact-title', <h2 style={S.h2}>📡 Contactez-moi</h2>, { marginBottom: '26px' })}
         {fd('contact-intro', (
           <p style={{ color: '#666', marginBottom: '22px', lineHeight: '1.6', maxWidth: '500px' }}>
-            Disponible pour une <strong style={{ color: '#00ff88' }}>alternance SOC Junior / Analyste Cyber</strong> dès maintenant
+            Disponible pour une <strong style={{ color: '#00ff88' }}>alternance Administrateur d'infrastructure sécurisée</strong> dès maintenant
           </p>
         ))}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
