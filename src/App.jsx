@@ -928,6 +928,12 @@ export default function App() {
         setSaved(true)
         setTimeout(() => setSaved(false), 3000)
         localStorage.setItem(KEY, JSON.stringify(data))
+      } else if (r.status === 401 || r.status === 403) {
+        localStorage.removeItem('admin_token')
+        setToken(null)
+        setIsAdmin(false)
+        setLoginError((d.error || 'Session expirée') + ' — reconnectez-vous')
+        setShowModal(true)
       } else {
         alert(d.error || 'Erreur de sauvegarde')
       }
