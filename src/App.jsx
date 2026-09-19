@@ -37,15 +37,15 @@ const INIT = {
       "s": 1
     },
     "soft-card": {
-      "x": 23,
-      "y": 26,
-      "w": 637.9617309570312,
-      "s": 1.2393775826288351
+      "x": 279,
+      "y": 23,
+      "w": 370.66094970703125,
+      "s": 1.253001778561507
     },
     "langs-card": {
-      "x": -15,
-      "y": 26,
-      "w": 195.97442626953125,
+      "x": -2,
+      "y": 21,
+      "w": 347.1174774169922,
       "s": 1.250838795509523
     },
     "skill-s2": {
@@ -1190,12 +1190,9 @@ const persistData = (next) => {
               flexDirection: 'column',
               justifyContent: 'center'
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '7px', gap: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
                 <ET val={sk.name} onSave={v => up('skills', data.skills.map(x => x.id === sk.id ? { ...x, name: v } : x))} edit={A} style={{ color: '#ccc', flex: 1, fontSize: '0.88rem' }} />
                 <span style={{ color: '#00ff88', minWidth: '36px', fontSize: '0.85rem', textAlign: 'right' }}>{sk.level}%</span>
-              </div>
-              <div style={{ background: '#181818', borderRadius: '4px', height: '7px', overflow: 'hidden' }}>
-                <div style={{ background: 'linear-gradient(90deg,#00ff88,#00aaff)', height: '100%', width: `${sk.level}%`, transition: 'width 0.6s ease' }} />
               </div>
             </div>
           ))}
