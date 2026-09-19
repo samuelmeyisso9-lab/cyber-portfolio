@@ -1387,7 +1387,7 @@ const persistData = (next) => {
       <div style={{ ...S.section, position: 'relative', textAlign: 'center' }}>
         {fd('contact-title', <h2 style={S.h2}>📡 Contactez-moi</h2>, { marginBottom: '26px' })}
         {fd('contact-intro', (
-          <p style={{ color: '#666', marginBottom: '26px', lineHeight: '1.6', maxWidth: '520px', margin: '0 auto 26px' }}>
+          <p style={{ color: '#666', lineHeight: '1.6', margin: '0 auto 26px', width: '100%' }}>
             Disponible pour une <strong style={{ color: '#00ff88' }}>alternance Administrateur d'infrastructure sécurisée</strong> dès maintenant
           </p>
         ))}
