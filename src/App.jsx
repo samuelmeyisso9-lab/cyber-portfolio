@@ -252,7 +252,7 @@ const INIT = {
       "level": "A1"
     }
   ],
-  "softSkills": "Autodidacte · Adaptabilité & réactivité · Travail en équipe · Organisation & autonomie · Résilience · Polyvalence · Persévérance · Diligence · Détermination",
+  "softSkills": "Autodidacte · Adaptabilité & réactivité · Travail en équipe · Organisation & autonomie · Résilience · Polyvalence   Persévérance · Diligence ·  Détermination",
   "tools": "Wireshark · Nmap · BurpSuite · Kali Linux · VMware · Docker · Stormshield · Hashcat · Sqlmap · Metasploit · Packet Tracer · Windows Server"
 }
 
@@ -1160,7 +1160,7 @@ const persistData = (next) => {
               <div style={S.cardT}>🧠 Soft Skills</div>
               {A
                 ? <ET val={data.softSkills} onSave={v => up('softSkills', v)} edit style={{ color: '#888', fontSize: '0.9rem', display: 'block', lineHeight: '1.9' }} />
-                : <div style={{ color: '#888', fontSize: '0.9rem', display: 'block', lineHeight: '1.9' }}>{data.softSkills.split('·').map((s, i, arr) => <span key={i}>• {s.trim()}{i < arr.length - 1 ? '   ·   ' : ''}</span>)}</div>
+                : <div style={{ color: '#888', fontSize: '0.9rem', display: 'block', lineHeight: '1.9' }}>{data.softSkills.split('·').map((s, i, arr) => <span key={i}>{s.trim()}{i < arr.length - 1 ? ' · ' : ''}</span>)}</div>
               }
             </div>
           ))}
