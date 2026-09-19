@@ -796,6 +796,7 @@ export default function App() {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 
   const [token, setToken] = useState(localStorage.getItem('admin_token'))
+  const undoRef = useRef([])
   const [loginForm, setLoginForm] = useState({ username: '', password: '' })
   const [loginError, setLoginError] = useState('')
 
@@ -897,7 +898,11 @@ export default function App() {
   }, [isAdmin, data])
 
 
-  const up = (k, v) => setData(d => ({ ...d, [k]: v }))
+  const up = (k, v) => {
+    undoRef.current.push(data)
+    if (undoRef.current.length > 30) undoRef.current.shift()
+    setData(d => ({ ...d, [k]: v }))
+  }
 
   // Met à jour la position d'un élément
   const moveEl = (id, pos) => {
@@ -950,9 +955,18 @@ export default function App() {
 
   const reset = () => {
     if (window.confirm('Réinitialiser tout le contenu par défaut ?')) {
+      undoRef.current.push(data)
       setData(INIT)
       localStorage.removeItem(KEY)
     }
+  }
+
+const undo = () => {
+    const prev = undoRef.current.pop()
+    if (!prev) return
+    const restored = { ...INIT, ...prev, desc: INIT.desc, subtitle: INIT.subtitle, badge: INIT.badge }
+    setData(restored)
+    localStorage.setItem(KEY, JSON.stringify(restored))
   }
 
   const makeDragEnd = (key) => ({ active, over }) => {
@@ -1287,6 +1301,7 @@ export default function App() {
             <button onClick={() => up('projects', [...data.projects, { id: 'p' + Date.now(), title: '🆕 Nouveau Projet', desc: 'Description...', tags: 'Tag1 · Tag2' }])} style={S.aBtn}>+ Projet</button>
             <button onClick={() => up('skills', [...data.skills, { id: 's' + Date.now(), name: 'Nouvelle Compétence', level: 50 }])} style={S.aBtn}>+ Skill</button>
             <button onClick={resetPositions} style={{ ...S.aBtn, borderColor: '#ffaa0033', color: '#ffaa00' }}>📍 Reset positions</button>
+            <button onClick={undo} style={{ ...S.aBtn, borderColor: '#00aaff33', color: '#00aaff' }}>⟲ Annuler{undoRef.current.length ? ` (${undoRef.current.length})` : ''}</button>
             <button onClick={reset} style={{ ...S.aBtn, borderColor: '#ff444433', color: '#ff4444' }}>↺ Reset tout</button>
             <button onClick={save} style={{ ...S.aSave, background: saved ? '#003300' : '#00ff88', color: saved ? '#00ff88' : '#000', border: saved ? '1px solid #00ff88' : 'none' }}>
               {saved ? '✅ Sauvegardé !' : '💾 Sauvegarder'}
