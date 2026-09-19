@@ -821,6 +821,10 @@ export default function App() {
       if (stored.desc === LEGACY.desc) merged.desc = INIT.desc
       if (stored.subtitle === LEGACY.subtitle) merged.subtitle = INIT.subtitle
       if (stored.badge === LEGACY.badge || String(stored.badge || '').includes('septembre 2026')) merged.badge = INIT.badge
+      const langs = Array.isArray(merged.langs) ? merged.langs : []
+      if (!langs.some(l => String(l.lang).toLowerCase() === 'allemand')) {
+        merged.langs = [...langs, { id: 'l' + (langs.reduce((m, l) => Math.max(m, parseInt(String(l.id).replace(/\D/g, '') || 0, 10)), 0) + 1), lang: 'Allemand', level: 'A1' }]
+      }
       return merged
     } catch { return INIT }
   })
