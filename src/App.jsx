@@ -1398,10 +1398,8 @@ const persistData = (next) => {
         }}>
           {data.contact.map(c =>
             fd(`contact-${c.id}`, (
-              <div style={{ display: 'flex', gap: '14px', alignItems: 'center', justifyContent: 'center', padding: '12px 4px' }}>
-                <span style={{ fontSize: '1.3rem', width: '32px', minWidth: '32px', textAlign: 'center', lineHeight: 1 }}>{c.icon}</span>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ color: '#00ff88', fontWeight: 'bold', fontSize: '0.95rem', letterSpacing: '0.5px', marginBottom: '3px' }}>{c.label}</div>
+              <div style={{ textAlign: 'center', padding: '12px 4px' }}>
+                <div style={{ color: '#00ff88', fontWeight: 'bold', fontSize: '0.95rem', letterSpacing: '0.5px', marginBottom: '3px' }}>{c.icon} {c.label}</div>
                   {A ? (
                     <ET val={c.value} onSave={v => up('contact', data.contact.map(x => x.id === c.id ? { ...x, value: v } : x))} edit={A} style={{ color: '#bbb', fontSize: '0.95rem' }} />
                   ) : (
@@ -1415,7 +1413,7 @@ const persistData = (next) => {
                     >
                       {c.value}
                     </a>
-                  )}                </div>
+                  )}
               </div>
             ), { borderBottom: '1px solid #161616', width: 'fit-content', margin: '4px 0' })
           )}
