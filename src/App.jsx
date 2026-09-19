@@ -877,6 +877,11 @@ export default function App() {
         const f1 = merged.formations.find(x => x.id === 'f1')
         if (f1 && f1.period === 'Sept 2025 – Juin 2026') f1.period = INIT.formations.find(x => x.id === 'f1').period
       }
+      const tools = String(merged.tools || '')
+      const missingTools = INIT.tools.split('·').map(t => t.trim()).filter(t => !tools.toLowerCase().includes(t.toLowerCase()))
+      if (missingTools.length) {
+        merged.tools = [tools, ...missingTools].filter(Boolean).join(' · ')
+      }
       return merged
     } catch { return INIT }
   })
