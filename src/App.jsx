@@ -12,7 +12,7 @@ const API_URL = import.meta.env.PROD ? '' : import.meta.env.VITE_API_URL || 'htt
 const KEY = 'portfolio_samuel_v4'
 
 const INIT = {
-  "badge": "🟢 DISPONIBLE pour une alternance Administrateur d'infrastructure sécurisée · dès maintenant",
+  "badge": "🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès maintenant",
   "name": "Samuel MEYISSO",
   "subtitle": "Analyste Cybersécurité · SOC Junior · Hacking Éthique · Administrateur d'infrastructure sécurisée",
   "desc": "Étudiant en Bachelor Cybersécurité & Hacking Éthique à l'École 89. Spécialisé en administration infrastructure sécurisée, déploiement et configuration de solutions SIEM/EDR (Wazuh, CrowdStrike Falcon), durcissement Microsoft 365 (CIS Benchmarks), audit de conformité RGPD/CNIL et incident response. Approche rigoureuse, documentation complète, impact opérationnel.",
@@ -94,6 +94,12 @@ const INIT = {
       "y": 0,
       "w": null,
       "s": 1
+    },
+    "subtitle": {
+      "x": -24,
+      "y": 6,
+      "w": 1144,
+      "s": 0.9648654239063762
     }
   },
   "skills": [
@@ -235,9 +241,14 @@ const INIT = {
       "lang": "Espagnol",
       "level": "B2"
     },
-    {
+{
       "id": "l3",
       "lang": "Italien",
+      "level": "A1"
+    },
+    {
+      "id": "l4",
+      "lang": "Allemand",
       "level": "A1"
     }
   ],
