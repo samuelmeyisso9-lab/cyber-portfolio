@@ -132,16 +132,22 @@ const INIT = {
       "s": 1.2784810126582278
     },
     "contact-intro": {
-      "x": 0,
-      "y": 0,
-      "w": 1294.8298950195312,
-      "s": 0.6701389019963913
+      "x": -6,
+      "y": -29,
+      "w": 1281.7125854492188,
+      "s": 0.8255793072871982
     },
     "contact-c1": {
       "x": -33,
       "y": -16,
       "w": null,
       "s": 1.2531645569620253
+    },
+    "contact-title": {
+      "x": -1,
+      "y": -20,
+      "w": null,
+      "s": 1
     }
   },
   "skills": [
@@ -1393,8 +1399,7 @@ const persistData = (next) => {
         ))}
         <div style={{
           display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center',
-          maxWidth: '560px', margin: '0 auto', padding: '16px 28px',
-          background: 'rgba(255,255,255,0.015)', border: '1px solid #1d221d', borderRadius: '16px',
+          maxWidth: '560px', margin: '0 auto',
         }}>
           {data.contact.map(c =>
             fd(`contact-${c.id}`, (
