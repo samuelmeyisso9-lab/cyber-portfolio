@@ -14,6 +14,7 @@ const KEY = 'portfolio_samuel_v4'
 const INIT = {
   "badge": "🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès maintenant",
   "name": "Samuel MEYISSO",
+  "photo": "/photo-samuel.jpg",
   "subtitle": "Administrateur d'infrastructure sécurisée· SOC Junior · Hacking Éthique · Analyste Cybersécurité ",
   "desc": "Étudiant en Bachelor Cybersécurité & Hacking Éthique à l'École 89. Spécialisé en administration infrastructure sécurisée, déploiement et configuration de solutions SIEM/EDR (Wazuh, CrowdStrike Falcon), durcissement Microsoft 365 (CIS Benchmarks), audit de conformité RGPD/CNIL et incident response. Approche rigoureuse, documentation complète, impact opérationnel.",
   "sectionOrder": [
@@ -1155,18 +1156,51 @@ const persistData = (next) => {
           </h1>
         ), { marginBottom: '10px' })}
         {fd('photo', (
-          <img
-            src="/photo-samuel.jpg"
-            alt="Samuel MEYISSO"
-            style={{
-              width: '220px', height: '295px',
-              objectFit: 'cover',
-              borderRadius: '14px',
-              border: '3px solid #00ff88',
-              boxShadow: '0 0 20px rgba(0, 255, 136, 0.45), 0 0 50px rgba(0, 255, 136, 0.15), inset 0 0 0 4px #0a0a0a',
-              background: '#0f0f0f',
-            }}
-          />
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <img
+              src={data.photo || '/photo-samuel.jpg'}
+              alt="Samuel MEYISSO"
+              style={{
+                width: '220px', height: '295px',
+                objectFit: 'cover',
+                borderRadius: '14px',
+                border: '3px solid #00ff88',
+                boxShadow: '0 0 20px rgba(0, 255, 136, 0.45), 0 0 50px rgba(0, 255, 136, 0.15), inset 0 0 0 4px #0a0a0a',
+                background: '#0f0f0f',
+                display: 'block',
+              }}
+            />
+            {A && (
+              <>
+                <button
+                  onClick={() => document.getElementById('photo-file-input')?.click()}
+                  title="Changer la photo"
+                  style={{
+                    position: 'absolute', top: '8px', right: '8px',
+                    width: '34px', height: '34px', borderRadius: '50%',
+                    background: '#00ff88', color: '#000', border: 'none',
+                    fontSize: '1rem', cursor: 'pointer', zIndex: 5,
+                    boxShadow: '0 0 12px rgba(0,255,136,0.6)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}
+                >&#9998;</button>
+                <input
+                  id="photo-file-input"
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={e => {
+                    const file = e.target.files && e.target.files[0]
+                    if (!file) return
+                    const reader = new FileReader()
+                    reader.onload = ev => up('photo', ev.target.result)
+                    reader.readAsDataURL(file)
+                    e.target.value = ''
+                  }}
+                />
+              </>
+            )}
+          </div>
         ), { display: 'inline-block', marginBottom: '18px' })}
         {fd('subtitle', (
           <div style={{ fontSize: '1.05rem', color: '#00aaff', fontWeight: 'bold' }}>
