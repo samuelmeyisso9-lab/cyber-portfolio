@@ -20,9 +20,9 @@ const INIT = {
     "home",
     "skills",
     "projets",
-    "soc",
     "contact"
   ],
+  "backgrounds": {},
   "positions": {
     "desc": {
       "x": 196,
@@ -861,6 +861,8 @@ export default function App() {
       if (stored.desc === LEGACY.desc) merged.desc = INIT.desc
       if (stored.subtitle === LEGACY.subtitle) merged.subtitle = INIT.subtitle
       if (stored.badge === LEGACY.badge || String(stored.badge || '').includes('septembre 2026')) merged.badge = INIT.badge
+      if (!merged.backgrounds || typeof merged.backgrounds !== 'object') merged.backgrounds = {}
+      if (Array.isArray(merged.sectionOrder)) merged.sectionOrder = merged.sectionOrder.filter(x => x !== 'soc')
       const langs = Array.isArray(merged.langs) ? merged.langs : []
       if (!langs.some(l => String(l.lang).toLowerCase() === 'allemand')) {
         merged.langs = [...langs, { id: 'l' + (langs.reduce((m, l) => Math.max(m, parseInt(String(l.id).replace(/\D/g, '') || 0, 10)), 0) + 1), lang: 'Allemand', level: 'A1' }]
@@ -1185,7 +1187,6 @@ const persistData = (next) => {
         ), { marginBottom: '32px' })}
         {!A && fd('cta-buttons', (
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <button style={S.btnG} onClick={() => setSection('soc')}>🖥️ SOC Live</button>
             <button style={S.btnO} onClick={() => setSection('projets')}>📁 Projets</button>
             <button style={S.btnO} onClick={() => setSection('contact')}>📡 Contact</button>
           </div>
@@ -1280,7 +1281,6 @@ const persistData = (next) => {
     if (id === 'projets') return (
       <div style={{ ...S.section, position: 'relative' }}>
         {fd('projets-title', <h2 style={S.h2}>📁 Projets Cybersécurité 2025–2026</h2>, { marginBottom: '26px' })}
-        <PreloadDocs files={data.projects.filter(p => p.file).map(p => p.file)} />
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={makeDragEnd('projects')}>
           <SortableContext items={data.projects.map(p => p.id)} strategy={verticalListSortingStrategy}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
@@ -1365,27 +1365,6 @@ const persistData = (next) => {
       </div>
     )
 
-    if (id === 'soc') return (
-      <div style={{ ...S.section, position: 'relative' }}>
-        {fd('soc-title', <h2 style={S.h2}>🖥️ SOC Dashboard — Live Demo</h2>, { marginBottom: '26px' })}
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '20px' }}>
-          {fd('soc-feed', <LogFeed />)}
-          {fd('soc-attack', (
-            <div style={S.card}>
-              <div style={S.logH}>⚡ SIMULATION PENTEST</div>
-              <button onClick={runAttack} disabled={attackRunning} style={{ ...S.btnG, opacity: attackRunning ? 0.5 : 1, marginBottom: '12px', width: '100%' }}>
-                {attackRunning ? '⏳ Attaque en cours...' : '🚀 Lancer la simulation'}
-              </button>
-              <div style={S.logBox}>
-                {attackLog.length === 0 && <div style={{ color: '#2a2a2a', fontStyle: 'italic' }}>En attente...</div>}
-                {attackLog.map((l, i) => <div key={i} style={{ ...S.logLine, color: l.includes('🔴') ? '#ff4444' : l.includes('✅') ? '#00ff88' : '#aaa' }}>{l}</div>)}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-
     if (id === 'contact') return (
       <div style={{ ...S.section, position: 'relative', textAlign: 'center' }}>
         {fd('contact-title', <h2 style={S.h2}>📡 Contactez-moi</h2>, { marginBottom: '26px' })}
@@ -1443,6 +1422,7 @@ const persistData = (next) => {
             <button onClick={() => setShowFileManager(true)} style={S.aBtn}>📁 Fichiers</button>
             <button onClick={() => { const id = 'p' + Date.now(); up('projects', [...data.projects, { id, title: '🆕 Nouveau Projet', desc: 'Description...', tags: 'Tag1 · Tag2' }]); lastAddedRef.current = { key: 'projects', id } }} style={S.aBtn}>+ Projet</button>
             <button onClick={() => { const id = 's' + Date.now(); up('skills', [...data.skills, { id, name: 'Nouvelle Compétence', level: 50 }]); lastAddedRef.current = { key: 'skills', id } }} style={S.aBtn}>+ Skill</button>
+            <button onClick={() => { const f = window.prompt('Image de fond pour cet onglet (nom dans public/, ex: bg-home.jpg) :', (data.backgrounds&&data.backgrounds[section]) || ''); if (f !== null) { const v=f.trim(); up('backgrounds', { ...(data.backgrounds||{}), [section]: v ? (v.startsWith('/')?v:'/'+v) : null }) } }} style={{ ...S.aBtn, borderColor: '#00aaff33', color: '#00aaff' }}>Fond</button>
             <button onClick={resetPositions} style={{ ...S.aBtn, borderColor: '#ffaa0033', color: '#ffaa00' }}>📍 Reset positions</button>
             <button onClick={undo} style={{ ...S.aBtn, borderColor: '#00aaff33', color: '#00aaff' }}>⟲ Annuler{undoRef.current.length ? ` (${undoRef.current.length})` : ''}</button>
             <button onClick={redo} style={{ ...S.aBtn, borderColor: '#ffaa0033', color: '#ffaa00' }}>⟳ Refaire{redoRef.current.length ? ` (${redoRef.current.length})` : ''}</button>
@@ -1468,8 +1448,13 @@ const persistData = (next) => {
         </div>
       </nav>
 
-      <main style={S.main}>
-        {renderSection(section)}
+      <main style={{ ...S.main, position: 'relative', minHeight: '60vh' }}>
+        {data.backgrounds && data.backgrounds[section] && (
+          <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+            backgroundImage: `url(${data.backgrounds[section]})`, backgroundSize: 'cover',
+            backgroundPosition: 'center', opacity: 0.14, filter: 'grayscale(0.2) blur(0.3px)' }} />
+        )}
+        <div style={{ position: 'relative', zIndex: 1 }}>{renderSection(section)}</div>
       </main>
 
       <footer style={{ textAlign: 'center', color: '#1a1a1a', padding: '20px', borderTop: '1px solid #0f0f0f', fontSize: '0.82rem', marginBottom: A ? '60px' : '0' }}>
