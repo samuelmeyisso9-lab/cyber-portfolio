@@ -12,10 +12,10 @@ const API_URL = import.meta.env.PROD ? '' : import.meta.env.VITE_API_URL || 'htt
 const KEY = 'portfolio_samuel_v4'
 
 const INIT = {
-  "badge": "🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès maintenant",
+  "badge": "Cybersécurité · Systèmes & Réseaux · Développement de solutions numériques\n\nDisponible immédiatement – Île-de-France",
   "name": "Samuel MEYISSO",
-  "subtitle": "Administrateur d'infrastructure sécurisée· SOC Junior · Hacking Éthique · Analyste Cybersécurité ",
-  "desc": "Étudiant en Bachelor Cybersécurité & Hacking Éthique à l'École 89. Spécialisé en administration infrastructure sécurisée, déploiement et configuration de solutions SIEM/EDR (Wazuh, CrowdStrike Falcon), durcissement Microsoft 365 (CIS Benchmarks), audit de conformité RGPD/CNIL et incident response. Approche rigoureuse, documentation complète, impact opérationnel.",
+  "subtitle": "Cybersécurité · Systèmes & Réseaux · Développement de solutions numériques",
+  "desc": "Étudiant en deuxième année de Bachelor Cybersécurité & Hacking Éthique à l’École 89 – Deep Tech, je développe un profil polyvalent à la croisée de la cybersécurité, de l’administration des infrastructures informatiques et de la conception de solutions numériques.\n\nLors de mon stage chez RIGHT IT en tant que SOC Analyst, j’ai acquis une expérience pratique en audit de sécurité Microsoft 365, analyse de risques, déploiement et supervision de Wazuh SIEM, utilisation de CrowdStrike Falcon et analyse de scénarios de réponse aux incidents.\n\nMa formation et mes projets m’ont également permis de travailler sur des environnements Windows, Windows Server, Active Directory et Linux, la configuration de réseaux, le durcissement des systèmes, l’analyse de vulnérabilités et la documentation technique.\n\nEn parallèle, je m'intéresse à la conception de solutions numériques, aux technologies web, à l’intelligence artificielle et à l’automatisation. J’explore notamment le développement de projets et d’agents intelligents pour répondre à des besoins concrets.\n\nCurieux, rigoureux et persévérant, j’aime comprendre les problématiques techniques, concevoir des solutions adaptées et intégrer la sécurité dès leur conception.\n\nJe recherche actuellement une alternance dans les domaines de la cybersécurité, des systèmes et infrastructures, ou de la conception et du développement de solutions numériques.",
   "sectionOrder": [
     "home",
     "skills",
@@ -90,8 +90,8 @@ const INIT = {
       "s": 1
     },
     "badge": {
-      "x": 0,
-      "y": 0,
+      "x": 9,
+      "y": 15,
       "w": null,
       "s": 1
     },
@@ -862,6 +862,18 @@ export default function App() {
       if (stored.desc === LEGACY.desc) merged.desc = INIT.desc
       if (stored.subtitle === LEGACY.subtitle) merged.subtitle = INIT.subtitle
       if (stored.badge === LEGACY.badge || String(stored.badge || '').includes('septembre 2026')) merged.badge = INIT.badge
+      const LEGACY_BADGES = [
+        "🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès maintenant",
+        "🟢 DISPONIBLE pour une alternance Cybersécurité/SOC Junior · dès la rentrée septembre 2026",
+        "🟢 DISPONIBLE pour une alternance Administrateur d'infrastructure sécurisée · dès maintenant",
+      ]
+      if (LEGACY_BADGES.includes(String(stored.badge || ''))) merged.badge = INIT.badge
+      const LEGACY_SUBTITLES = [
+        "Administrateur d'infrastructure sécurisée· SOC Junior · Hacking Éthique · Analyste Cybersécurité",
+        "Administrateur d'infrastructure sécurisée · Analyste Cybersécurité · SOC Junior · Hacking Éthique",
+        "Administrateur d'infrastructure sécurisée· SOC Junior · Hacking Éthique · Analyste Cybersécurité ",
+      ]
+      if (LEGACY_SUBTITLES.includes(String(stored.subtitle || ''))) merged.subtitle = INIT.subtitle
       if (!merged.backgrounds || typeof merged.backgrounds !== 'object') merged.backgrounds = {}
       if (merged.positions && merged.positions.photo) { merged.positions.photo = { x: 0, y: 0, w: null, s: 1 } }
       if (Array.isArray(merged.sectionOrder)) merged.sectionOrder = merged.sectionOrder.filter(x => x !== 'soc')
