@@ -868,6 +868,11 @@ export default function App() {
         "🟢 DISPONIBLE pour une alternance Administrateur d'infrastructure sécurisée · dès maintenant",
       ]
       if (LEGACY_BADGES.includes(String(stored.badge || ''))) merged.badge = INIT.badge
+      const LEGACY_DESCS = [
+        "Étudiant en Bachelor Cybersécurité à l'École 89. Spécialisé en sécurité offensive & défensive, analyse réseau, détection de vulnérabilités et tests d'intrusion (SQLi, OWASP).",
+        "Étudiant en Bachelor Cybersécurité & Hacking Éthique à l'École 89. Spécialisé en administration infrastructure sécurisée, déploiement et configuration de solutions SIEM/EDR (Wazuh, CrowdStrike Falcon), durcissement Microsoft 365 (CIS Benchmarks), audit de conformité RGPD/CNIL et incident response. Approche rigoureuse, documentation complète, impact opérationnel.",
+      ]
+      if (LEGACY_DESCS.includes(String(stored.desc || '')) || String(stored.desc || '').includes('incident response') || String(stored.desc || '').includes('Approche rigoureuse, documentation complète')) merged.desc = INIT.desc
       const LEGACY_SUBTITLES = [
         "Administrateur d'infrastructure sécurisée· SOC Junior · Hacking Éthique · Analyste Cybersécurité",
         "Administrateur d'infrastructure sécurisée · Analyste Cybersécurité · SOC Junior · Hacking Éthique",
