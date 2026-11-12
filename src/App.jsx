@@ -881,7 +881,6 @@ export default function App() {
       if (LEGACY_SUBTITLES.includes(String(stored.subtitle || ''))) merged.subtitle = INIT.subtitle
       if (!merged.backgrounds || typeof merged.backgrounds !== 'object') merged.backgrounds = {}
       if (merged.positions && merged.positions.photo) { merged.positions.photo = { x: 0, y: 0, w: null, s: 1 } }
-      if (typeof merged.photo === 'string' && merged.photo.startsWith('data:')) merged.photo = INIT.photo
       if (Array.isArray(merged.sectionOrder)) merged.sectionOrder = merged.sectionOrder.filter(x => x !== 'soc')
       const langs = Array.isArray(merged.langs) ? merged.langs : []
       if (!langs.some(l => String(l.lang).toLowerCase() === 'allemand')) {
