@@ -795,32 +795,6 @@ function CyberBackground() {
   )
 }
 
-function NeonSmile() {
-  const [show, setShow] = useState(false)
-  const [pos, setPos] = useState({ x: 50, y: 40 })
-  useEffect(() => {
-    const tick = () => {
-      setPos({ x: 15 + Math.random() * 70, y: 20 + Math.random() * 60 })
-      setShow(true)
-      setTimeout(() => setShow(false), 1400)
-    }
-    const id = setInterval(tick, 5000)
-    const t = setTimeout(tick, 2000)
-    return () => { clearInterval(id); clearTimeout(t) }
-  }, [])
-  if (!show) return null
-  return (
-    <div style={{
-      position: 'fixed', left: pos.x + '%', top: pos.y + '%',
-      transform: 'translate(-50%, -50%)',
-      fontSize: '3.2rem', color: '#00ff88', pointerEvents: 'none',
-      zIndex: 99997, animation: 'neonSmileIn 1.4s ease-in-out',
-      textShadow: '0 0 10px #00ff88, 0 0 22px #00ff88, 0 0 44px #00aaff, 0 0 60px #00ff88',
-      filter: 'drop-shadow(0 0 6px #00ff88)',
-    }}>😊</div>
-  )
-}
-
 function CustomCursor() {
   const bolt = useRef(null)
   const [hovering, setHovering] = useState(false)
@@ -1199,10 +1173,7 @@ const persistData = (next) => {
                : <TypeWriter text={data.name} />}
           </h1>
         ), { marginBottom: '10px' })}
-        <div style={{ display: 'inline-block', marginBottom: '18px', position: 'relative', animation: 'photoGlitch 2s infinite, photoDisintegrate 8s infinite' }}>
-          <div style={{ position: 'absolute', inset: 0, zIndex: 3, pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'show404 8s infinite', opacity: 0 }}>
-            <span style={{ fontFamily: 'monospace', fontWeight: 'bold', fontSize: '2.6rem', color: '#ff4444', textShadow: '0 0 8px #ff4444, 0 0 20px #ff4444, 0 0 40px #ff0000', letterSpacing: '2px' }}>404</span>
-          </div>
+        <div style={{ display: 'inline-block', marginBottom: '18px', position: 'relative' }}>
           <img
             src={data.photo || '/photo-samuel.jpg'}
             alt="Samuel MEYISSO"
@@ -1504,7 +1475,6 @@ const persistData = (next) => {
     <div style={S.root}>
       <CyberBackground />
       <CustomCursor />
-      <NeonSmile />
       {showModal && <PwModal onLogin={handleLogin} onClose={() => setShowModal(false)} error={loginError} form={loginForm} setForm={setLoginForm} />}
       {showFileManager && <FileManager onClose={() => setShowFileManager(false)} />}
       {showDashboard && <AdminDashboard logs={liveLogs} onClose={() => setShowDashboard(false)} />}
@@ -1570,34 +1540,6 @@ const persistData = (next) => {
         ::-webkit-scrollbar-thumb { background: #00ff8822; }
         [contenteditable]:focus { outline: 1px solid #00ff88 !important; background: #0a140a !important; border-radius: 3px; }
         
-        @keyframes photoGlitch {
-          0%, 82%, 100% { transform: translate(0,0) skewX(0deg); filter: none; opacity: 1; clip-path: inset(0 0 0 0); }
-          83% { transform: translate(-4px, 1px) skewX(-3deg); filter: hue-rotate(90deg) brightness(1.5); opacity: 0.85; clip-path: inset(2% 0 60% 0); }
-          84% { transform: translate(4px, -2px) skewX(3deg); filter: hue-rotate(-90deg) brightness(1.7); opacity: 0.9; clip-path: inset(50% 0 10% 0); }
-          85% { transform: translate(-2px, 2px) skewX(-1deg); filter: hue-rotate(45deg); opacity: 0.8; clip-path: inset(10% 0 5% 0); }
-          86% { transform: translate(2px, -1px) skewX(1deg); filter: brightness(1.4); opacity: 0.95; clip-path: inset(0 0 0 0); }
-          87% { transform: translate(-1px, 1px); filter: hue-rotate(-45deg); opacity: 0.85; }
-          88% { transform: translate(1px, -1px); opacity: 0.9; }
-          89% { transform: translate(0,0) skewX(0deg); filter: none; opacity: 1; }
-        }
-        @keyframes photoDisintegrate {
-          0%, 40%, 100% { filter: none; transform: scale(1); opacity: 1; }
-          45% { filter: contrast(2) brightness(1.4) saturate(1.5); transform: scale(1.02); opacity: 0.95; }
-          55% { filter: blur(1px) contrast(2.5) brightness(1.6) saturate(0); transform: scale(0.98) skewX(4deg); opacity: 0.7; }
-          62% { filter: blur(3px) contrast(3) brightness(2) saturate(0); transform: scale(0.92) skewX(-5deg); opacity: 0.4; }
-          68% { filter: blur(6px) brightness(2.2) saturate(0); transform: scale(0.85) skewX(6deg); opacity: 0.15; }
-          72% { filter: blur(10px) brightness(2.5); transform: scale(0.8); opacity: 0; }
-          88% { filter: blur(10px) brightness(2.5); transform: scale(0.8); opacity: 0; }
-          92% { filter: blur(4px) brightness(1.6); transform: scale(0.92); opacity: 0.3; }
-          96% { filter: blur(1px) brightness(1.2); transform: scale(0.98); opacity: 0.7; }
-        }
-        @keyframes show404 {
-          0%, 52%, 88%, 100% { opacity: 0; transform: translate(-50%,-50%) scale(0.6); }
-          58% { opacity: 1; transform: translate(-50%,-50%) scale(1.2); }
-          62% { opacity: 1; transform: translate(-50%,-50%) scale(1); }
-          72% { opacity: 1; transform: translate(-50%,-50%) scale(1.05); }
-          80% { opacity: 0.6; transform: translate(-50%,-50%) scale(0.9); }
-        }
         @keyframes holoFlicker {
           0%, 88%, 100% { transform: translate(0,0) skewX(0deg); filter: none; opacity: 1; }
           89% { transform: translate(-3px, 1px) skewX(-2deg); filter: hue-rotate(90deg) brightness(1.4); opacity: 0.85; }
