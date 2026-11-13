@@ -1186,9 +1186,9 @@ const persistData = (next) => {
             }}
           />
           {/* RGB Split - canal rouge decale a gauche */}
-          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(5) hue-rotate(-30deg)', transform: 'translateX(-4px)', mixBlendMode: 'multiply', opacity: 0, zIndex: 1, pointerEvents: 'none', animation: 'rgbBurst 5s infinite', WebkitMaskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)', maskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)' }} />
+          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(5) hue-rotate(-30deg)', transform: 'translateX(-4px)', mixBlendMode: 'multiply', opacity: 0, zIndex: 1, pointerEvents: 'none', animation: 'rgbBurst 5s infinite', WebkitMaskImage: 'radial-gradient(ellipse 75% 80% at 50% 45%, black 45%, transparent 90%)', maskImage: 'radial-gradient(ellipse 75% 80% at 50% 45%, black 45%, transparent 90%)' }} />
           {/* RGB Split - canal cyan decale a droite */}
-          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(5) hue-rotate(160deg)', transform: 'translateX(4px)', mixBlendMode: 'multiply', opacity: 0, zIndex: 1, pointerEvents: 'none', animation: 'rgbBurst 5s infinite 0.15s', WebkitMaskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)', maskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)' }} />
+          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(5) hue-rotate(160deg)', transform: 'translateX(4px)', mixBlendMode: 'multiply', opacity: 0, zIndex: 1, pointerEvents: 'none', animation: 'rgbBurst 5s infinite 0.15s', WebkitMaskImage: 'radial-gradient(ellipse 75% 80% at 50% 45%, black 45%, transparent 90%)', maskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)' }} />
           {/* Scanlines CRT */}
           <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.35) 0px, rgba(0,0,0,0.35) 1px, transparent 1px, transparent 3px)', mixBlendMode: 'multiply', opacity: 0, animation: 'scanBurst 5s infinite', WebkitMaskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)', maskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)' }} />
           {A && (
@@ -1544,20 +1544,21 @@ const persistData = (next) => {
         [contenteditable]:focus { outline: 1px solid #00ff88 !important; background: #0a140a !important; border-radius: 3px; }
         
         @keyframes rgbBurst {
-          0%, 8%, 100% { transform: translateX(-4px); opacity: 0; }
-          1% { transform: translateX(-9px); opacity: 0.95; }
-          2% { transform: translateX(-2px); opacity: 0.7; }
-          3% { transform: translateX(-7px); opacity: 1; }
-          4% { transform: translateX(-3px); opacity: 0.85; }
-          5% { transform: translateX(-5px); opacity: 0.95; }
-          6% { transform: translateX(-2px); opacity: 0.6; }
-          7% { transform: translateX(-4px); opacity: 0.3; }
+          0%, 70%, 100% { transform: translateX(-4px); opacity: 0; }
+          1% { transform: translateX(-10px) skewX(-2deg); opacity: 1; }
+          5% { transform: translateX(-3px) skewX(1deg); opacity: 0.85; }
+          10% { transform: translateX(-8px) skewX(-1deg); opacity: 1; }
+          15% { transform: translateX(-2px); opacity: 0.7; }
+          20% { transform: translateX(-6px); opacity: 0.9; }
+          25% { transform: translateX(-4px); opacity: 0.5; }
+          30% { transform: translateX(-3px); opacity: 0.2; }
         }
         @keyframes scanBurst {
-          0%, 8%, 100% { opacity: 0; }
-          1% { opacity: 0.7; }
-          4% { opacity: 0.5; }
-          7% { opacity: 0.2; }
+          0%, 70%, 100% { opacity: 0; }
+          1% { opacity: 0.8; }
+          10% { opacity: 0.6; }
+          20% { opacity: 0.4; }
+          30% { opacity: 0.15; }
         }
         @keyframes scanDrift {
           0% { background-position: 0 0; }
