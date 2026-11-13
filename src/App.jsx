@@ -1520,7 +1520,34 @@ const persistData = (next) => {
             <button onClick={() => setShowFileManager(true)} style={S.aBtn}>📁 Fichiers</button>
             <button onClick={() => { const id = 'p' + Date.now(); up('projects', [...data.projects, { id, title: '🆕 Nouveau Projet', desc: 'Description...', tags: 'Tag1 · Tag2' }]); lastAddedRef.current = { key: 'projects', id } }} style={S.aBtn}>+ Projet</button>
             <button onClick={() => { const id = 's' + Date.now(); up('skills', [...data.skills, { id, name: 'Nouvelle Compétence', level: 50 }]); lastAddedRef.current = { key: 'skills', id } }} style={S.aBtn}>+ Skill</button>
-            <button onClick={() => { const f = window.prompt('Image de fond pour cet onglet (nom dans public/, ex: bg-home.jpg) :', (data.backgrounds&&data.backgrounds[section]) || ''); if (f !== null) { const v=f.trim(); up('backgrounds', { ...(data.backgrounds||{}), [section]: v ? (v.startsWith('/')?v:'/'+v) : null }) } }} style={{ ...S.aBtn, borderColor: '#00aaff33', color: '#00aaff' }}>Fond</button>
+            <button onClick={() => document.getElementById('bg-file-input')?.click()} title="Changer le fond d'ecran de cet onglet" style={{ ...S.aBtn, borderColor: '#00aaff33', color: '#00aaff', fontSize: '1rem', padding: '7px 11px' }}>&#9998;</button>
+            {data.backgrounds && data.backgrounds[section] && (
+              <button onClick={() => up('backgrounds', { ...(data.backgrounds||{}), [section]: null })} title="Retirer le fond" style={{ ...S.aBtn, borderColor: '#ff444433', color: '#ff4444', fontSize: '0.9rem', padding: '7px 10px' }}>x</button>
+            )}
+            <input id="bg-file-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
+              const file = e.target.files && e.target.files[0]
+              if (!file) return
+              const reader = new FileReader()
+              reader.onload = ev => {
+                const img = new Image()
+                img.onload = () => {
+                  const MAX = 1920
+                  const ratio = Math.min(MAX / img.width, MAX / img.height, 1)
+                  const w = Math.round(img.width * ratio)
+                  const h = Math.round(img.height * ratio)
+                  const canvas = document.createElement('canvas')
+                  canvas.width = w; canvas.height = h
+                  const ctx = canvas.getContext('2d')
+                  ctx.imageSmoothingEnabled = true
+                  ctx.imageSmoothingQuality = 'high'
+                  ctx.drawImage(img, 0, 0, w, h)
+                  up('backgrounds', { ...(data.backgrounds||{}), [section]: canvas.toDataURL('image/jpeg', 0.78) })
+                }
+                img.src = ev.target.result
+              }
+              reader.readAsDataURL(file)
+              e.target.value = ''
+            }} />
             <button onClick={resetPositions} style={{ ...S.aBtn, borderColor: '#ffaa0033', color: '#ffaa00' }}>📍 Reset positions</button>
             <button onClick={undo} style={{ ...S.aBtn, borderColor: '#00aaff33', color: '#00aaff' }}>⟲ Annuler{undoRef.current.length ? ` (${undoRef.current.length})` : ''}</button>
             <button onClick={redo} style={{ ...S.aBtn, borderColor: '#ffaa0033', color: '#ffaa00' }}>⟳ Refaire{redoRef.current.length ? ` (${redoRef.current.length})` : ''}</button>
@@ -1546,13 +1573,13 @@ const persistData = (next) => {
         </div>
       </nav>
 
-      <main style={{ ...S.main, position: 'relative', minHeight: '60vh' }}>
-        {data.backgrounds && data.backgrounds[section] && (
-          <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-            backgroundImage: `url(${data.backgrounds[section]})`, backgroundSize: 'cover',
-            backgroundPosition: 'center', opacity: 0.14, filter: 'grayscale(0.2) blur(0.3px)' }} />
-        )}
-        <div style={{ position: 'relative', zIndex: 1 }}>{renderSection(section)}</div>
+      {data.backgrounds && data.backgrounds[section] && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
+          backgroundImage: `url(${data.backgrounds[section]})`, backgroundSize: 'cover',
+          backgroundPosition: 'center', opacity: 0.16, filter: 'grayscale(0.15) blur(0.4px)' }} />
+      )}
+      <main style={{ ...S.main, position: 'relative', zIndex: 1, minHeight: '60vh' }}>
+        {renderSection(section)}
       </main>
 
       <footer style={{ textAlign: 'center', color: '#1a1a1a', padding: '20px', borderTop: '1px solid #0f0f0f', fontSize: '0.82rem', marginBottom: A ? '60px' : '0' }}>
