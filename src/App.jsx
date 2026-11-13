@@ -1191,10 +1191,12 @@ const persistData = (next) => {
               position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2,
               clipPath: `inset(${i*20}% 0 ${(4-i)*20}% 0)`,
               animation: `sliceGlitch 5s infinite`,
-              animationDelay: (i % 2 === 0 ? '0s' : '0.05s'),
+              animationDelay: (i % 2 === 0 ? '0s' : '0.04s'),
+              WebkitMaskImage: 'radial-gradient(ellipse 60% 72% at 50% 44%, black 30%, transparent 82%)',
+              maskImage: 'radial-gradient(ellipse 60% 72% at 50% 44%, black 30%, transparent 82%)',
             }}>
-              <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'cover', transform: i % 2 === 0 ? 'translateX(-6px)' : 'translateX(6px)', filter: i % 2 === 0 ? 'brightness(1.3) saturate(1.4)' : 'brightness(1.2) saturate(1.3) hue-rotate(180deg)' }} />
-              <div style={{ position: 'absolute', inset: 0, background: i % 2 === 0 ? 'rgba(0,255,136,0.18)' : 'rgba(0,170,255,0.18)', mixBlendMode: 'screen' }} />
+              <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'cover', transform: i % 2 === 0 ? 'translateX(-14px)' : 'translateX(14px)', filter: i % 2 === 0 ? 'brightness(1.5) saturate(1.8) contrast(1.2)' : 'brightness(1.4) saturate(1.7) contrast(1.2) hue-rotate(180deg)' }} />
+              <div style={{ position: 'absolute', inset: 0, background: i % 2 === 0 ? 'rgba(0,255,136,0.32)' : 'rgba(0,170,255,0.32)', mixBlendMode: 'screen' }} />
             </div>
           ))}
           {/* Scanlines CRT subtiles */}
@@ -1562,20 +1564,20 @@ const persistData = (next) => {
           89% { opacity: 0.1; }
         }
         @keyframes sliceGlitch {
-          0%, 84%, 100% { transform: translateX(0); opacity: 0; }
-          85% { transform: translateX(-12px); opacity: 1; }
-          86% { transform: translateX(10px); opacity: 0.9; }
-          87% { transform: translateX(-8px); opacity: 1; }
-          88% { transform: translateX(6px); opacity: 0.85; }
-          89% { transform: translateX(-4px); opacity: 0.6; }
-          90% { transform: translateX(2px); opacity: 0.3; }
-          91% { transform: translateX(0); opacity: 0; }
+          0%, 78%, 100% { transform: translateX(0); opacity: 0; }
+          79% { transform: translateX(-18px); opacity: 1; }
+          80% { transform: translateX(16px); opacity: 0.95; }
+          81% { transform: translateX(-12px); opacity: 1; }
+          82% { transform: translateX(10px); opacity: 0.9; }
+          83% { transform: translateX(-6px); opacity: 0.7; }
+          84% { transform: translateX(4px); opacity: 0.4; }
+          85% { transform: translateX(0); opacity: 0; }
         }
         @keyframes scanBurst {
-          0%, 84%, 100% { opacity: 0; }
-          85% { opacity: 0.5; }
-          88% { opacity: 0.25; }
-          91% { opacity: 0; }
+          0%, 78%, 100% { opacity: 0; }
+          79% { opacity: 0.7; }
+          82% { opacity: 0.45; }
+          85% { opacity: 0.15; }
         }
         @keyframes holoFlicker {
           0%, 88%, 100% { transform: translate(0,0) skewX(0deg); filter: none; opacity: 1; }
