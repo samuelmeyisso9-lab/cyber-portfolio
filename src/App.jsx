@@ -1185,9 +1185,12 @@ const persistData = (next) => {
               imageRendering: 'auto',
             }}
           />
+          {/* Chromatic aberration (TV glitch) */}
+          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1.2) saturate(2)', transform: 'translateX(-5px)', mixBlendMode: 'screen', opacity: 0, pointerEvents: 'none', zIndex: 1, animation: 'chromaBurst 5s infinite' }} />
+          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1.2) saturate(2) hue-rotate(180deg)', transform: 'translateX(5px)', mixBlendMode: 'screen', opacity: 0, pointerEvents: 'none', zIndex: 1, animation: 'chromaBurst 5s infinite 0.05s' }} />
           {/* Slicer glitch - fines tranches horizontales, couleurs RGB + portfolio */}
           {Array.from({ length: 14 }).map((_, i) => {
-            const colors = ['#ff3b3b', '#00ff88', '#00aaff', '#a855f7', '#888888', '#ff3b3b', '#00ff88', '#00aaff', '#a855f7', '#888888', '#ff3b3b', '#00ff88', '#00aaff', '#a855f7']
+            const colors = ['#ff0040', '#00ff88', '#00aaff', '#ff00ff', '#ffff00', '#00ffff', '#ff8800', '#8b5cf6', '#ff0040', '#00ff88', '#00aaff', '#ff00ff', '#ffff00', '#00ffff']
             const col = colors[i]
             const top = (i / 14 * 100).toFixed(2)
             const bottom = ((13 - i) / 14 * 100).toFixed(2)
@@ -1202,8 +1205,8 @@ const persistData = (next) => {
                 WebkitMaskImage: 'radial-gradient(ellipse 62% 74% at 50% 44%, black 32%, transparent 84%)',
                 maskImage: 'radial-gradient(ellipse 62% 74% at 50% 44%, black 32%, transparent 84%)',
               }}>
-                <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'cover', transform: `translateX(${dir * off}px)`, filter: 'brightness(1.4) saturate(1.6) contrast(1.15)' }} />
-                <div style={{ position: 'absolute', inset: 0, background: col, mixBlendMode: 'screen', opacity: 0.35 }} />
+                <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'cover', transform: `translateX(${dir * (off + 6)}px)`, filter: 'brightness(1.4) saturate(1.6) contrast(1.15)' }} />
+                <div style={{ position: 'absolute', inset: 0, background: col, mixBlendMode: 'screen', opacity: 0.5 }} />
               </div>
             )
           })}
@@ -1570,6 +1573,14 @@ const persistData = (next) => {
           83% { opacity: 0.6; }
           86% { opacity: 0.35; }
           89% { opacity: 0.1; }
+        }
+        @keyframes chromaBurst {
+          0%, 76%, 100% { opacity: 0; transform: translateX(-5px); }
+          77% { opacity: 0.7; transform: translateX(-10px); }
+          79% { opacity: 0.5; transform: translateX(-3px); }
+          81% { opacity: 0.8; transform: translateX(-8px); }
+          83% { opacity: 0.4; transform: translateX(-2px); }
+          85% { opacity: 0; transform: translateX(-5px); }
         }
         @keyframes sliceGlitch {
           0%, 76%, 100% { transform: translateX(0); opacity: 0; }
