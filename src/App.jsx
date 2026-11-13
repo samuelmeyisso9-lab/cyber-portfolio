@@ -280,6 +280,11 @@ const INIT = {
   ],
   "langs": [
     {
+      "id": "l0",
+      "lang": "Français",
+      "level": "Langue maternelle"
+    },
+    {
       "id": "l1",
       "lang": "Anglais",
       "level": "B2"
@@ -883,6 +888,9 @@ export default function App() {
       if (merged.positions && merged.positions.photo) { merged.positions.photo = { x: 0, y: 0, w: null, s: 1 } }
       if (Array.isArray(merged.sectionOrder)) merged.sectionOrder = merged.sectionOrder.filter(x => x !== 'soc')
       const langs = Array.isArray(merged.langs) ? merged.langs : []
+      if (!langs.some(l => String(l.lang).toLowerCase() === 'français' || String(l.lang).toLowerCase() === 'francais')) {
+        merged.langs = [{ id: 'l0', lang: 'Français', level: 'Langue maternelle' }, ...langs]
+      }
       if (!langs.some(l => String(l.lang).toLowerCase() === 'allemand')) {
         merged.langs = [...langs, { id: 'l' + (langs.reduce((m, l) => Math.max(m, parseInt(String(l.id).replace(/\D/g, '') || 0, 10)), 0) + 1), lang: 'Allemand', level: 'A1' }]
       }
