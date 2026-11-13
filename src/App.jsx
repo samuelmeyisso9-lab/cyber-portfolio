@@ -917,6 +917,7 @@ export default function App() {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 
   const [token, setToken] = useState(localStorage.getItem('admin_token'))
+  const [imgPreview, setImgPreview] = useState(null)
   const undoRef = useRef([])
   const redoRef = useRef([])
   const cutRef = useRef(null)
@@ -1255,10 +1256,7 @@ const persistData = (next) => {
                       ctx.imageSmoothingEnabled = true
                       ctx.imageSmoothingQuality = 'high'
                       ctx.drawImage(img, 0, 0, w, h)
-                      const dataUrl = canvas.toDataURL('image/jpeg', 0.88)
-                      const newData = { ...data, photo: dataUrl }
-                      up('photo', dataUrl)
-                      save(newData)
+                      setImgPreview({ dataUrl: canvas.toDataURL('image/jpeg', 0.88), target: 'photo' })
                     }
                     img.src = ev.target.result
                   }
@@ -1510,6 +1508,29 @@ const persistData = (next) => {
       <CyberBackground />
       <CustomCursor />
       {showModal && <PwModal onLogin={handleLogin} onClose={() => setShowModal(false)} error={loginError} form={loginForm} setForm={setLoginForm} />}
+      {imgPreview && (
+        <div style={{ position: 'fixed', inset: 0, background: '#000000ee', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10001, padding: '20px' }}>
+          <div style={{ background: '#0f0f0f', border: '1px solid #00ff88', borderRadius: '16px', padding: '24px', maxWidth: '90vw', maxHeight: '90vh', display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+            <div style={{ color: '#00ff88', fontSize: '1.1rem', fontWeight: 'bold' }}>Apercu de l'image</div>
+            <img src={imgPreview.dataUrl} alt="preview" style={{ maxWidth: '70vw', maxHeight: '60vh', objectFit: 'contain', borderRadius: '10px', border: '2px solid #00ff8844' }} />
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button onClick={() => {
+                if (imgPreview.target === 'photo') {
+                  const newData = { ...data, photo: imgPreview.dataUrl }
+                  up('photo', imgPreview.dataUrl)
+                  save(newData)
+                } else {
+                  const newBgData = { ...data, backgrounds: { ...(data.backgrounds||{}), [section]: imgPreview.dataUrl } }
+                  up('backgrounds', newBgData.backgrounds)
+                  save(newBgData)
+                }
+                setImgPreview(null)
+              }} style={{ ...S.aSave, background: '#00ff88', color: '#000', border: 'none', padding: '10px 22px' }}>Valider</button>
+              <button onClick={() => setImgPreview(null)} style={{ ...S.aBtn, borderColor: '#ff444433', color: '#ff4444', padding: '10px 22px' }}>Annuler</button>
+            </div>
+          </div>
+        </div>
+      )}
       {showFileManager && <FileManager onClose={() => setShowFileManager(false)} />}
       {showDashboard && <AdminDashboard logs={liveLogs} onClose={() => setShowDashboard(false)} />}
 
@@ -1545,10 +1566,7 @@ const persistData = (next) => {
                   ctx.imageSmoothingEnabled = true
                   ctx.imageSmoothingQuality = 'high'
                   ctx.drawImage(img, 0, 0, w, h)
-                  const bgUrl = canvas.toDataURL('image/jpeg', 0.78)
-                  const newBgData = { ...data, backgrounds: { ...(data.backgrounds||{}), [section]: bgUrl } }
-                  up('backgrounds', newBgData.backgrounds)
-                  save(newBgData)
+                  setImgPreview({ dataUrl: canvas.toDataURL('image/jpeg', 0.78), target: 'bg' })
                 }
                 img.src = ev.target.result
               }
@@ -1582,8 +1600,8 @@ const persistData = (next) => {
 
       {data.backgrounds && data.backgrounds[section] && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
-          backgroundImage: `url(${data.backgrounds[section]})`, backgroundSize: 'cover',
-          backgroundPosition: 'center', opacity: 0.16, filter: 'grayscale(0.15) blur(0.4px)' }} />
+          backgroundImage: `url(${data.backgrounds[section]})`, backgroundSize: 'contain',
+          backgroundPosition: 'center', backgroundRepeat: 'no-repeat', opacity: 0.18, filter: 'grayscale(0.15) blur(0.4px)' }} />
       )}
       <main style={{ ...S.main, position: 'relative', zIndex: 1, minHeight: '60vh' }}>
         {renderSection(section)}
