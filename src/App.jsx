@@ -1173,7 +1173,7 @@ const persistData = (next) => {
                : <TypeWriter text={data.name} />}
           </h1>
         ), { marginBottom: '10px' })}
-        <div style={{ display: 'inline-block', marginBottom: '18px', position: 'relative', borderRadius: '14px', overflow: 'hidden', border: '3px solid #00ff88', boxShadow: '0 0 10px rgba(0, 255, 136, 0.3)' }}>
+        <div style={{ display: 'inline-block', marginBottom: '18px', position: 'relative', borderRadius: '14px', overflow: 'hidden', border: '3px solid #00ff88', boxShadow: '0 0 10px rgba(0, 255, 136, 0.3)', animation: 'photoBurst 5s infinite' }}>
           <img
             src={data.photo || '/photo-samuel.jpg'}
             alt="Samuel MEYISSO"
@@ -1563,6 +1563,15 @@ const persistData = (next) => {
         @keyframes scanDrift {
           0% { background-position: 0 0; }
           100% { background-position: 0 40px; }
+        }
+        @keyframes photoBurst {
+          0%, 70%, 100% { transform: scale(1) skewX(0deg); filter: none; }
+          1% { transform: scale(1.02) skewX(-3deg); filter: contrast(1.6) brightness(1.3) saturate(1.4); }
+          5% { transform: scale(0.99) skewX(2deg); filter: contrast(1.4) brightness(1.15); }
+          10% { transform: scale(1.01) skewX(-1.5deg); filter: contrast(1.5) brightness(1.25) saturate(1.3); }
+          15% { transform: scale(1) skewX(0.5deg); filter: contrast(1.2) brightness(1.1); }
+          20% { transform: scale(1.005) skewX(-0.5deg); filter: contrast(1.1); }
+          25% { transform: scale(1) skewX(0deg); filter: none; }
         }
         @keyframes holoFlicker {
           0%, 88%, 100% { transform: translate(0,0) skewX(0deg); filter: none; opacity: 1; }
