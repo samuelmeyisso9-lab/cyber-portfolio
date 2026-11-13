@@ -267,7 +267,7 @@ const INIT = {
       "id": "c4",
       "icon": "🎓",
       "label": "École",
-      "value": "École 89 — Deep Tech · Bachelor Cybersécurité",
+      "value": "École 89 — Deep Tech · Science of Bachelor Cybersécurité & Hacking Éthique",
       "link": "https://ecole-89.com/"
     },
     {
@@ -871,6 +871,7 @@ export default function App() {
         "🟢 DISPONIBLE pour une alternance Administrateur d'infrastructure sécurisée · dès maintenant",
       ]
       if (LEGACY_BADGES.includes(String(stored.badge || ''))) merged.badge = INIT.badge
+      if (Array.isArray(merged.contact)) { const c4 = merged.contact.find(x => x.id === 'c4'); if (c4 && String(c4.value||'').includes('Bachelor Cybersécurité') && !String(c4.value||'').includes('Science of Bachelor')) c4.value = INIT.contact.find(x => x.id === 'c4').value }
       const LEGACY_DESCS = [
         "Étudiant en Bachelor Cybersécurité à l'École 89. Spécialisé en sécurité offensive & défensive, analyse réseau, détection de vulnérabilités et tests d'intrusion (SQLi, OWASP).",
         "Étudiant en Bachelor Cybersécurité & Hacking Éthique à l'École 89. Spécialisé en administration infrastructure sécurisée, déploiement et configuration de solutions SIEM/EDR (Wazuh, CrowdStrike Falcon), durcissement Microsoft 365 (CIS Benchmarks), audit de conformité RGPD/CNIL et incident response. Approche rigoureuse, documentation complète, impact opérationnel.",
