@@ -1052,7 +1052,7 @@ export default function App() {
     if (clickCount.current >= 5) { clickCount.current = 0; setShowModal(true) }
   }
 
-  const save = async (content) => {
+  const save = async (content, attempt = 0) => {
     const payload = content || data
     try {
       setSaved(false)
@@ -1079,7 +1079,11 @@ export default function App() {
         alert(d.error || 'Erreur de sauvegarde')
       }
     } catch (err) {
-      alert('Serveur injoignable')
+      if (attempt < 2) {
+        await new Promise(res => setTimeout(res, 4000))
+        return save(content, attempt + 1)
+      }
+      alert('Serveur injoignable - reessaie dans quelques secondes (le serveur Render se reveille).')
     }
   }
 
