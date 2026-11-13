@@ -1173,7 +1173,7 @@ const persistData = (next) => {
                : <TypeWriter text={data.name} />}
           </h1>
         ), { marginBottom: '10px' })}
-        <div style={{ display: 'inline-block', marginBottom: '18px', position: 'relative', borderRadius: '14px', overflow: 'hidden', border: '3px solid #00ff88', boxShadow: '0 0 10px rgba(0, 255, 136, 0.3)', animation: 'photoBurst 5s infinite' }}>
+        <div style={{ display: 'inline-block', marginBottom: '18px', position: 'relative', borderRadius: '14px', overflow: 'hidden', border: '3px solid #00ff88', boxShadow: '0 0 10px rgba(0, 255, 136, 0.3)' }}>
           <img
             src={data.photo || '/photo-samuel.jpg'}
             alt="Samuel MEYISSO"
@@ -1185,12 +1185,14 @@ const persistData = (next) => {
               imageRendering: 'auto',
             }}
           />
-          {/* RGB Split - canal rouge decale a gauche */}
-          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(5) hue-rotate(-30deg)', transform: 'translateX(-4px)', mixBlendMode: 'multiply', opacity: 0, zIndex: 1, pointerEvents: 'none', animation: 'rgbBurst 5s infinite', WebkitMaskImage: 'radial-gradient(ellipse 75% 80% at 50% 45%, black 45%, transparent 90%)', maskImage: 'radial-gradient(ellipse 75% 80% at 50% 45%, black 45%, transparent 90%)' }} />
-          {/* RGB Split - canal cyan decale a droite */}
-          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(5) hue-rotate(160deg)', transform: 'translateX(4px)', mixBlendMode: 'multiply', opacity: 0, zIndex: 1, pointerEvents: 'none', animation: 'rgbBurst 5s infinite 0.15s', WebkitMaskImage: 'radial-gradient(ellipse 75% 80% at 50% 45%, black 45%, transparent 90%)', maskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)' }} />
+          {/* Pixelation burst (de-pixelise) */}
+          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', imageRendering: 'pixelated', opacity: 0, pointerEvents: 'none', zIndex: 1, animation: 'pixelBurst 5s infinite' }} />
+          {/* RGB Split - canal rouge */}
+          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(1) saturate(3) hue-rotate(-20deg) brightness(1.1)', transform: 'translateX(-3px)', mixBlendMode: 'screen', opacity: 0, pointerEvents: 'none', zIndex: 2, animation: 'rgbBurst 5s infinite', WebkitMaskImage: 'radial-gradient(ellipse 70% 75% at 50% 45%, black 40%, transparent 85%)', maskImage: 'radial-gradient(ellipse 70% 75% at 50% 45%, black 40%, transparent 85%)' }} />
+          {/* RGB Split - canal cyan */}
+          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(1) saturate(3) hue-rotate(160deg) brightness(1.1)', transform: 'translateX(3px)', mixBlendMode: 'screen', opacity: 0, pointerEvents: 'none', zIndex: 2, animation: 'rgbBurst 5s infinite 0.1s', WebkitMaskImage: 'radial-gradient(ellipse 70% 75% at 50% 45%, black 40%, transparent 85%)', maskImage: 'radial-gradient(ellipse 70% 75% at 50% 45%, black 40%, transparent 85%)' }} />
           {/* Scanlines CRT */}
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.35) 0px, rgba(0,0,0,0.35) 1px, transparent 1px, transparent 3px)', mixBlendMode: 'multiply', opacity: 0, animation: 'scanBurst 5s infinite', WebkitMaskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)', maskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)' }} />
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 3, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px)', mixBlendMode: 'multiply', opacity: 0, animation: 'scanBurst 5s infinite', WebkitMaskImage: 'radial-gradient(ellipse 70% 75% at 50% 45%, black 40%, transparent 85%)', maskImage: 'radial-gradient(ellipse 70% 75% at 50% 45%, black 40%, transparent 85%)' }} />
           {A && (
             <>
               <button
@@ -1543,16 +1545,6 @@ const persistData = (next) => {
         ::-webkit-scrollbar-thumb { background: #00ff8822; }
         [contenteditable]:focus { outline: 1px solid #00ff88 !important; background: #0a140a !important; border-radius: 3px; }
         
-        @keyframes rgbBurst {
-          0%, 70%, 100% { transform: translateX(-4px); opacity: 0; }
-          1% { transform: translateX(-10px) skewX(-2deg); opacity: 1; }
-          5% { transform: translateX(-3px) skewX(1deg); opacity: 0.85; }
-          10% { transform: translateX(-8px) skewX(-1deg); opacity: 1; }
-          15% { transform: translateX(-2px); opacity: 0.7; }
-          20% { transform: translateX(-6px); opacity: 0.9; }
-          25% { transform: translateX(-4px); opacity: 0.5; }
-          30% { transform: translateX(-3px); opacity: 0.2; }
-        }
         @keyframes scanBurst {
           0%, 70%, 100% { opacity: 0; }
           1% { opacity: 0.8; }
@@ -1564,14 +1556,30 @@ const persistData = (next) => {
           0% { background-position: 0 0; }
           100% { background-position: 0 40px; }
         }
-        @keyframes photoBurst {
-          0%, 70%, 100% { transform: scale(1) skewX(0deg); filter: none; }
-          1% { transform: scale(1.02) skewX(-3deg); filter: contrast(1.6) brightness(1.3) saturate(1.4); }
-          5% { transform: scale(0.99) skewX(2deg); filter: contrast(1.4) brightness(1.15); }
-          10% { transform: scale(1.01) skewX(-1.5deg); filter: contrast(1.5) brightness(1.25) saturate(1.3); }
-          15% { transform: scale(1) skewX(0.5deg); filter: contrast(1.2) brightness(1.1); }
-          20% { transform: scale(1.005) skewX(-0.5deg); filter: contrast(1.1); }
-          25% { transform: scale(1) skewX(0deg); filter: none; }
+        @keyframes pixelBurst {
+          0%, 82%, 100% { opacity: 0; transform: scale(1); }
+          83% { opacity: 0.85; transform: scale(0.18); }
+          84% { opacity: 0.8; transform: scale(0.22); }
+          85% { opacity: 0.7; transform: scale(0.32); }
+          86% { opacity: 0.55; transform: scale(0.48); }
+          87% { opacity: 0.4; transform: scale(0.68); }
+          88% { opacity: 0.25; transform: scale(0.82); }
+          89% { opacity: 0.1; transform: scale(0.94); }
+          90% { opacity: 0; transform: scale(1); }
+        }
+        @keyframes rgbBurst {
+          0%, 82%, 100% { transform: translateX(-3px); opacity: 0; }
+          83% { transform: translateX(-7px); opacity: 0.85; }
+          84% { transform: translateX(-2px); opacity: 0.5; }
+          85% { transform: translateX(-5px); opacity: 0.9; }
+          86% { transform: translateX(-2px); opacity: 0.4; }
+          87% { transform: translateX(-4px); opacity: 0.2; }
+        }
+        @keyframes scanBurst {
+          0%, 82%, 100% { opacity: 0; }
+          83% { opacity: 0.6; }
+          86% { opacity: 0.35; }
+          89% { opacity: 0.1; }
         }
         @keyframes holoFlicker {
           0%, 88%, 100% { transform: translate(0,0) skewX(0deg); filter: none; opacity: 1; }
