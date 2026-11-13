@@ -1277,7 +1277,7 @@ const persistData = (next) => {
         </div>
         {fd('stats', (
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-            {[{ l: 'Projets cyber', v: '5' }, { l: 'Outils maîtrisés', v: '12+' }, { l: 'Simulations lancées', v: String(threats) }].map(x => (
+            {[{ l: 'Projets cyber', v: '5' }, { l: 'Outils maîtrisés', v: '12+' }].map(x => (
               <div key={x.l} style={S.stat}><div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#00ff88' }}>{x.v}</div><div style={{ color: '#444', fontSize: '0.8rem', marginTop: '3px' }}>{x.l}</div></div>
             ))}
           </div>
