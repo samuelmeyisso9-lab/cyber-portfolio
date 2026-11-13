@@ -287,7 +287,7 @@ const INIT = {
     {
       "id": "l1",
       "lang": "Anglais",
-      "level": "B2"
+      "level": "C1"
     },
     {
       "id": "l2",
@@ -889,6 +889,8 @@ export default function App() {
       if (!langs.some(l => String(l.lang).toLowerCase() === 'français' || String(l.lang).toLowerCase() === 'francais')) {
         merged.langs = [{ id: 'l0', lang: 'Français', level: 'Langue maternelle' }, ...langs]
       }
+      const en = langs.find(l => String(l.lang).toLowerCase() === 'anglais')
+      if (en) en.level = 'C1'
       if (!langs.some(l => String(l.lang).toLowerCase() === 'allemand')) {
         merged.langs = [...langs, { id: 'l' + (langs.reduce((m, l) => Math.max(m, parseInt(String(l.id).replace(/\D/g, '') || 0, 10)), 0) + 1), lang: 'Allemand', level: 'A1' }]
       }
