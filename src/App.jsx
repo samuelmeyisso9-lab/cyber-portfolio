@@ -801,24 +801,22 @@ function CyberBackground() {
 }
 
 function CustomCursor() {
-  const bolt = useRef(null)
+  const cursor = useRef(null)
   const [hovering, setHovering] = useState(false)
 
   useEffect(() => {
     const move = (e) => {
-      if (bolt.current) {
-        bolt.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`
+      if (cursor.current) {
+        cursor.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`
       }
     }
-    const down = () => bolt.current && (bolt.current.style.transform += ' scale(0.8)')
-    const up = () => bolt.current && (bolt.current.style.transform = bolt.current.style.transform.replace(' scale(0.8)', ''))
-    
+    const down = () => cursor.current && (cursor.current.style.transform += ' scale(0.85)')
+    const up = () => cursor.current && (cursor.current.style.transform = cursor.current.style.transform.replace(' scale(0.85)', ''))
     const over = (e) => {
       const tag = e.target.tagName
       const isBtn = tag === 'BUTTON' || tag === 'A' || e.target.closest('button') || e.target.closest('a') || e.target.contentEditable === 'true'
       setHovering(!!isBtn)
     }
-
     window.addEventListener('mousemove', move)
     window.addEventListener('mousedown', down); window.addEventListener('mouseup', up)
     window.addEventListener('mouseover', over)
@@ -830,21 +828,21 @@ function CustomCursor() {
 
   return (
     <>
-      <div ref={bolt} style={{
-        position: 'fixed', top: -26, left: -6,
-        width: hovering ? 17 : 13, height: hovering ? 32 : 25,
+      <div ref={cursor} style={{
+        position: 'fixed', top: -2, left: -2,
+        width: hovering ? 30 : 24, height: hovering ? 30 : 24,
         pointerEvents: 'none', zIndex: 99999,
         transition: 'width 0.2s, height 0.2s, transform 0.05s linear',
+        filter: `drop-shadow(0 0 4px ${hovering ? '#00aaff' : '#00ff88'}) drop-shadow(0 0 10px ${hovering ? 'rgba(0,170,255,0.5)' : 'rgba(0,255,136,0.45)'})`,
       }}>
-        <svg viewBox="0 0 16 46" width="100%" height="100%" aria-hidden="true"
-          style={{ transform: 'rotate(-25deg)', filter: 'drop-shadow(0 0 4px #00ff88) drop-shadow(0 0 9px rgba(0,255,136,0.5))' }}>
-          <path d="M8 0 L2 20 H6.5 L5.5 44 L15 22 H10.5 Z" fill="#00ff88" stroke="#baffdb" strokeWidth="0.35" />
+        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden="true">
+          <path d="M3 2 L3 19 L8.5 14.5 L12 22 L15 20.5 L11.2 13 L19 13 Z"
+            fill={hovering ? '#00aaff' : '#00ff88'} stroke="#0a0a0a" strokeWidth="1.2" strokeLinejoin="round" />
         </svg>
       </div>
       <style>{`
         body, button, a { cursor: none !important; }
         @media (max-width: 768px) {
-          #bolt { display: none !important; }
           body, button, a { cursor: auto !important; }
         }
       `}</style>
