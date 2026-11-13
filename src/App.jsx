@@ -1185,14 +1185,20 @@ const persistData = (next) => {
               imageRendering: 'auto',
             }}
           />
-          {/* Pixelation burst (de-pixelise) */}
-          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', imageRendering: 'pixelated', opacity: 0, pointerEvents: 'none', zIndex: 1, animation: 'pixelBurst 5s infinite' }} />
-          {/* RGB Split - canal rouge */}
-          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(1) saturate(3) hue-rotate(-20deg) brightness(1.1)', transform: 'translateX(-3px)', mixBlendMode: 'screen', opacity: 0, pointerEvents: 'none', zIndex: 2, animation: 'rgbBurst 5s infinite', WebkitMaskImage: 'radial-gradient(ellipse 70% 75% at 50% 45%, black 40%, transparent 85%)', maskImage: 'radial-gradient(ellipse 70% 75% at 50% 45%, black 40%, transparent 85%)' }} />
-          {/* RGB Split - canal cyan */}
-          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(1) saturate(3) hue-rotate(160deg) brightness(1.1)', transform: 'translateX(3px)', mixBlendMode: 'screen', opacity: 0, pointerEvents: 'none', zIndex: 2, animation: 'rgbBurst 5s infinite 0.1s', WebkitMaskImage: 'radial-gradient(ellipse 70% 75% at 50% 45%, black 40%, transparent 85%)', maskImage: 'radial-gradient(ellipse 70% 75% at 50% 45%, black 40%, transparent 85%)' }} />
-          {/* Scanlines CRT */}
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 3, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px)', mixBlendMode: 'multiply', opacity: 0, animation: 'scanBurst 5s infinite', WebkitMaskImage: 'radial-gradient(ellipse 70% 75% at 50% 45%, black 40%, transparent 85%)', maskImage: 'radial-gradient(ellipse 70% 75% at 50% 45%, black 40%, transparent 85%)' }} />
+          {/* Slicer glitch - bandes horizontales qui glissent laterallement */}
+          {[0,1,2,3,4].map(i => (
+            <div key={i} style={{
+              position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2,
+              clipPath: `inset(${i*20}% 0 ${(4-i)*20}% 0)`,
+              animation: `sliceGlitch 5s infinite`,
+              animationDelay: (i % 2 === 0 ? '0s' : '0.05s'),
+            }}>
+              <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'cover', transform: i % 2 === 0 ? 'translateX(-6px)' : 'translateX(6px)', filter: i % 2 === 0 ? 'brightness(1.3) saturate(1.4)' : 'brightness(1.2) saturate(1.3) hue-rotate(180deg)' }} />
+              <div style={{ position: 'absolute', inset: 0, background: i % 2 === 0 ? 'rgba(0,255,136,0.18)' : 'rgba(0,170,255,0.18)', mixBlendMode: 'screen' }} />
+            </div>
+          ))}
+          {/* Scanlines CRT subtiles */}
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 3, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px)', mixBlendMode: 'multiply', opacity: 0, animation: 'scanBurst 5s infinite', WebkitMaskImage: 'radial-gradient(ellipse 75% 80% at 50% 45%, black 45%, transparent 90%)', maskImage: 'radial-gradient(ellipse 75% 80% at 50% 45%, black 45%, transparent 90%)' }} />
           {A && (
             <>
               <button
@@ -1545,41 +1551,31 @@ const persistData = (next) => {
         ::-webkit-scrollbar-thumb { background: #00ff8822; }
         [contenteditable]:focus { outline: 1px solid #00ff88 !important; background: #0a140a !important; border-radius: 3px; }
         
-        @keyframes scanBurst {
-          0%, 70%, 100% { opacity: 0; }
-          1% { opacity: 0.8; }
-          10% { opacity: 0.6; }
-          20% { opacity: 0.4; }
-          30% { opacity: 0.15; }
-        }
         @keyframes scanDrift {
           0% { background-position: 0 0; }
           100% { background-position: 0 40px; }
-        }
-        @keyframes pixelBurst {
-          0%, 82%, 100% { opacity: 0; transform: scale(1); }
-          83% { opacity: 0.85; transform: scale(0.18); }
-          84% { opacity: 0.8; transform: scale(0.22); }
-          85% { opacity: 0.7; transform: scale(0.32); }
-          86% { opacity: 0.55; transform: scale(0.48); }
-          87% { opacity: 0.4; transform: scale(0.68); }
-          88% { opacity: 0.25; transform: scale(0.82); }
-          89% { opacity: 0.1; transform: scale(0.94); }
-          90% { opacity: 0; transform: scale(1); }
-        }
-        @keyframes rgbBurst {
-          0%, 82%, 100% { transform: translateX(-3px); opacity: 0; }
-          83% { transform: translateX(-7px); opacity: 0.85; }
-          84% { transform: translateX(-2px); opacity: 0.5; }
-          85% { transform: translateX(-5px); opacity: 0.9; }
-          86% { transform: translateX(-2px); opacity: 0.4; }
-          87% { transform: translateX(-4px); opacity: 0.2; }
         }
         @keyframes scanBurst {
           0%, 82%, 100% { opacity: 0; }
           83% { opacity: 0.6; }
           86% { opacity: 0.35; }
           89% { opacity: 0.1; }
+        }
+        @keyframes sliceGlitch {
+          0%, 84%, 100% { transform: translateX(0); opacity: 0; }
+          85% { transform: translateX(-12px); opacity: 1; }
+          86% { transform: translateX(10px); opacity: 0.9; }
+          87% { transform: translateX(-8px); opacity: 1; }
+          88% { transform: translateX(6px); opacity: 0.85; }
+          89% { transform: translateX(-4px); opacity: 0.6; }
+          90% { transform: translateX(2px); opacity: 0.3; }
+          91% { transform: translateX(0); opacity: 0; }
+        }
+        @keyframes scanBurst {
+          0%, 84%, 100% { opacity: 0; }
+          85% { opacity: 0.5; }
+          88% { opacity: 0.25; }
+          91% { opacity: 0; }
         }
         @keyframes holoFlicker {
           0%, 88%, 100% { transform: translate(0,0) skewX(0deg); filter: none; opacity: 1; }
@@ -1590,13 +1586,6 @@ const persistData = (next) => {
           93% { transform: translate(-1px, 1px); filter: hue-rotate(-45deg); opacity: 0.85; }
           94% { transform: translate(1px, -1px); opacity: 0.9; }
           95% { transform: translate(0,0) skewX(0deg); filter: none; opacity: 1; }
-        }
-        @keyframes neonSmileIn {
-          0% { opacity: 0; transform: translate(-50%,-50%) scale(0.4) rotate(-15deg); }
-          20% { opacity: 1; transform: translate(-50%,-50%) scale(1.15) rotate(5deg); }
-          40% { transform: translate(-50%,-50%) scale(1) rotate(-3deg); }
-          80% { opacity: 1; transform: translate(-50%,-50%) scale(1) rotate(0deg); }
-          100% { opacity: 0; transform: translate(-50%,-50%) scale(0.6) rotate(10deg); }
         }
         @keyframes holoFlicker {
           0% { opacity: 0.8; transform: skewX(0deg); filter: hue-rotate(0deg); }
