@@ -1486,6 +1486,7 @@ const persistData = (next) => {
             <span style={{ color: '#2a2a2a', fontSize: '0.7rem' }}>Glisse un élément · Double-clic = reset position · Slider = niveau</span>
           </div>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button onClick={() => { const json = JSON.stringify(data, null, 2); if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(json).then(() => alert('Contenu copie dans le presse-papiers (' + json.length + ' caracteres). Colle-le ici pour synchronisation.')).catch(() => window.prompt('Copie manuelle :', json)) } else { window.prompt('Copie manuelle :', json) } }} style={S.aBtn}>Exporter</button>
             <button onClick={() => setShowFileManager(true)} style={S.aBtn}>📁 Fichiers</button>
             <button onClick={() => { const id = 'p' + Date.now(); up('projects', [...data.projects, { id, title: '🆕 Nouveau Projet', desc: 'Description...', tags: 'Tag1 · Tag2' }]); lastAddedRef.current = { key: 'projects', id } }} style={S.aBtn}>+ Projet</button>
             <button onClick={() => { const id = 's' + Date.now(); up('skills', [...data.skills, { id, name: 'Nouvelle Compétence', level: 50 }]); lastAddedRef.current = { key: 'skills', id } }} style={S.aBtn}>+ Skill</button>
