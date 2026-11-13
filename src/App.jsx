@@ -795,6 +795,32 @@ function CyberBackground() {
   )
 }
 
+function NeonSmile() {
+  const [show, setShow] = useState(false)
+  const [pos, setPos] = useState({ x: 50, y: 40 })
+  useEffect(() => {
+    const tick = () => {
+      setPos({ x: 15 + Math.random() * 70, y: 20 + Math.random() * 60 })
+      setShow(true)
+      setTimeout(() => setShow(false), 1400)
+    }
+    const id = setInterval(tick, 5000)
+    const t = setTimeout(tick, 2000)
+    return () => { clearInterval(id); clearTimeout(t) }
+  }, [])
+  if (!show) return null
+  return (
+    <div style={{
+      position: 'fixed', left: pos.x + '%', top: pos.y + '%',
+      transform: 'translate(-50%, -50%)',
+      fontSize: '3.2rem', color: '#00ff88', pointerEvents: 'none',
+      zIndex: 99997, animation: 'neonSmileIn 1.4s ease-in-out',
+      textShadow: '0 0 10px #00ff88, 0 0 22px #00ff88, 0 0 44px #00aaff, 0 0 60px #00ff88',
+      filter: 'drop-shadow(0 0 6px #00ff88)',
+    }}>😊</div>
+  )
+}
+
 function CustomCursor() {
   const bolt = useRef(null)
   const [hovering, setHovering] = useState(false)
@@ -1173,7 +1199,7 @@ const persistData = (next) => {
                : <TypeWriter text={data.name} />}
           </h1>
         ), { marginBottom: '10px' })}
-        <div style={{ display: 'inline-block', marginBottom: '18px', position: 'relative' }}>
+        <div style={{ display: 'inline-block', marginBottom: '18px', position: 'relative', animation: 'photoGlitch 5s infinite' }}>
           <img
             src={data.photo || '/photo-samuel.jpg'}
             alt="Samuel MEYISSO"
@@ -1475,6 +1501,7 @@ const persistData = (next) => {
     <div style={S.root}>
       <CyberBackground />
       <CustomCursor />
+      <NeonSmile />
       {showModal && <PwModal onLogin={handleLogin} onClose={() => setShowModal(false)} error={loginError} form={loginForm} setForm={setLoginForm} />}
       {showFileManager && <FileManager onClose={() => setShowFileManager(false)} />}
       {showDashboard && <AdminDashboard logs={liveLogs} onClose={() => setShowDashboard(false)} />}
@@ -1540,6 +1567,23 @@ const persistData = (next) => {
         ::-webkit-scrollbar-thumb { background: #00ff8822; }
         [contenteditable]:focus { outline: 1px solid #00ff88 !important; background: #0a140a !important; border-radius: 3px; }
         
+        @keyframes photoGlitch {
+          0%, 88%, 100% { transform: translate(0,0) skewX(0deg); filter: none; opacity: 1; }
+          89% { transform: translate(-3px, 1px) skewX(-2deg); filter: hue-rotate(90deg) brightness(1.4); opacity: 0.85; }
+          90% { transform: translate(3px, -2px) skewX(2deg); filter: hue-rotate(-90deg) brightness(1.6); opacity: 0.9; }
+          91% { transform: translate(-2px, 2px) skewX(-1deg); filter: hue-rotate(45deg); opacity: 0.8; }
+          92% { transform: translate(2px, -1px) skewX(1deg); filter: brightness(1.3); opacity: 0.95; }
+          93% { transform: translate(-1px, 1px); filter: hue-rotate(-45deg); opacity: 0.85; }
+          94% { transform: translate(1px, -1px); opacity: 0.9; }
+          95% { transform: translate(0,0) skewX(0deg); filter: none; opacity: 1; }
+        }
+        @keyframes neonSmileIn {
+          0% { opacity: 0; transform: translate(-50%,-50%) scale(0.4) rotate(-15deg); }
+          20% { opacity: 1; transform: translate(-50%,-50%) scale(1.15) rotate(5deg); }
+          40% { transform: translate(-50%,-50%) scale(1) rotate(-3deg); }
+          80% { opacity: 1; transform: translate(-50%,-50%) scale(1) rotate(0deg); }
+          100% { opacity: 0; transform: translate(-50%,-50%) scale(0.6) rotate(10deg); }
+        }
         @keyframes holoFlicker {
           0% { opacity: 0.8; transform: skewX(0deg); filter: hue-rotate(0deg); }
           5% { opacity: 0.5; transform: skewX(2deg); }
