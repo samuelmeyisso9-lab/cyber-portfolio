@@ -12,302 +12,7 @@ const API_URL = import.meta.env.PROD ? '' : import.meta.env.VITE_API_URL || 'htt
 const KEY = 'portfolio_samuel_v4'
 
 const INIT = {
-  "badge": "Cybersécurité · Systèmes & Réseaux · Développement de solutions numériques\n\nDisponible immédiatement – Île-de-France",
-  "name": "Samuel MEYISSO",
-  "subtitle": "Cybersécurité · Systèmes & Réseaux · Développement de solutions numériques",
-  "desc": "Étudiant en 2e année de Bachelor Cybersécurité & Hacking Éthique à l’École 89, je suis un profil polyvalent qui associe cybersécurité, administration des systèmes et réseaux, et conception de solutions numériques. Mon expérience chez RIGHT IT en tant que SOC Analyst et mes projets techniques m’ont permis de développer une approche concrète de la sécurité informatique, de l’analyse et de la résolution de problèmes. Curieux, rigoureux et persévérant, j’aime apprendre, comprendre et construire. Je ne me limite pas à ce que je connais : je cherche constamment à progresser et à transformer mes idées en solutions concrètes.\n\n          « La faim regarde à la porte de l’homme laborieux, mais elle n’ose pas y entrer. »\n—                                       Benjamin Franklin",
-  "sectionOrder": [
-    "home",
-    "skills",
-    "projets",
-    "contact"
-  ],
-  "backgrounds": {},
-  "positions": {
-    "desc": {
-      "x": 196,
-      "y": 6,
-      "w": 708,
-      "s": 1
-    },
-    "stats": {
-      "x": 265,
-      "y": 3,
-      "w": 603,
-      "s": 1
-    },
-    "soft-card": {
-      "x": 279,
-      "y": 23,
-      "w": 370.66094970703125,
-      "s": 1.253001778561507
-    },
-    "langs-card": {
-      "x": -2,
-      "y": 21,
-      "w": 347.1174774169922,
-      "s": 1.250838795509523
-    },
-    "skill-s2": {
-      "x": 546,
-      "y": 143,
-      "w": 387.81231689453125,
-      "s": 1.3075170735937627
-    },
-    "skill-s3": {
-      "x": 2,
-      "y": 19,
-      "w": 337.1119689941406,
-      "s": 1.168271461870516
-    },
-    "skill-s4": {
-      "x": 539,
-      "y": -299,
-      "w": 424.66436767578125,
-      "s": 1.2140010491596211
-    },
-    "skill-s1": {
-      "x": 7,
-      "y": 57,
-      "w": 390.7618103027344,
-      "s": 1.007595670958985
-    },
-    "tools-title": {
-      "x": -2,
-      "y": -2,
-      "w": null,
-      "s": 1
-    },
-    "skill-s5": {
-      "x": -3,
-      "y": 22,
-      "w": 338
-    },
-    "photo": {
-      "x": 0,
-      "y": 0,
-      "w": null,
-      "s": 1
-    },
-    "badge": {
-      "x": 9,
-      "y": 15,
-      "w": null,
-      "s": 1
-    },
-    "subtitle": {
-      "x": -24,
-      "y": 6,
-      "w": 1144,
-      "s": 0.9648654239063762
-    },
-    "proj-p5": {
-      "x": -3,
-      "y": -1,
-      "w": 376.0378112792969,
-      "s": 0.9115377841949388
-    },
-    "contact-c4": {
-      "x": -57,
-      "y": 232,
-      "w": 558.7843627929688,
-      "s": 1.1998097079437242
-    },
-    "contact-c5": {
-      "x": -63,
-      "y": 7,
-      "w": 369.01397705078125,
-      "s": 1.3164556962025316
-    },
-    "contact-c3": {
-      "x": -83,
-      "y": 51,
-      "w": null,
-      "s": 1.5696202531645569
-    },
-    "contact-c2": {
-      "x": -57,
-      "y": 18,
-      "w": null,
-      "s": 1.2784810126582278
-    },
-    "contact-intro": {
-      "x": -6,
-      "y": -29,
-      "w": 1281.7125854492188,
-      "s": 0.8255793072871982
-    },
-    "contact-c1": {
-      "x": -33,
-      "y": -16,
-      "w": null,
-      "s": 1.2531645569620253
-    },
-    "contact-title": {
-      "x": -1,
-      "y": -20,
-      "w": null,
-      "s": 1
-    }
-  },
-  "skills": [
-    {
-      "id": "s1",
-      "name": "Network Security (Wireshark, Nmap, BurpSuite)",
-      "level": 82
-    },
-    {
-      "id": "s2",
-      "name": "Penetration Testing (SQLi, OWASP)",
-      "level": 80
-    },
-    {
-      "id": "s3",
-      "name": "SIEM / Log Analysis / SOC",
-      "level": 78
-    },
-    {
-      "id": "s4",
-      "name": "Virtualisation (Kali, VMware, Docker)",
-      "level": 85
-    },
-    {
-      "id": "s5",
-      "name": "Python / Scripting",
-      "level": 72
-    },
-    {
-      "id": "s6",
-      "name": "Cloud & IAM (RBAC, RLS)",
-      "level": 68
-    }
-  ],
-  "projects": [
-    {
-      "id": "p1",
-      "title": "🖥️ VM Vulnérable — Audit & Surveillance",
-      "desc": "Création d'une VM vulnérable, audit de sécurité complet et surveillance active des OS.",
-      "tags": "Kali Linux · VirtualBox · Audit",
-      "file": "audit-vm.pdf"
-    },
-    {
-      "id": "p2",
-      "title": "🗄️ Base de Données Éducative (10 000+)",
-      "desc": "Conception et déploiement d'un logiciel de gestion éducative à grande échelle.",
-      "tags": "SQL · Docker · Database",
-      "file": "db-educative.pdf"
-    },
-    {
-      "id": "p3",
-      "title": "🔐 Virtualisation & Cryptographie",
-      "desc": "Virtualisation avancée, cryptographie, stéganographie et chiffrement de données.",
-      "tags": "VMware · Cryptographie · Stégano",
-      "file": "rapport-fortress.pdf"
-    },
-    {
-      "id": "p4",
-      "title": "🏢 Réseau d'Entreprise Segmenté",
-      "desc": "Conception, implémentation et audit d'un réseau d'entreprise entièrement segmenté.",
-      "tags": "Stormshield · LAN/WAN · Pentest",
-      "file": "reseau-segmente.pdf"
-    },
-    {
-      "id": "p5",
-      "title": "🚴 Novabike — Audit & Remédiation",
-      "desc": "Audit de sécurité et remédiation basés sur le CIS Benchmark avec Wazuh, sur machines virtuelles VirtualBox.",
-      "tags": "Wazuh · CIS Benchmark · VirtualBox",
-      "file": "novabike-attack.pdf"
-    }
-  ],
-  "formations": [
-    {
-      "id": "f1",
-      "school": "École 89 — Deep Tech",
-      "period": "2ème Année en cours",
-      "diploma": "Bachelor Cybersécurité & Hacking Éthique",
-      "link": "https://ecole-89.com/"
-    },
-    {
-      "id": "f2",
-      "school": "F.L.S.H Limoges",
-      "period": "Sept 2024 – Juil 2025",
-      "diploma": "L1 Langues Étrangères Appliquées (ENG/ESP/ITAL)",
-      "link": "https://www.flsh.unilim.fr/"
-    },
-    {
-      "id": "f3",
-      "school": "Lycée International Cours Lumière",
-      "period": "Sept 2023 – Juil 2024",
-      "diploma": "Baccalauréat Général — Ses, LLcer",
-      "link": "https://www.courslumiere.org/"
-    }
-  ],
-  "contact": [
-    {
-      "id": "c1",
-      "icon": "📞",
-      "label": "Téléphone",
-      "value": "06 99 58 20 51"
-    },
-    {
-      "id": "c2",
-      "icon": "📧",
-      "label": "Email",
-      "value": "samuelmeyisso635@gmail.com",
-      "link": "https://mail.google.com/mail/?view=cm&fs=1&to=samuelmeyisso635@gmail.com"
-    },
-    {
-      "id": "c3",
-      "icon": "📍",
-      "label": "Localisation",
-      "value": "Île de France, 77120",
-      "link": "https://www.regions-departements-france.fr/region-ile-de-france.html"
-    },
-    {
-      "id": "c4",
-      "icon": "🎓",
-      "label": "École",
-      "value": "École 89 — Deep Tech · Bachelor Cybersécurité",
-      "link": "https://ecole-89.com/"
-    },
-    {
-      "id": "c5",
-      "icon": "🔗",
-      "label": "LinkedIn",
-      "value": "Samuel Meyisso",
-      "link": "https://www.linkedin.com/in/samuel-emmanuel-meyisso-91980b330/"
-    }
-  ],
-  "langs": [
-    {
-      "id": "l0",
-      "lang": "Français",
-      "level": "Langue maternelle"
-    },
-    {
-      "id": "l1",
-      "lang": "Anglais",
-      "level": "B2"
-    },
-    {
-      "id": "l2",
-      "lang": "Espagnol",
-      "level": "B2"
-    },
-    {
-      "id": "l3",
-      "lang": "Italien",
-      "level": "A1"
-    },
-    {
-      "id": "l4",
-      "lang": "Allemand",
-      "level": "A1"
-    }
-  ],
-  "softSkills": "Autodidacte · Adaptabilité & réactivité · Travail en équipe · Organisation & autonomie · Résilience · Polyvalence   Persévérance · Diligence ·  Détermination",
-  "tools": "Wireshark · Nmap · BurpSuite · Kali Linux · VMware · Docker · Stormshield · Hashcat · Sqlmap · Metasploit · Packet Tracer · Windows Server · CrowdStrike Falcon · Microsoft 365 · Wazuh · SharePoint · Excel",
-  "photo": "/photo-samuel.jpg"
+  "test": "hello"
 }
 
 const ATTACK_STEPS = [
@@ -1048,7 +753,8 @@ export default function App() {
     if (clickCount.current >= 5) { clickCount.current = 0; setShowModal(true) }
   }
 
-  const save = async () => {
+  const save = async (content) => {
+    const payload = content || data
     try {
       setSaved(false)
       const r = await fetch(`${API_URL}/api/save-content`, {
@@ -1057,13 +763,13 @@ export default function App() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ content: data })
+        body: JSON.stringify({ content: payload })
       })
       const d = await r.json()
       if (d.success) {
         setSaved(true)
         setTimeout(() => setSaved(false), 3000)
-        localStorage.setItem(KEY, JSON.stringify(data))
+        localStorage.setItem(KEY, JSON.stringify(payload))
       } else if (r.status === 401 || r.status === 403) {
         localStorage.removeItem('admin_token')
         setToken(null)
@@ -1254,7 +960,10 @@ const persistData = (next) => {
                       ctx.imageSmoothingEnabled = true
                       ctx.imageSmoothingQuality = 'high'
                       ctx.drawImage(img, 0, 0, w, h)
-                      up('photo', canvas.toDataURL('image/jpeg', 0.88))
+                      const dataUrl = canvas.toDataURL('image/jpeg', 0.88)
+                      const newData = { ...data, photo: dataUrl }
+                      up('photo', dataUrl)
+                      save(newData)
                     }
                     img.src = ev.target.result
                   }
@@ -1541,7 +1250,10 @@ const persistData = (next) => {
                   ctx.imageSmoothingEnabled = true
                   ctx.imageSmoothingQuality = 'high'
                   ctx.drawImage(img, 0, 0, w, h)
-                  up('backgrounds', { ...(data.backgrounds||{}), [section]: canvas.toDataURL('image/jpeg', 0.78) })
+                  const bgUrl = canvas.toDataURL('image/jpeg', 0.78)
+                  const newBgData = { ...data, backgrounds: { ...(data.backgrounds||{}), [section]: bgUrl } }
+                  up('backgrounds', newBgData.backgrounds)
+                  save(newBgData)
                 }
                 img.src = ev.target.result
               }
