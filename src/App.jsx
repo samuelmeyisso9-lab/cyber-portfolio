@@ -1186,11 +1186,11 @@ const persistData = (next) => {
             }}
           />
           {/* RGB Split - canal rouge decale a gauche */}
-          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(5) hue-rotate(-30deg)', transform: 'translateX(-4px)', mixBlendMode: 'multiply', opacity: 0.9, zIndex: 1, pointerEvents: 'none', animation: 'rgbFlicker 3s infinite' }} />
+          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(5) hue-rotate(-30deg)', transform: 'translateX(-4px)', mixBlendMode: 'multiply', opacity: 0, zIndex: 1, pointerEvents: 'none', animation: 'rgbBurst 5s infinite', WebkitMaskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)', maskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)' }} />
           {/* RGB Split - canal cyan decale a droite */}
-          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(5) hue-rotate(160deg)', transform: 'translateX(4px)', mixBlendMode: 'multiply', opacity: 0.9, zIndex: 1, pointerEvents: 'none', animation: 'rgbFlicker 3s infinite 0.4s' }} />
+          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(5) hue-rotate(160deg)', transform: 'translateX(4px)', mixBlendMode: 'multiply', opacity: 0, zIndex: 1, pointerEvents: 'none', animation: 'rgbBurst 5s infinite 0.15s', WebkitMaskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)', maskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)' }} />
           {/* Scanlines CRT */}
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 1px, transparent 1px, transparent 3px)', mixBlendMode: 'multiply', animation: 'scanDrift 8s linear infinite' }} />
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.35) 0px, rgba(0,0,0,0.35) 1px, transparent 1px, transparent 3px)', mixBlendMode: 'multiply', opacity: 0, animation: 'scanBurst 5s infinite', WebkitMaskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)', maskImage: 'radial-gradient(ellipse 55% 65% at 50% 42%, black 35%, transparent 80%)' }} />
           {A && (
             <>
               <button
@@ -1543,12 +1543,21 @@ const persistData = (next) => {
         ::-webkit-scrollbar-thumb { background: #00ff8822; }
         [contenteditable]:focus { outline: 1px solid #00ff88 !important; background: #0a140a !important; border-radius: 3px; }
         
-        @keyframes rgbFlicker {
-          0%, 88%, 100% { transform: translateX(-4px); opacity: 0.9; }
-          89% { transform: translateX(-8px); opacity: 1; }
-          90% { transform: translateX(-2px); opacity: 0.6; }
-          91% { transform: translateX(-6px); opacity: 0.95; }
-          92% { transform: translateX(-3px); opacity: 0.7; }
+        @keyframes rgbBurst {
+          0%, 8%, 100% { transform: translateX(-4px); opacity: 0; }
+          1% { transform: translateX(-9px); opacity: 0.95; }
+          2% { transform: translateX(-2px); opacity: 0.7; }
+          3% { transform: translateX(-7px); opacity: 1; }
+          4% { transform: translateX(-3px); opacity: 0.85; }
+          5% { transform: translateX(-5px); opacity: 0.95; }
+          6% { transform: translateX(-2px); opacity: 0.6; }
+          7% { transform: translateX(-4px); opacity: 0.3; }
+        }
+        @keyframes scanBurst {
+          0%, 8%, 100% { opacity: 0; }
+          1% { opacity: 0.7; }
+          4% { opacity: 0.5; }
+          7% { opacity: 0.2; }
         }
         @keyframes scanDrift {
           0% { background-position: 0 0; }
