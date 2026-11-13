@@ -1174,10 +1174,6 @@ const persistData = (next) => {
           </h1>
         ), { marginBottom: '10px' })}
         <div style={{ display: 'inline-block', marginBottom: '18px', position: 'relative', borderRadius: '14px', overflow: 'hidden', border: '3px solid #00ff88', boxShadow: '0 0 10px rgba(0, 255, 136, 0.3)' }}>
-          {/* RGB Split - canal rouge decale a gauche */}
-          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(4) hue-rotate(-30deg)', transform: 'translateX(-2.5px)', mixBlendMode: 'screen', opacity: 0.55, animation: 'rgbFlicker 3s infinite' }} />
-          {/* RGB Split - canal cyan decale a droite */}
-          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(4) hue-rotate(160deg)', transform: 'translateX(2.5px)', mixBlendMode: 'screen', opacity: 0.55, animation: 'rgbFlicker 3s infinite 0.4s' }} />
           <img
             src={data.photo || '/photo-samuel.jpg'}
             alt="Samuel MEYISSO"
@@ -1189,6 +1185,10 @@ const persistData = (next) => {
               imageRendering: 'auto',
             }}
           />
+          {/* RGB Split - canal rouge decale a gauche */}
+          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(5) hue-rotate(-30deg)', transform: 'translateX(-4px)', mixBlendMode: 'multiply', opacity: 0.9, zIndex: 1, pointerEvents: 'none', animation: 'rgbFlicker 3s infinite' }} />
+          {/* RGB Split - canal cyan decale a droite */}
+          <img src={data.photo || '/photo-samuel.jpg'} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1) sepia(1) saturate(5) hue-rotate(160deg)', transform: 'translateX(4px)', mixBlendMode: 'multiply', opacity: 0.9, zIndex: 1, pointerEvents: 'none', animation: 'rgbFlicker 3s infinite 0.4s' }} />
           {/* Scanlines CRT */}
           <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 1px, transparent 1px, transparent 3px)', mixBlendMode: 'multiply', animation: 'scanDrift 8s linear infinite' }} />
           {A && (
@@ -1544,11 +1544,11 @@ const persistData = (next) => {
         [contenteditable]:focus { outline: 1px solid #00ff88 !important; background: #0a140a !important; border-radius: 3px; }
         
         @keyframes rgbFlicker {
-          0%, 90%, 100% { transform: translateX(-2.5px); opacity: 0.55; }
-          91% { transform: translateX(-5px); opacity: 0.8; }
-          92% { transform: translateX(-1px); opacity: 0.4; }
-          93% { transform: translateX(-4px); opacity: 0.7; }
-          94% { transform: translateX(-2px); opacity: 0.5; }
+          0%, 88%, 100% { transform: translateX(-4px); opacity: 0.9; }
+          89% { transform: translateX(-8px); opacity: 1; }
+          90% { transform: translateX(-2px); opacity: 0.6; }
+          91% { transform: translateX(-6px); opacity: 0.95; }
+          92% { transform: translateX(-3px); opacity: 0.7; }
         }
         @keyframes scanDrift {
           0% { background-position: 0 0; }
