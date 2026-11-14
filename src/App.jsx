@@ -23,6 +23,7 @@ const INIT = {
     "contact"
   ],
   "backgrounds": {},
+  "backgroundsMobile": {},
   "positions": {
     "desc": {
       "x": 196,
@@ -884,6 +885,7 @@ export default function App() {
       ]
       if (LEGACY_SUBTITLES.includes(String(stored.subtitle || ''))) merged.subtitle = INIT.subtitle
       if (!merged.backgrounds || typeof merged.backgrounds !== 'object') merged.backgrounds = {}
+      if (!merged.backgroundsMobile || typeof merged.backgroundsMobile !== 'object') merged.backgroundsMobile = {}
       if (merged.positions && merged.positions.photo) { merged.positions.photo = { x: 0, y: 0, w: null, s: 1 } }
       if (Array.isArray(merged.sectionOrder)) merged.sectionOrder = merged.sectionOrder.filter(x => x !== 'soc')
       const langs = Array.isArray(merged.langs) ? merged.langs : []
@@ -1529,8 +1531,14 @@ const persistData = (next) => {
                   up('photo', imgPreview.dataUrl)
                   save(newData)
                 } else {
-                  const newBgData = { ...data, backgrounds: { ...(data.backgrounds||{}), [section]: imgPreview.dataUrl } }
-                  up('backgrounds', newBgData.backgrounds)
+                  const newBg = isMobile
+                    ? { ...(data.backgroundsMobile||{}), [section]: imgPreview.dataUrl }
+                    : { ...(data.backgrounds||{}), [section]: imgPreview.dataUrl }
+                  const newBgData = isMobile
+                    ? { ...data, backgroundsMobile: newBg }
+                    : { ...data, backgrounds: newBg }
+                  if (isMobile) up('backgroundsMobile', newBg)
+                  else up('backgrounds', newBg)
                   save(newBgData)
                 }
                 setImgPreview(null)
@@ -1554,9 +1562,12 @@ const persistData = (next) => {
             <button onClick={() => setShowFileManager(true)} style={S.aBtn}>📁 Fichiers</button>
             <button onClick={() => { const id = 'p' + Date.now(); up('projects', [...data.projects, { id, title: '🆕 Nouveau Projet', desc: 'Description...', tags: 'Tag1 · Tag2' }]); lastAddedRef.current = { key: 'projects', id } }} style={S.aBtn}>+ Projet</button>
             <button onClick={() => { const id = 's' + Date.now(); up('skills', [...data.skills, { id, name: 'Nouvelle Compétence', level: 50 }]); lastAddedRef.current = { key: 'skills', id } }} style={S.aBtn}>+ Skill</button>
-            <button onClick={() => document.getElementById('bg-file-input')?.click()} title="Changer le fond d'ecran de cet onglet" style={{ ...S.aBtn, borderColor: '#00aaff33', color: '#00aaff', fontSize: '1rem', padding: '7px 11px' }}>&#9998;</button>
-            {data.backgrounds && data.backgrounds[section] && (
-              <button onClick={() => up('backgrounds', { ...(data.backgrounds||{}), [section]: null })} title="Retirer le fond" style={{ ...S.aBtn, borderColor: '#ff444433', color: '#ff4444', fontSize: '0.9rem', padding: '7px 10px' }}>x</button>
+            <button onClick={() => document.getElementById('bg-file-input')?.click()} title={"Changer le fond d'ecran de cet onglet (" + (isMobile ? 'mobile' : 'PC') + ")"} style={{ ...S.aBtn, borderColor: '#00aaff33', color: '#00aaff', fontSize: '1rem', padding: '7px 11px' }}>&#9998;</button>
+            {((isMobile ? (data.backgroundsMobile && data.backgroundsMobile[section]) : (data.backgrounds && data.backgrounds[section]))) && (
+              <button onClick={() => {
+                if (isMobile) up('backgroundsMobile', { ...(data.backgroundsMobile||{}), [section]: null })
+                else up('backgrounds', { ...(data.backgrounds||{}), [section]: null })
+              }} title="Retirer le fond" style={{ ...S.aBtn, borderColor: '#ff444433', color: '#ff4444', fontSize: '0.9rem', padding: '7px 10px' }}>x</button>
             )}
             <input id="bg-file-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
               const file = e.target.files && e.target.files[0]
@@ -1607,12 +1618,18 @@ const persistData = (next) => {
         </div>
       </nav>
 
-      {data.backgrounds && data.backgrounds[section] && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: 'none',
-          backgroundImage: `url(${data.backgrounds[section]})`, backgroundSize: 'contain',
-          backgroundPosition: 'center', backgroundRepeat: 'no-repeat', opacity: 0.32,
-          WebkitBackgroundSize: 'contain' }} />
-      )}
+      {(() => {
+        const bg = isMobile
+          ? ((data.backgroundsMobile && data.backgroundsMobile[section]) || (data.backgrounds && data.backgrounds[section]))
+          : (data.backgrounds && data.backgrounds[section])
+        if (!bg) return null
+        return (
+          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: 'none',
+            backgroundImage: `url(${bg})`, backgroundSize: isMobile ? 'contain' : 'cover',
+            backgroundPosition: 'center', backgroundRepeat: 'no-repeat', opacity: isMobile ? 0.28 : 0.22,
+            WebkitBackgroundSize: isMobile ? 'contain' : 'cover' }} />
+        )
+      })()}
       <main style={{ ...S.main, position: 'relative', zIndex: 1, minHeight: '60vh' }}>
         {renderSection(section)}
       </main>
