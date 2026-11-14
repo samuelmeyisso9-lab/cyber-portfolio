@@ -329,7 +329,7 @@ function FreeDrag({ id, isAdmin, positions, onMove, children, style = {} }) {
   const origin = useRef({})
   const elRef = useRef()
   
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 1024
   const pos = isMobile ? { x: 0, y: 0, w: null, s: 1 } : (positions?.[id] || { x: 0, y: 0, w: null, s: 1 })
 
   // ── DRAG ────────────────────────────────────────────
@@ -843,7 +843,7 @@ function CustomCursor() {
       </div>
       <style>{`
         body, button, a { cursor: none !important; }
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
           body, button, a { cursor: auto !important; }
         }
       `}</style>
