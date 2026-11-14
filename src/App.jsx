@@ -1623,11 +1623,18 @@ const persistData = (next) => {
           ? ((data.backgroundsMobile && data.backgroundsMobile[section]) || (data.backgrounds && data.backgrounds[section]))
           : ((data.backgrounds && data.backgrounds[section]) || (data.backgroundsMobile && data.backgroundsMobile[section]))
         if (!bg) return null
+        const contain = isMobile || section === 'projets' || section === 'contact'
         return (
-          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: 'none',
-            backgroundImage: `url(${bg})`, backgroundSize: (isMobile || section === 'projets' || section === 'contact') ? 'contain' : 'cover',
-            backgroundPosition: 'center', backgroundRepeat: 'no-repeat', opacity: isMobile ? 0.28 : 0.22,
-            WebkitBackgroundSize: (isMobile || section === 'projets' || section === 'contact') ? 'contain' : 'cover' }} />
+          <img src={bg} alt="" aria-hidden="true" style={{
+            position: 'fixed', top: '50%', left: '50%',
+            transform: 'translate(-50%, -50%)',
+            maxWidth: '92vw', maxHeight: '88vh',
+            width: 'auto', height: 'auto',
+            objectFit: contain ? 'contain' : 'cover',
+            opacity: isMobile ? 0.28 : 0.22,
+            pointerEvents: 'none', zIndex: 0,
+            filter: 'grayscale(0.1)',
+          }} />
         )
       })()}
       <main style={{ ...S.main, position: 'relative', zIndex: 1, minHeight: '60vh' }}>
