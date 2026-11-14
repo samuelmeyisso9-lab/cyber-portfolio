@@ -1625,9 +1625,9 @@ const persistData = (next) => {
         if (!bg) return null
         return (
           <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: 'none',
-            backgroundImage: `url(${bg})`, backgroundSize: isMobile ? 'contain' : 'cover',
+            backgroundImage: `url(${bg})`, backgroundSize: (isMobile || section === 'projets' || section === 'contact') ? 'contain' : 'cover',
             backgroundPosition: 'center', backgroundRepeat: 'no-repeat', opacity: isMobile ? 0.28 : 0.22,
-            WebkitBackgroundSize: isMobile ? 'contain' : 'cover' }} />
+            WebkitBackgroundSize: (isMobile || section === 'projets' || section === 'contact') ? 'contain' : 'cover' }} />
         )
       })()}
       <main style={{ ...S.main, position: 'relative', zIndex: 1, minHeight: '60vh' }}>
