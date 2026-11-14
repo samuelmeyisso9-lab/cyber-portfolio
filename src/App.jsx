@@ -1626,11 +1626,9 @@ const persistData = (next) => {
         const contain = isMobile || section === 'projets' || section === 'contact'
         return (
           <img src={bg} alt="" aria-hidden="true" style={{
-            position: 'fixed', top: '50%', left: '50%',
-            transform: 'translate(-50%, -50%)',
-            maxWidth: '92vw', maxHeight: '88vh',
-            width: 'auto', height: 'auto',
-            objectFit: contain ? 'contain' : 'cover',
+            position: 'fixed', top: 0, left: 0,
+            width: '100vw', height: '100vh',
+            objectFit: 'fill',
             opacity: isMobile ? 0.28 : 0.22,
             pointerEvents: 'none', zIndex: 0,
             filter: 'grayscale(0.1)',
