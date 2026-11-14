@@ -1621,7 +1621,7 @@ const persistData = (next) => {
       {(() => {
         const bg = isMobile
           ? ((data.backgroundsMobile && data.backgroundsMobile[section]) || (data.backgrounds && data.backgrounds[section]))
-          : (data.backgrounds && data.backgrounds[section])
+          : ((data.backgrounds && data.backgrounds[section]) || (data.backgroundsMobile && data.backgroundsMobile[section]))
         if (!bg) return null
         return (
           <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: 'none',
