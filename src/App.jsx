@@ -334,7 +334,7 @@ function FreeDrag({ id, isAdmin, positions, onMove, children, style = {} }) {
   // ── DRAG ────────────────────────────────────────────
   const onMouseDown = (e) => {
     if (!isAdmin || isMobile) return
-    if (e.target.dataset.resize || e.target.contentEditable === 'true' || e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return
+    if (e.target.dataset.resize || e.target.contentEditable === 'true' || (e.target.closest && e.target.closest('[contenteditable="true"]')) || e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return
     e.preventDefault(); e.stopPropagation()
     dragging.current = true
     origin.current = { mx: e.clientX, my: e.clientY, px: pos.x, py: pos.y }
