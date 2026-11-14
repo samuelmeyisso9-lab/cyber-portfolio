@@ -1608,9 +1608,10 @@ const persistData = (next) => {
       </nav>
 
       {data.backgrounds && data.backgrounds[section] && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: 'none',
           backgroundImage: `url(${data.backgrounds[section]})`, backgroundSize: 'contain',
-          backgroundPosition: 'center', backgroundRepeat: 'no-repeat', opacity: 0.18, filter: 'grayscale(0.15) blur(0.4px)' }} />
+          backgroundPosition: 'center', backgroundRepeat: 'no-repeat', opacity: 0.32,
+          WebkitBackgroundSize: 'contain' }} />
       )}
       <main style={{ ...S.main, position: 'relative', zIndex: 1, minHeight: '60vh' }}>
         {renderSection(section)}
