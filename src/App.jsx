@@ -306,7 +306,7 @@ const INIT = {
     }
   ],
   "softSkills": "Autodidacte · Adaptabilité & réactivité · Travail en équipe · Organisation & autonomie · Résilience · Polyvalence   Persévérance · Diligence ·  Détermination",
-  "tools": "Wireshark · Nmap · BurpSuite · Kali Linux · VMware · Docker · Stormshield · Hashcat · Sqlmap · Metasploit · Packet Tracer · Windows Server · CrowdStrike Falcon · Microsoft 365 · Wazuh · SharePoint · Excel",
+  "tools": "Windows Server · Active Directory · Linux · Microsoft 365 · VMware · Wazuh · CrowdStrike Falcon · Wireshark · Nmap · TCP/IP · Python · PowerShell · JavaScript · TypeScript · React · Node.js",
   "photo": "/photo-samuel.jpg"
 }
 
@@ -900,6 +900,8 @@ export default function App() {
         if (f1 && f1.period === 'Sept 2025 – Juin 2026') f1.period = INIT.formations.find(x => x.id === 'f1').period
       }
       const tools = String(merged.tools || '')
+      const NEW_TOOLS = "Windows Server · Active Directory · Linux · Microsoft 365 · VMware · Wazuh · CrowdStrike Falcon · Wireshark · Nmap · TCP/IP · Python · PowerShell · JavaScript · TypeScript · React · Node.js"
+      if (tools.includes('BurpSuite') || tools.includes('Stormshield') || tools.includes('Sqlmap') || tools.includes('Metasploit') || tools.includes('Packet Tracer')) merged.tools = NEW_TOOLS
       const missingTools = INIT.tools.split('·').map(t => t.trim()).filter(t => !tools.toLowerCase().includes(t.toLowerCase()))
       if (missingTools.length) {
         merged.tools = [tools, ...missingTools].filter(Boolean).join(' · ')
