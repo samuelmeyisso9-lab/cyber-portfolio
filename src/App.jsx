@@ -1628,7 +1628,7 @@ const persistData = (next) => {
           <img src={bg} alt="" aria-hidden="true" style={{
             position: 'fixed', top: 0, left: 0,
             width: '100vw', height: '100vh',
-            objectFit: 'cover',
+            objectFit: (isMobile || section === 'projets' || section === 'contact') ? 'contain' : 'cover',
             opacity: isMobile ? 0.28 : 0.22,
             pointerEvents: 'none', zIndex: 0,
             filter: 'grayscale(0.1)',
