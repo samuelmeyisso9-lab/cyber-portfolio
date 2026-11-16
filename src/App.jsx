@@ -1543,7 +1543,6 @@ const persistData = (next) => {
                   const onUp = () => { window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp) }
                   window.addEventListener('pointermove', onMove)
                   window.addEventListener('pointerup', onUp)
-                  try { e.currentTarget.setPointerCapture(e.pointerId) } catch (err) {}
                 }}
                 style={{
                   position: 'absolute',
