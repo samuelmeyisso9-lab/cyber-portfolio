@@ -933,6 +933,43 @@ export default function App() {
   const [cropState, setCropState] = useState(null)
   const cropDrag = useRef(null)
   const cropContainerRef = useRef(null)
+  useEffect(() => {
+    if (!cropState) return
+    const el = cropContainerRef.current
+    if (!el) return
+    const onMove = (e) => {
+      const drag = cropDrag.current
+      if (!drag) return
+      const dx = e.clientX - drag.startX, dy = e.clientY - drag.startY
+      const { dispW, dispH } = cropState
+      const sb = drag.startBox
+      if (drag.mode === 'move') {
+        let x = Math.max(0, Math.min(dispW - sb.w, sb.x + dx))
+        let y = Math.max(0, Math.min(dispH - sb.h, sb.y + dy))
+        setCropState(prev => (prev ? { ...prev, box: { ...prev.box, x, y } } : prev))
+      } else {
+        const hh = drag.handle
+        let { x, y, w, h } = sb
+        if (hh === 'se' || hh === 'ne') w = Math.max(30, sb.w + dx)
+        if (hh === 'sw' || hh === 'nw') { const nw = Math.max(30, sb.w - dx); x = sb.x + (sb.w - nw); w = nw }
+        if (hh === 'se' || hh === 'sw') h = Math.max(30, sb.h + dy)
+        if (hh === 'ne' || hh === 'nw') { const nh = Math.max(30, sb.h - dy); y = sb.y + (sb.h - nh); h = nh }
+        x = Math.max(0, Math.min(dispW - w, x)); y = Math.max(0, Math.min(dispH - h, y))
+        w = Math.min(w, dispW - x); h = Math.min(h, dispH - y)
+        setCropState(prev => (prev ? { ...prev, box: { x, y, w, h } } : prev))
+      }
+    }
+    const onUp = () => { cropDrag.current = null }
+    el.addEventListener('pointermove', onMove)
+    el.addEventListener('pointerup', onUp)
+    el.addEventListener('pointerleave', onUp)
+    return () => {
+      el.removeEventListener('pointermove', onMove)
+      el.removeEventListener('pointerup', onUp)
+      el.removeEventListener('pointerleave', onUp)
+    }
+  }, [cropState])
+
   const undoRef = useRef([])
   const redoRef = useRef([])
   const cutRef = useRef(null)
@@ -1526,31 +1563,7 @@ const persistData = (next) => {
         <div style={{ position: 'fixed', inset: 0, background: '#000000ee', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10001, padding: '16px' }}>
           <div style={{ background: '#0f0f0f', border: '1px solid #00ff88', borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center', maxWidth: '95vw', maxHeight: '95vh' }}>
             <div style={{ color: '#00ff88', fontSize: '1.1rem', fontWeight: 'bold' }}>Recadrer / Redimensionner</div>
-            <div ref={cropContainerRef} style={{ position: 'relative', width: cropState.dispW, height: cropState.dispH, userSelect: 'none', cursor: 'crosshair', touchAction: 'none' }}
-              onPointerMove={e => {
-                const drag = cropDrag.current
-                if (!drag) return
-                const dx = e.clientX - drag.startX, dy = e.clientY - drag.startY
-                const { dispW, dispH } = cropState
-                const sb = drag.startBox
-                if (drag.mode === 'move') {
-                  let x = Math.max(0, Math.min(dispW - sb.w, sb.x + dx))
-                  let y = Math.max(0, Math.min(dispH - sb.h, sb.y + dy))
-                  setCropState(prev => ({ ...prev, box: { ...prev.box, x, y } }))
-                } else {
-                  const hh = drag.handle
-                  let { x, y, w, h } = sb
-                  if (hh === 'se' || hh === 'ne') w = Math.max(30, sb.w + dx)
-                  if (hh === 'sw' || hh === 'nw') { const nw = Math.max(30, sb.w - dx); x = sb.x + (sb.w - nw); w = nw }
-                  if (hh === 'se' || hh === 'sw') h = Math.max(30, sb.h + dy)
-                  if (hh === 'ne' || hh === 'nw') { const nh = Math.max(30, sb.h - dy); y = sb.y + (sb.h - nh); h = nh }
-                  x = Math.max(0, Math.min(dispW - w, x)); y = Math.max(0, Math.min(dispH - h, y))
-                  w = Math.min(w, dispW - x); h = Math.min(h, dispH - y)
-                  setCropState(prev => ({ ...prev, box: { x, y, w, h } }))
-                }
-              }}
-              onPointerUp={() => { cropDrag.current = null }}
-            >
+            <div ref={cropContainerRef} style={{ position: 'relative', width: cropState.dispW, height: cropState.dispH, userSelect: 'none', cursor: 'crosshair', touchAction: 'none' }}>
               <img src={cropState.src} alt="" style={{ width: cropState.dispW, height: cropState.dispH, display: 'block', pointerEvents: 'none' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', pointerEvents: 'none' }} />
               <div
