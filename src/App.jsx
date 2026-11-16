@@ -1625,26 +1625,14 @@ const persistData = (next) => {
         if (!bg) return null
         const contain = isMobile || section === 'projets' || section === 'contact'
         return (
-          <>
-            <img src={bg} alt="" aria-hidden="true" style={{
-              position: 'fixed', top: 0, left: 0,
-              width: '100vw', height: '100vh',
-              objectFit: 'cover',
-              opacity: isMobile ? 0.16 : 0.14,
-              pointerEvents: 'none', zIndex: 0,
-              filter: 'grayscale(0.2) blur(16px)',
-            }} />
-            <img src={bg} alt="" aria-hidden="true" style={{
-              position: 'fixed', top: '50%', left: '50%',
-              transform: 'translate(-50%, -50%)',
-              maxWidth: '92vw', maxHeight: '88vh',
-              width: 'auto', height: 'auto',
-              objectFit: 'contain',
-              opacity: isMobile ? 0.3 : 0.24,
-              pointerEvents: 'none', zIndex: 0,
-              filter: 'grayscale(0.1)',
-            }} />
-          </>
+          <img src={bg} alt="" aria-hidden="true" style={{
+            position: 'fixed', top: 0, left: 0,
+            width: '100vw', height: '100vh',
+            objectFit: 'cover',
+            opacity: isMobile ? 0.25 : 0.2,
+            pointerEvents: 'none', zIndex: 0,
+            filter: 'grayscale(0.1)',
+          }} />
         )
       })()}
       <main style={{ ...S.main, position: 'relative', zIndex: 1, minHeight: '60vh' }}>
