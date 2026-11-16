@@ -935,6 +935,38 @@ export default function App() {
   const cropContainerRef = useRef(null)
   useEffect(() => {
     if (!cropState) return
+    const onMove = (e) => {
+      const drag = cropDrag.current
+      if (!drag) return
+      const dx = e.clientX - drag.startX, dy = e.clientY - drag.startY
+      const { dispW, dispH } = cropState
+      const sb = drag.startBox
+      if (drag.mode === 'move') {
+        let x = Math.max(0, Math.min(dispW - sb.w, sb.x + dx))
+        let y = Math.max(0, Math.min(dispH - sb.h, sb.y + dy))
+        setCropState(prev => (prev ? { ...prev, box: { ...prev.box, x, y } } : prev))
+      } else {
+        const hh = drag.handle
+        let { x, y, w, h } = sb
+        if (hh === 'se' || hh === 'ne') w = Math.max(30, sb.w + dx)
+        if (hh === 'sw' || hh === 'nw') { const nw = Math.max(30, sb.w - dx); x = sb.x + (sb.w - nw); w = nw }
+        if (hh === 'se' || hh === 'sw') h = Math.max(30, sb.h + dy)
+        if (hh === 'ne' || hh === 'nw') { const nh = Math.max(30, sb.h - dy); y = sb.y + (sb.h - nh); h = nh }
+        x = Math.max(0, Math.min(dispW - w, x)); y = Math.max(0, Math.min(dispH - h, y))
+        w = Math.min(w, dispW - x); h = Math.min(h, dispH - y)
+        setCropState(prev => (prev ? { ...prev, box: { x, y, w, h } } : prev))
+      }
+    }
+    const onUp = () => { cropDrag.current = null }
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerup', onUp)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+    }
+  }, [cropState])
+  useEffect(() => {
+    if (!cropState) return
     const el = cropContainerRef.current
     if (!el) return
     const onMove = (e) => {
