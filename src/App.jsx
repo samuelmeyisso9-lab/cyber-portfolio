@@ -932,6 +932,7 @@ export default function App() {
   const [token, setToken] = useState(localStorage.getItem('admin_token'))
   const [cropState, setCropState] = useState(null)
   const cropDrag = useRef(null)
+  const cropContainerRef = useRef(null)
   const undoRef = useRef([])
   const redoRef = useRef([])
   const cutRef = useRef(null)
