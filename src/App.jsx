@@ -347,9 +347,9 @@ function FreeDrag({ id, isAdmin, positions, onMove, children, style = {} }) {
       if (!dragging.current) return
       onMove(id, { ...pos, x: origin.current.px + (e.clientX - origin.current.mx), y: origin.current.py + (e.clientY - origin.current.my) })
     }
-    const onUp = () => { dragging.current = false; window.removeEventListener('mousemove', onMv); window.removeEventListener('mouseup', onUp) }
+    const onUp = () => { dragging.current = false; window.removeEventListener('mousemove', onMv); window.removeEventListener('pointerup', onUp) }
     window.addEventListener('mousemove', onMv)
-    window.addEventListener('mouseup', onUp)
+    window.addEventListener('pointerup', onUp)
   }
 
   // ── RESIZE (coin bas-droite) ─────────────────────────
@@ -363,9 +363,9 @@ function FreeDrag({ id, isAdmin, positions, onMove, children, style = {} }) {
       const newW = Math.max(80, origin.current.w + (e.clientX - origin.current.mx))
       onMove(id, { ...pos, w: newW })
     }
-    const onUp = () => { resizing.current = false; window.removeEventListener('mousemove', onMv); window.removeEventListener('mouseup', onUp) }
+    const onUp = () => { resizing.current = false; window.removeEventListener('mousemove', onMv); window.removeEventListener('pointerup', onUp) }
     window.addEventListener('mousemove', onMv)
-    window.addEventListener('mouseup', onUp)
+    window.addEventListener('pointerup', onUp)
   }
 
   // ── SCALE (coin bas-gauche) ──────────────────────────
@@ -380,9 +380,9 @@ function FreeDrag({ id, isAdmin, positions, onMove, children, style = {} }) {
       const newS = Math.min(2, Math.max(0.3, origin.current.s + delta))
       onMove(id, { ...pos, s: newS })
     }
-    const onUp = () => { resizing.current = false; window.removeEventListener('mousemove', onMv); window.removeEventListener('mouseup', onUp) }
+    const onUp = () => { resizing.current = false; window.removeEventListener('mousemove', onMv); window.removeEventListener('pointerup', onUp) }
     window.addEventListener('mousemove', onMv)
-    window.addEventListener('mouseup', onUp)
+    window.addEventListener('pointerup', onUp)
   }
 
   const onDblClick = (e) => {
@@ -1529,7 +1529,7 @@ const persistData = (next) => {
               <img src={cropState.src} alt="" style={{ width: cropState.dispW, height: cropState.dispH, display: 'block', pointerEvents: 'none' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', pointerEvents: 'none' }} />
               <div
-                onMouseDown={e => {
+                onPointerDown={e => {
                   e.preventDefault()
                   const startX = e.clientX, startY = e.clientY
                   const startBox = { ...cropState.box }
@@ -1540,9 +1540,9 @@ const persistData = (next) => {
                     let y = Math.max(0, Math.min(dispH - startBox.h, startBox.y + dy))
                     setCropState(prev => ({ ...prev, box: { ...prev.box, x, y } }))
                   }
-                  const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
-                  window.addEventListener('mousemove', onMove)
-                  window.addEventListener('mouseup', onUp)
+                  const onUp = () => { window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp) }
+                  window.addEventListener('pointermove', onMove)
+                  window.addEventListener('pointerup', onUp)
                 }}
                 style={{
                   position: 'absolute',
@@ -1551,11 +1551,12 @@ const persistData = (next) => {
                   border: '2px solid #00ff88',
                   boxShadow: '0 0 0 9999px rgba(0,0,0,0.5)',
                   cursor: 'move', boxSizing: 'border-box',
+                  touchAction: 'none',
                 }}
               >
                 {['nw','ne','sw','se'].map(h => (
                   <div key={h}
-                    onMouseDown={e => {
+                    onPointerDown={e => {
                       e.preventDefault(); e.stopPropagation()
                       const startX = e.clientX, startY = e.clientY
                       const startBox = { ...cropState.box }
@@ -1571,8 +1572,8 @@ const persistData = (next) => {
                         w = Math.min(w, dispW - x); h = Math.min(h, dispH - y)
                         setCropState(prev => ({ ...prev, box: { x, y, w, h } }))
                       }
-                      const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
-                      window.addEventListener('mousemove', onMove)
+                      const onUp = () => { window.removeEventListener('pointermove', onMove); window.removeEventListener('mouseup', onUp) }
+                      window.addEventListener('pointermove', onMove)
                       window.addEventListener('mouseup', onUp)
                     }}
                     style={{
