@@ -930,7 +930,8 @@ export default function App() {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 
   const [token, setToken] = useState(localStorage.getItem('admin_token'))
-  const [imgPreview, setImgPreview] = useState(null)
+  const [cropState, setCropState] = useState(null)
+  const cropDrag = useRef(null)
   const undoRef = useRef([])
   const redoRef = useRef([])
   const cutRef = useRef(null)
@@ -1263,17 +1264,12 @@ const persistData = (next) => {
                   reader.onload = ev => {
                     const img = new Image()
                     img.onload = () => {
-                      const MAX = 440
-                      const ratio = Math.min(MAX / img.width, MAX / img.height, 1)
-                      const w = Math.round(img.width * ratio)
-                      const h = Math.round(img.height * ratio)
-                      const canvas = document.createElement('canvas')
-                      canvas.width = w; canvas.height = h
-                      const ctx = canvas.getContext('2d')
-                      ctx.imageSmoothingEnabled = true
-                      ctx.imageSmoothingQuality = 'high'
-                      ctx.drawImage(img, 0, 0, w, h)
-                      setImgPreview({ dataUrl: canvas.toDataURL('image/jpeg', 0.88), target: 'photo' })
+                      const maxW = Math.min(window.innerWidth * 0.7, 900)
+                      const maxH = Math.min(window.innerHeight * 0.6, 700)
+                      const scale = Math.min(maxW / img.width, maxH / img.height, 1)
+                      const dispW = Math.round(img.width * scale)
+                      const dispH = Math.round(img.height * scale)
+                      setCropState({ src: ev.target.result, target: 'photo', imgW: img.width, imgH: img.height, dispW, dispH, box: { x: 0, y: 0, w: dispW, h: dispH } })
                     }
                     img.src = ev.target.result
                   }
@@ -1525,31 +1521,105 @@ const persistData = (next) => {
       <CyberBackground />
       <CustomCursor />
       {showModal && <PwModal onLogin={handleLogin} onClose={() => setShowModal(false)} error={loginError} form={loginForm} setForm={setLoginForm} />}
-      {imgPreview && (
-        <div style={{ position: 'fixed', inset: 0, background: '#000000ee', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10001, padding: '20px' }}>
-          <div style={{ background: '#0f0f0f', border: '1px solid #00ff88', borderRadius: '16px', padding: '24px', maxWidth: '90vw', maxHeight: '90vh', display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
-            <div style={{ color: '#00ff88', fontSize: '1.1rem', fontWeight: 'bold' }}>Apercu de l'image</div>
-            <img src={imgPreview.dataUrl} alt="preview" style={{ maxWidth: '70vw', maxHeight: '60vh', objectFit: 'contain', borderRadius: '10px', border: '2px solid #00ff8844' }} />
+      {cropState && (
+        <div style={{ position: 'fixed', inset: 0, background: '#000000ee', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10001, padding: '16px' }}>
+          <div style={{ background: '#0f0f0f', border: '1px solid #00ff88', borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center', maxWidth: '95vw', maxHeight: '95vh' }}>
+            <div style={{ color: '#00ff88', fontSize: '1.1rem', fontWeight: 'bold' }}>Recadrer / Redimensionner</div>
+            <div style={{ position: 'relative', width: cropState.dispW, height: cropState.dispH, userSelect: 'none', cursor: 'crosshair' }}>
+              <img src={cropState.src} alt="" style={{ width: cropState.dispW, height: cropState.dispH, display: 'block', pointerEvents: 'none' }} />
+              <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', pointerEvents: 'none' }} />
+              <div
+                onMouseDown={e => {
+                  e.preventDefault()
+                  const startX = e.clientX, startY = e.clientY
+                  const startBox = { ...cropState.box }
+                  const onMove = (ev) => {
+                    const dx = ev.clientX - startX, dy = ev.clientY - startY
+                    const { dispW, dispH } = cropState
+                    let x = Math.max(0, Math.min(dispW - startBox.w, startBox.x + dx))
+                    let y = Math.max(0, Math.min(dispH - startBox.h, startBox.y + dy))
+                    setCropState(prev => ({ ...prev, box: { ...prev.box, x, y } }))
+                  }
+                  const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
+                  window.addEventListener('mousemove', onMove)
+                  window.addEventListener('mouseup', onUp)
+                }}
+                style={{
+                  position: 'absolute',
+                  left: cropState.box.x, top: cropState.box.y,
+                  width: cropState.box.w, height: cropState.box.h,
+                  border: '2px solid #00ff88',
+                  boxShadow: '0 0 0 9999px rgba(0,0,0,0.5)',
+                  cursor: 'move', boxSizing: 'border-box',
+                }}
+              >
+                {['nw','ne','sw','se'].map(h => (
+                  <div key={h}
+                    onMouseDown={e => {
+                      e.preventDefault(); e.stopPropagation()
+                      const startX = e.clientX, startY = e.clientY
+                      const startBox = { ...cropState.box }
+                      const onMove = (ev) => {
+                        const dx = ev.clientX - startX, dy = ev.clientY - startY
+                        const { dispW, dispH } = cropState
+                        let { x, y, w, h } = startBox
+                        if (h === 'se' || h === 'ne') w = Math.max(30, startBox.w + dx)
+                        if (h === 'sw' || h === 'nw') { const nw = Math.max(30, startBox.w - dx); x = startBox.x + (startBox.w - nw); w = nw }
+                        if (h === 'se' || h === 'sw') h = Math.max(30, startBox.h + dy)
+                        if (h === 'ne' || h === 'nw') { const nh = Math.max(30, startBox.h - dy); y = startBox.y + (startBox.h - nh); h = nh }
+                        x = Math.max(0, Math.min(dispW - w, x)); y = Math.max(0, Math.min(dispH - h, y))
+                        w = Math.min(w, dispW - x); h = Math.min(h, dispH - y)
+                        setCropState(prev => ({ ...prev, box: { x, y, w, h } }))
+                      }
+                      const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
+                      window.addEventListener('mousemove', onMove)
+                      window.addEventListener('mouseup', onUp)
+                    }}
+                    style={{
+                      position: 'absolute', width: 14, height: 14, background: '#00ff88', border: '2px solid #000', borderRadius: 3, cursor: h + '-resize', zIndex: 5,
+                      top: h.startsWith('n') ? -7 : undefined, bottom: h.startsWith('s') ? -7 : undefined,
+                      left: h.endsWith('w') ? -7 : undefined, right: h.endsWith('e') ? -7 : undefined,
+                    }} />
+                ))}
+              </div>
+            </div>
+            <div style={{ color: '#888', fontSize: '0.75rem', textAlign: 'center' }}>Glisse la zone pour la deplacer · Tire les coins pour recadrer</div>
             <div style={{ display: 'flex', gap: '12px' }}>
               <button onClick={() => {
-                if (imgPreview.target === 'photo') {
-                  const newData = { ...data, photo: imgPreview.dataUrl }
-                  up('photo', imgPreview.dataUrl)
-                  save(newData)
-                } else {
-                  const newBg = isMobile
-                    ? { ...(data.backgroundsMobile||{}), [section]: imgPreview.dataUrl }
-                    : { ...(data.backgrounds||{}), [section]: imgPreview.dataUrl }
-                  const newBgData = isMobile
-                    ? { ...data, backgroundsMobile: newBg }
-                    : { ...data, backgrounds: newBg }
-                  if (isMobile) up('backgroundsMobile', newBg)
-                  else up('backgrounds', newBg)
-                  save(newBgData)
+                if (!cropState) return
+                const { src, target, imgW, imgH, dispW, dispH, box } = cropState
+                const scale = imgW / dispW
+                const sx = Math.round(box.x * scale), sy = Math.round(box.y * scale)
+                const sw = Math.round(box.w * scale), sh = Math.round(box.h * scale)
+                const img = new Image()
+                img.onload = () => {
+                  const MAX = target === 'photo' ? 440 : 1920
+                  const ratio = Math.min(MAX / sw, MAX / sh, 1)
+                  const canvas = document.createElement('canvas')
+                  canvas.width = Math.round(sw * ratio); canvas.height = Math.round(sh * ratio)
+                  const ctx = canvas.getContext('2d')
+                  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'
+                  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height)
+                  const dataUrl = canvas.toDataURL('image/jpeg', 0.88)
+                  if (target === 'photo') {
+                    const newData = { ...data, photo: dataUrl }
+                    up('photo', dataUrl); save(newData)
+                  } else {
+                    const newBg = isMobile
+                      ? { ...(data.backgroundsMobile||{}), [section]: dataUrl }
+                      : { ...(data.backgrounds||{}), [section]: dataUrl }
+                    const newBgData = isMobile
+                      ? { ...data, backgroundsMobile: newBg }
+                      : { ...data, backgrounds: newBg }
+                    if (isMobile) up('backgroundsMobile', newBg)
+                    else up('backgrounds', newBg)
+                    save(newBgData)
+                  }
+                  setCropState(null)
                 }
-                setImgPreview(null)
+                img.src = src
               }} style={{ ...S.aSave, background: '#00ff88', color: '#000', border: 'none', padding: '10px 22px' }}>Valider</button>
-              <button onClick={() => setImgPreview(null)} style={{ ...S.aBtn, borderColor: '#ff444433', color: '#ff4444', padding: '10px 22px' }}>Annuler</button>
+              <button onClick={() => setCropState(null)} style={{ ...S.aBtn, borderColor: '#ff444433', color: '#ff4444', padding: '10px 22px' }}>Annuler</button>
             </div>
           </div>
         </div>
@@ -1582,17 +1652,12 @@ const persistData = (next) => {
               reader.onload = ev => {
                 const img = new Image()
                 img.onload = () => {
-                  const MAX = 1920
-                  const ratio = Math.min(MAX / img.width, MAX / img.height, 1)
-                  const w = Math.round(img.width * ratio)
-                  const h = Math.round(img.height * ratio)
-                  const canvas = document.createElement('canvas')
-                  canvas.width = w; canvas.height = h
-                  const ctx = canvas.getContext('2d')
-                  ctx.imageSmoothingEnabled = true
-                  ctx.imageSmoothingQuality = 'high'
-                  ctx.drawImage(img, 0, 0, w, h)
-                  setImgPreview({ dataUrl: canvas.toDataURL('image/jpeg', 0.78), target: 'bg' })
+                  const maxW = Math.min(window.innerWidth * 0.7, 900)
+                  const maxH = Math.min(window.innerHeight * 0.6, 700)
+                  const scale = Math.min(maxW / img.width, maxH / img.height, 1)
+                  const dispW = Math.round(img.width * scale)
+                  const dispH = Math.round(img.height * scale)
+                  setCropState({ src: ev.target.result, target: 'bg', imgW: img.width, imgH: img.height, dispW, dispH, box: { x: 0, y: 0, w: dispW, h: dispH } })
                 }
                 img.src = ev.target.result
               }
