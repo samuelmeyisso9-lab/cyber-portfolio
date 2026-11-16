@@ -931,6 +931,7 @@ export default function App() {
 
   const [token, setToken] = useState(localStorage.getItem('admin_token'))
   const [cropState, setCropState] = useState(null)
+  const [cropDragging, setCropDragging] = useState(false)
   const cropDrag = useRef(null)
   const cropContainerRef = useRef(null)
   const cropStateRef = useRef(null)
@@ -1573,7 +1574,7 @@ const persistData = (next) => {
                   e.preventDefault()
                   console.log('BOX mousedown, setting cropDrag')
                   cropDrag.current = { mode: 'move', startX: e.clientX, startY: e.clientY, startBox: { ...cropState.box } }
-                  console.log('cropDrag after set:', cropDrag.current && cropDrag.current.mode)
+                  setCropDragging(true)
                 }}
                 style={{
                   position: 'absolute',
@@ -1590,6 +1591,7 @@ const persistData = (next) => {
                     onMouseDown={e => {
                       e.preventDefault(); e.stopPropagation()
                       cropDrag.current = { mode: 'resize', handle: h, startX: e.clientX, startY: e.clientY, startBox: { ...cropState.box } }
+                      setCropDragging(true)
                     }}
                     style={{
                       position: 'absolute', width: 16, height: 16, background: '#00ff88', border: '2px solid #000', borderRadius: 3, cursor: h + '-resize', zIndex: 5, touchAction: 'none',
@@ -1599,7 +1601,36 @@ const persistData = (next) => {
                 ))}
               </div>
             </div>
-            <div style={{ color: '#888', fontSize: '0.75rem', textAlign: 'center' }}>Glisse la zone pour la deplacer · Tire les coins pour recadrer</div>
+            {cropDragging && (
+              <div
+                onMouseMove={e => {
+                  const drag = cropDrag.current
+                  if (!drag) return
+                  const dx = e.clientX - drag.startX, dy = e.clientY - drag.startY
+                  const { dispW, dispH } = cropState
+                  const sb = drag.startBox
+                  if (drag.mode === 'move') {
+                    let x = Math.max(0, Math.min(dispW - sb.w, sb.x + dx))
+                    let y = Math.max(0, Math.min(dispH - sb.h, sb.y + dy))
+                    setCropState(prev => (prev ? { ...prev, box: { ...prev.box, x, y } } : prev))
+                  } else {
+                    const hh = drag.handle
+                    let { x, y, w, h } = sb
+                    if (hh === 'se' || hh === 'ne') w = Math.max(30, sb.w + dx)
+                    if (hh === 'sw' || hh === 'nw') { const nw = Math.max(30, sb.w - dx); x = sb.x + (sb.w - nw); w = nw }
+                    if (hh === 'se' || hh === 'sw') h = Math.max(30, sb.h + dy)
+                    if (hh === 'ne' || hh === 'nw') { const nh = Math.max(30, sb.h - dy); y = sb.y + (sb.h - nh); h = nh }
+                    x = Math.max(0, Math.min(dispW - w, x)); y = Math.max(0, Math.min(dispH - h, y))
+                    w = Math.min(w, dispW - x); h = Math.min(h, dispH - y)
+                    setCropState(prev => (prev ? { ...prev, box: { x, y, w, h } } : prev))
+                  }
+                }}
+                onMouseUp={() => { cropDrag.current = null; setCropDragging(false) }}
+                onMouseLeave={() => { /* keep dragging */ }}
+                style={{ position: 'fixed', inset: 0, zIndex: 10002, cursor: 'move' }}
+              />
+            )}
+            <div style={{ color: '#888', fontSize: '0.75rem', textAlign: 'center' }}>Glisse la zone pour la deplacer - Tire les coins pour recadrer</div>
             <div style={{ display: 'flex', gap: '12px' }}>
               <button onClick={() => {
                 if (!cropState) return
