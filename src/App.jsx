@@ -347,9 +347,9 @@ function FreeDrag({ id, isAdmin, positions, onMove, children, style = {} }) {
       if (!dragging.current) return
       onMove(id, { ...pos, x: origin.current.px + (e.clientX - origin.current.mx), y: origin.current.py + (e.clientY - origin.current.my) })
     }
-    const onUp = () => { dragging.current = false; window.removeEventListener('mousemove', onMv); window.removeEventListener('pointerup', onUp) }
+    const onUp = () => { dragging.current = false; window.removeEventListener('mousemove', onMv); window.removeEventListener('mouseup', onUp) }
     window.addEventListener('mousemove', onMv)
-    window.addEventListener('pointerup', onUp)
+    window.addEventListener('mouseup', onUp)
   }
 
   // ── RESIZE (coin bas-droite) ─────────────────────────
@@ -363,9 +363,9 @@ function FreeDrag({ id, isAdmin, positions, onMove, children, style = {} }) {
       const newW = Math.max(80, origin.current.w + (e.clientX - origin.current.mx))
       onMove(id, { ...pos, w: newW })
     }
-    const onUp = () => { resizing.current = false; window.removeEventListener('mousemove', onMv); window.removeEventListener('pointerup', onUp) }
+    const onUp = () => { resizing.current = false; window.removeEventListener('mousemove', onMv); window.removeEventListener('mouseup', onUp) }
     window.addEventListener('mousemove', onMv)
-    window.addEventListener('pointerup', onUp)
+    window.addEventListener('mouseup', onUp)
   }
 
   // ── SCALE (coin bas-gauche) ──────────────────────────
@@ -960,10 +960,10 @@ export default function App() {
       }
     }
     const onUp = () => { cropDrag.current = null }
-    window.addEventListener('pointermove', onMove)
+    window.addEventListener('mousemove', onMove)
     window.addEventListener('pointerup', onUp)
     return () => {
-      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('mousemove', onMove)
       window.removeEventListener('pointerup', onUp)
     }
   }, [cropState])
@@ -1565,7 +1565,7 @@ const persistData = (next) => {
               <img src={cropState.src} alt="" style={{ width: cropState.dispW, height: cropState.dispH, display: 'block', pointerEvents: 'none' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', pointerEvents: 'none' }} />
               <div
-                onPointerDown={e => {
+                onMouseDown={e => {
                   e.preventDefault()
                   console.log('BOX pointerdown', e.clientX, e.clientY)
                   cropDrag.current = { mode: 'move', startX: e.clientX, startY: e.clientY, startBox: { ...cropState.box } }
@@ -1583,7 +1583,7 @@ const persistData = (next) => {
               >
                 {['nw','ne','sw','se'].map(h => (
                   <div key={h}
-                    onPointerDown={e => {
+                    onMouseDown={e => {
                       e.preventDefault(); e.stopPropagation()
                       cropDrag.current = { mode: 'resize', handle: h, startX: e.clientX, startY: e.clientY, startBox: { ...cropState.box } }
                     }}
