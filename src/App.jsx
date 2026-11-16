@@ -1570,7 +1570,9 @@ const persistData = (next) => {
               <div
                 onPointerDown={e => {
                   e.preventDefault()
+                  console.log('BOX pointerdown', e.clientX, e.clientY)
                   cropDrag.current = { mode: 'move', startX: e.clientX, startY: e.clientY, startBox: { ...cropState.box } }
+                  console.log('cropDrag set to', cropDrag.current.mode)
                 }}
                 style={{
                   position: 'absolute',
