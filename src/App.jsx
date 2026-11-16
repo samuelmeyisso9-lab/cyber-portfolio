@@ -967,7 +967,8 @@ export default function App() {
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mouseup', onUp)
     }
-  }, [cropState])
+  }, [])
+
 
 
   const undoRef = useRef([])
