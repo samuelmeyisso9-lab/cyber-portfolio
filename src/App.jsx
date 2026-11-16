@@ -1543,6 +1543,7 @@ const persistData = (next) => {
                   const onUp = () => { window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp) }
                   window.addEventListener('pointermove', onMove)
                   window.addEventListener('pointerup', onUp)
+                  try { e.currentTarget.setPointerCapture(e.pointerId) } catch (err) {}
                 }}
                 style={{
                   position: 'absolute',
@@ -1572,9 +1573,9 @@ const persistData = (next) => {
                         w = Math.min(w, dispW - x); h = Math.min(h, dispH - y)
                         setCropState(prev => ({ ...prev, box: { x, y, w, h } }))
                       }
-                      const onUp = () => { window.removeEventListener('pointermove', onMove); window.removeEventListener('mouseup', onUp) }
+                      const onUp = () => { window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp) }
                       window.addEventListener('pointermove', onMove)
-                      window.addEventListener('mouseup', onUp)
+                      window.addEventListener('pointerup', onUp)
                     }}
                     style={{
                       position: 'absolute', width: 14, height: 14, background: '#00ff88', border: '2px solid #000', borderRadius: 3, cursor: h + '-resize', zIndex: 5,
