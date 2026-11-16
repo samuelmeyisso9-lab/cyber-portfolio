@@ -938,6 +938,7 @@ export default function App() {
     const el = cropContainerRef.current
     if (!el) return
     const onMove = (e) => {
+      console.log('NATIVE onMove fired, drag=', cropDrag.current && cropDrag.current.mode)
       const drag = cropDrag.current
       if (!drag) return
       const dx = e.clientX - drag.startX, dy = e.clientY - drag.startY
