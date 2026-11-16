@@ -937,6 +937,7 @@ export default function App() {
   cropStateRef.current = cropState
   useEffect(() => {
     const onMove = (e) => {
+      console.log('window onMove, drag=', cropDrag.current && cropDrag.current.mode)
       const drag = cropDrag.current
       if (!drag) return
       const cs = cropStateRef.current
@@ -960,7 +961,7 @@ export default function App() {
         setCropState(prev => (prev ? { ...prev, box: { x, y, w, h } } : prev))
       }
     }
-    const onUp = () => { cropDrag.current = null }
+    const onUp = () => { console.log('onUp fired'); cropDrag.current = null }
     window.addEventListener('mousemove', onMove)
     window.addEventListener('mouseup', onUp)
     return () => {
@@ -1570,7 +1571,9 @@ const persistData = (next) => {
               <div
                 onMouseDown={e => {
                   e.preventDefault()
+                  console.log('BOX mousedown, setting cropDrag')
                   cropDrag.current = { mode: 'move', startX: e.clientX, startY: e.clientY, startBox: { ...cropState.box } }
+                  console.log('cropDrag after set:', cropDrag.current && cropDrag.current.mode)
                 }}
                 style={{
                   position: 'absolute',
