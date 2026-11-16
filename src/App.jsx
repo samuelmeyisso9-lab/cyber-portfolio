@@ -1563,30 +1563,63 @@ const persistData = (next) => {
       <CustomCursor />
       {showModal && <PwModal onLogin={handleLogin} onClose={() => setShowModal(false)} error={loginError} form={loginForm} setForm={setLoginForm} />}
       {cropState && (
-        <div style={{ position: 'fixed', inset: 0, background: '#000000ee', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10001, padding: '20px' }}>
-          <div style={{ background: '#0f0f0f', border: '1px solid #00ff88', borderRadius: '16px', padding: '24px', maxWidth: '90vw', maxHeight: '90vh', display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
-            <div style={{ color: '#00ff88', fontSize: '1.1rem', fontWeight: 'bold' }}>Apercu de l'image</div>
-            <img src={cropState.src} alt="preview" style={{ maxWidth: '70vw', maxHeight: '60vh', objectFit: 'contain', borderRadius: '10px', border: '2px solid #00ff8844' }} />
-            <div style={{ color: '#888', fontSize: '0.8rem', textAlign: 'center' }}>L'image sera compressee et appliquee telle quelle.</div>
+        <div style={{ position: 'fixed', inset: 0, background: '#000000ee', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10001, padding: '16px', overflow: 'auto' }}>
+          <div style={{ background: '#0f0f0f', border: '1px solid #00ff88', borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px', alignItems: 'center', maxWidth: '95vw', maxHeight: '95vh' }}>
+            <div style={{ color: '#00ff88', fontSize: '1.1rem', fontWeight: 'bold' }}>Recadrer / Redimensionner</div>
+            <div style={{ position: 'relative', width: cropState.dispW, height: cropState.dispH, userSelect: 'none' }}>
+              <img src={cropState.src} alt="" style={{ width: cropState.dispW, height: cropState.dispH, display: 'block', pointerEvents: 'none' }} />
+              <div style={{ position: 'absolute', left: cropState.box.x, top: cropState.box.y, width: cropState.box.w, height: cropState.box.h, border: '2px solid #00ff88', boxShadow: '0 0 0 9999px rgba(0,0,0,0.5)', pointerEvents: 'none', boxSizing: 'border-box' }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%', maxWidth: '420px' }}>
+              {[
+                { label: 'X', key: 'x', min: 0, max: cropState.dispW - cropState.box.w },
+                { label: 'Y', key: 'y', min: 0, max: cropState.dispH - cropState.box.h },
+                { label: 'Largeur', key: 'w', min: 30, max: cropState.dispW - cropState.box.x },
+                { label: 'Hauteur', key: 'h', min: 30, max: cropState.dispH - cropState.box.y },
+              ].map(sl => (
+                <div key={sl.key} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ color: '#00ff88', fontSize: '0.75rem', minWidth: '62px' }}>{sl.label}</span>
+                  <input type="range" min={sl.min} max={sl.max} value={cropState.box[sl.key]}
+                    onChange={e => {
+                      const v = +e.target.value
+                      setCropState(prev => {
+                        const box = { ...prev.box, [sl.key]: v }
+                        if (sl.key === 'x') box.x = Math.max(0, Math.min(prev.dispW - box.w, v))
+                        if (sl.key === 'y') box.y = Math.max(0, Math.min(prev.dispH - box.h, v))
+                        if (sl.key === 'w') box.w = Math.max(30, Math.min(prev.dispW - box.x, v))
+                        if (sl.key === 'h') box.h = Math.max(30, Math.min(prev.dispH - box.y, v))
+                        return { ...prev, box }
+                      })
+                    }}
+                    style={{ flex: 1, accentColor: '#00ff88' }} />
+                  <span style={{ color: '#888', fontSize: '0.75rem', minWidth: '36px', textAlign: 'right' }}>{cropState.box[sl.key]}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ color: '#888', fontSize: '0.75rem', textAlign: 'center' }}>Apercu du resultat :</div>
+            <div style={{ width: Math.min(cropState.box.w, 220), height: Math.min(cropState.box.h, 220), overflow: 'hidden', position: 'relative', border: '1px solid #00ff8844', borderRadius: '8px' }}>
+              <img src={cropState.src} alt="" style={{ position: 'absolute', left: -cropState.box.x, top: -cropState.box.y, width: cropState.dispW, height: cropState.dispH, pointerEvents: 'none' }} />
+            </div>
             <div style={{ display: 'flex', gap: '12px' }}>
               <button onClick={() => {
-                const { src, target } = cropState
+                if (!cropState) return
+                const { src, target, imgW, imgH, dispW, dispH, box } = cropState
+                const scale = imgW / dispW
+                const sx = Math.round(box.x * scale), sy = Math.round(box.y * scale)
+                const sw = Math.round(box.w * scale), sh = Math.round(box.h * scale)
                 const img = new Image()
                 img.onload = () => {
                   const MAX = target === 'photo' ? 440 : 1920
-                  const ratio = Math.min(MAX / img.width, MAX / img.height, 1)
+                  const ratio = Math.min(MAX / sw, MAX / sh, 1)
                   const canvas = document.createElement('canvas')
-                  canvas.width = Math.round(img.width * ratio)
-                  canvas.height = Math.round(img.height * ratio)
+                  canvas.width = Math.round(sw * ratio); canvas.height = Math.round(sh * ratio)
                   const ctx = canvas.getContext('2d')
-                  ctx.imageSmoothingEnabled = true
-                  ctx.imageSmoothingQuality = 'high'
-                  ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+                  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'
+                  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height)
                   const dataUrl = canvas.toDataURL('image/jpeg', 0.88)
                   if (target === 'photo') {
                     const newData = { ...data, photo: dataUrl }
-                    up('photo', dataUrl)
-                    save(newData)
+                    up('photo', dataUrl); save(newData)
                   } else {
                     const newBg = isMobile
                       ? { ...(data.backgroundsMobile||{}), [section]: dataUrl }
