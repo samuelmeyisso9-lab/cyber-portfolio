@@ -1525,24 +1525,37 @@ const persistData = (next) => {
         <div style={{ position: 'fixed', inset: 0, background: '#000000ee', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10001, padding: '16px' }}>
           <div style={{ background: '#0f0f0f', border: '1px solid #00ff88', borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center', maxWidth: '95vw', maxHeight: '95vh' }}>
             <div style={{ color: '#00ff88', fontSize: '1.1rem', fontWeight: 'bold' }}>Recadrer / Redimensionner</div>
-            <div style={{ position: 'relative', width: cropState.dispW, height: cropState.dispH, userSelect: 'none', cursor: 'crosshair' }}>
+            <div ref={cropContainerRef} style={{ position: 'relative', width: cropState.dispW, height: cropState.dispH, userSelect: 'none', cursor: 'crosshair', touchAction: 'none' }}
+              onPointerMove={e => {
+                const drag = cropDrag.current
+                if (!drag) return
+                const dx = e.clientX - drag.startX, dy = e.clientY - drag.startY
+                const { dispW, dispH } = cropState
+                const sb = drag.startBox
+                if (drag.mode === 'move') {
+                  let x = Math.max(0, Math.min(dispW - sb.w, sb.x + dx))
+                  let y = Math.max(0, Math.min(dispH - sb.h, sb.y + dy))
+                  setCropState(prev => ({ ...prev, box: { ...prev.box, x, y } }))
+                } else {
+                  const hh = drag.handle
+                  let { x, y, w, h } = sb
+                  if (hh === 'se' || hh === 'ne') w = Math.max(30, sb.w + dx)
+                  if (hh === 'sw' || hh === 'nw') { const nw = Math.max(30, sb.w - dx); x = sb.x + (sb.w - nw); w = nw }
+                  if (hh === 'se' || hh === 'sw') h = Math.max(30, sb.h + dy)
+                  if (hh === 'ne' || hh === 'nw') { const nh = Math.max(30, sb.h - dy); y = sb.y + (sb.h - nh); h = nh }
+                  x = Math.max(0, Math.min(dispW - w, x)); y = Math.max(0, Math.min(dispH - h, y))
+                  w = Math.min(w, dispW - x); h = Math.min(h, dispH - y)
+                  setCropState(prev => ({ ...prev, box: { x, y, w, h } }))
+                }
+              }}
+              onPointerUp={() => { cropDrag.current = null }}
+            >
               <img src={cropState.src} alt="" style={{ width: cropState.dispW, height: cropState.dispH, display: 'block', pointerEvents: 'none' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', pointerEvents: 'none' }} />
               <div
                 onPointerDown={e => {
                   e.preventDefault()
-                  const startX = e.clientX, startY = e.clientY
-                  const startBox = { ...cropState.box }
-                  const onMove = (ev) => {
-                    const dx = ev.clientX - startX, dy = ev.clientY - startY
-                    const { dispW, dispH } = cropState
-                    let x = Math.max(0, Math.min(dispW - startBox.w, startBox.x + dx))
-                    let y = Math.max(0, Math.min(dispH - startBox.h, startBox.y + dy))
-                    setCropState(prev => ({ ...prev, box: { ...prev.box, x, y } }))
-                  }
-                  const onUp = () => { window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp) }
-                  window.addEventListener('pointermove', onMove)
-                  window.addEventListener('pointerup', onUp)
+                  cropDrag.current = { mode: 'move', startX: e.clientX, startY: e.clientY, startBox: { ...cropState.box } }
                 }}
                 style={{
                   position: 'absolute',
@@ -1558,28 +1571,12 @@ const persistData = (next) => {
                   <div key={h}
                     onPointerDown={e => {
                       e.preventDefault(); e.stopPropagation()
-                      const startX = e.clientX, startY = e.clientY
-                      const startBox = { ...cropState.box }
-                      const onMove = (ev) => {
-                        const dx = ev.clientX - startX, dy = ev.clientY - startY
-                        const { dispW, dispH } = cropState
-                        let { x, y, w, h } = startBox
-                        if (h === 'se' || h === 'ne') w = Math.max(30, startBox.w + dx)
-                        if (h === 'sw' || h === 'nw') { const nw = Math.max(30, startBox.w - dx); x = startBox.x + (startBox.w - nw); w = nw }
-                        if (h === 'se' || h === 'sw') h = Math.max(30, startBox.h + dy)
-                        if (h === 'ne' || h === 'nw') { const nh = Math.max(30, startBox.h - dy); y = startBox.y + (startBox.h - nh); h = nh }
-                        x = Math.max(0, Math.min(dispW - w, x)); y = Math.max(0, Math.min(dispH - h, y))
-                        w = Math.min(w, dispW - x); h = Math.min(h, dispH - y)
-                        setCropState(prev => ({ ...prev, box: { x, y, w, h } }))
-                      }
-                      const onUp = () => { window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp) }
-                      window.addEventListener('pointermove', onMove)
-                      window.addEventListener('pointerup', onUp)
+                      cropDrag.current = { mode: 'resize', handle: h, startX: e.clientX, startY: e.clientY, startBox: { ...cropState.box } }
                     }}
                     style={{
-                      position: 'absolute', width: 14, height: 14, background: '#00ff88', border: '2px solid #000', borderRadius: 3, cursor: h + '-resize', zIndex: 5,
-                      top: h.startsWith('n') ? -7 : undefined, bottom: h.startsWith('s') ? -7 : undefined,
-                      left: h.endsWith('w') ? -7 : undefined, right: h.endsWith('e') ? -7 : undefined,
+                      position: 'absolute', width: 16, height: 16, background: '#00ff88', border: '2px solid #000', borderRadius: 3, cursor: h + '-resize', zIndex: 5, touchAction: 'none',
+                      top: h.startsWith('n') ? -8 : undefined, bottom: h.startsWith('s') ? -8 : undefined,
+                      left: h.endsWith('w') ? -8 : undefined, right: h.endsWith('e') ? -8 : undefined,
                     }} />
                 ))}
               </div>
