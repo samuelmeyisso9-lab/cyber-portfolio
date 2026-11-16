@@ -933,15 +933,16 @@ export default function App() {
   const [cropState, setCropState] = useState(null)
   const cropDrag = useRef(null)
   const cropContainerRef = useRef(null)
+  const cropStateRef = useRef(null)
+  cropStateRef.current = cropState
   useEffect(() => {
-    if (!cropState) return
-    const el = cropContainerRef.current
-    if (!el) return
     const onMove = (e) => {
       const drag = cropDrag.current
       if (!drag) return
+      const cs = cropStateRef.current
+      if (!cs) return
       const dx = e.clientX - drag.startX, dy = e.clientY - drag.startY
-      const { dispW, dispH } = cropState
+      const { dispW, dispH } = cs
       const sb = drag.startBox
       if (drag.mode === 'move') {
         let x = Math.max(0, Math.min(dispW - sb.w, sb.x + dx))
@@ -960,13 +961,14 @@ export default function App() {
       }
     }
     const onUp = () => { cropDrag.current = null }
-    window.addEventListener('mousemove', onMove)
+    window.addEventListener('pointermove', onMove)
     window.addEventListener('pointerup', onUp)
     return () => {
-      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('pointermove', onMove)
       window.removeEventListener('pointerup', onUp)
     }
-  }, [cropState])
+  }, [])
+
 
   const undoRef = useRef([])
   const redoRef = useRef([])
@@ -1567,9 +1569,7 @@ const persistData = (next) => {
               <div
                 onMouseDown={e => {
                   e.preventDefault()
-                  console.log('BOX pointerdown', e.clientX, e.clientY)
                   cropDrag.current = { mode: 'move', startX: e.clientX, startY: e.clientY, startBox: { ...cropState.box } }
-                  console.log('cropDrag set to', cropDrag.current.mode)
                 }}
                 style={{
                   position: 'absolute',
