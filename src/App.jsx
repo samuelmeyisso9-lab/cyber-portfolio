@@ -22,8 +22,12 @@ const INIT = {
     "projets",
     "contact"
   ],
-  "backgrounds": {},
-  "backgroundsMobile": {},
+  "backgrounds": {
+    "projets": "/bg-projets.jpg"
+  },
+  "backgroundsMobile": {
+    "projets": "/bg-projets.jpg"
+  },
   "positions": {
     "desc": {
       "x": 196,
@@ -885,6 +889,8 @@ export default function App() {
       ]
       if (LEGACY_SUBTITLES.includes(String(stored.subtitle || ''))) merged.subtitle = INIT.subtitle
       if (!merged.backgrounds || typeof merged.backgrounds !== 'object') merged.backgrounds = {}
+      if (!merged.backgrounds.projets) { if (!merged.backgrounds) merged.backgrounds = {}; merged.backgrounds.projets = '/bg-projets.jpg' }
+      if (!merged.backgroundsMobile.projets) { if (!merged.backgroundsMobile) merged.backgroundsMobile = {}; merged.backgroundsMobile.projets = '/bg-projets.jpg' }
       if (!merged.backgroundsMobile || typeof merged.backgroundsMobile !== 'object') merged.backgroundsMobile = {}
       if (merged.positions && merged.positions.photo) { merged.positions.photo = { x: 0, y: 0, w: null, s: 1 } }
       if (Array.isArray(merged.sectionOrder)) merged.sectionOrder = merged.sectionOrder.filter(x => x !== 'soc')
