@@ -1563,94 +1563,30 @@ const persistData = (next) => {
       <CustomCursor />
       {showModal && <PwModal onLogin={handleLogin} onClose={() => setShowModal(false)} error={loginError} form={loginForm} setForm={setLoginForm} />}
       {cropState && (
-        <div style={{ position: 'fixed', inset: 0, background: '#000000ee', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10001, padding: '16px' }}>
-          <div style={{ background: '#0f0f0f', border: '1px solid #00ff88', borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center', maxWidth: '95vw', maxHeight: '95vh' }}>
-            <div style={{ color: '#00ff88', fontSize: '1.1rem', fontWeight: 'bold' }}>Recadrer / Redimensionner</div>
-            <div ref={cropContainerRef} style={{ position: 'relative', width: cropState.dispW, height: cropState.dispH, userSelect: 'none', cursor: 'crosshair', touchAction: 'none' }}>
-              <img src={cropState.src} alt="" style={{ width: cropState.dispW, height: cropState.dispH, display: 'block', pointerEvents: 'none' }} />
-              <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', pointerEvents: 'none' }} />
-              <div
-                onMouseDown={e => {
-                  e.preventDefault()
-                  console.log('BOX mousedown, setting cropDrag')
-                  cropDrag.current = { mode: 'move', startX: e.clientX, startY: e.clientY, startBox: { ...cropState.box } }
-                  setCropDragging(true)
-                }}
-                style={{
-                  position: 'absolute',
-                  left: cropState.box.x, top: cropState.box.y,
-                  width: cropState.box.w, height: cropState.box.h,
-                  border: '2px solid #00ff88',
-                  boxShadow: '0 0 0 9999px rgba(0,0,0,0.5)',
-                  cursor: 'move', boxSizing: 'border-box',
-                  touchAction: 'none',
-                }}
-              >
-                {['nw','ne','sw','se'].map(h => (
-                  <div key={h}
-                    onMouseDown={e => {
-                      e.preventDefault(); e.stopPropagation()
-                      cropDrag.current = { mode: 'resize', handle: h, startX: e.clientX, startY: e.clientY, startBox: { ...cropState.box } }
-                      setCropDragging(true)
-                    }}
-                    style={{
-                      position: 'absolute', width: 16, height: 16, background: '#00ff88', border: '2px solid #000', borderRadius: 3, cursor: h + '-resize', zIndex: 5, touchAction: 'none',
-                      top: h.startsWith('n') ? -8 : undefined, bottom: h.startsWith('s') ? -8 : undefined,
-                      left: h.endsWith('w') ? -8 : undefined, right: h.endsWith('e') ? -8 : undefined,
-                    }} />
-                ))}
-              </div>
-            </div>
-            {cropDragging && (
-              <div
-                onMouseMove={e => {
-                  const drag = cropDrag.current
-                  if (!drag) return
-                  const dx = e.clientX - drag.startX, dy = e.clientY - drag.startY
-                  const { dispW, dispH } = cropState
-                  const sb = drag.startBox
-                  if (drag.mode === 'move') {
-                    let x = Math.max(0, Math.min(dispW - sb.w, sb.x + dx))
-                    let y = Math.max(0, Math.min(dispH - sb.h, sb.y + dy))
-                    setCropState(prev => (prev ? { ...prev, box: { ...prev.box, x, y } } : prev))
-                  } else {
-                    const hh = drag.handle
-                    let { x, y, w, h } = sb
-                    if (hh === 'se' || hh === 'ne') w = Math.max(30, sb.w + dx)
-                    if (hh === 'sw' || hh === 'nw') { const nw = Math.max(30, sb.w - dx); x = sb.x + (sb.w - nw); w = nw }
-                    if (hh === 'se' || hh === 'sw') h = Math.max(30, sb.h + dy)
-                    if (hh === 'ne' || hh === 'nw') { const nh = Math.max(30, sb.h - dy); y = sb.y + (sb.h - nh); h = nh }
-                    x = Math.max(0, Math.min(dispW - w, x)); y = Math.max(0, Math.min(dispH - h, y))
-                    w = Math.min(w, dispW - x); h = Math.min(h, dispH - y)
-                    setCropState(prev => (prev ? { ...prev, box: { x, y, w, h } } : prev))
-                  }
-                }}
-                onMouseUp={() => { cropDrag.current = null; setCropDragging(false) }}
-                onMouseLeave={() => { /* keep dragging */ }}
-                style={{ position: 'fixed', inset: 0, zIndex: 10002, cursor: 'move' }}
-              />
-            )}
-            <div style={{ color: '#888', fontSize: '0.75rem', textAlign: 'center' }}>Glisse la zone pour la deplacer - Tire les coins pour recadrer</div>
+        <div style={{ position: 'fixed', inset: 0, background: '#000000ee', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10001, padding: '20px' }}>
+          <div style={{ background: '#0f0f0f', border: '1px solid #00ff88', borderRadius: '16px', padding: '24px', maxWidth: '90vw', maxHeight: '90vh', display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+            <div style={{ color: '#00ff88', fontSize: '1.1rem', fontWeight: 'bold' }}>Apercu de l'image</div>
+            <img src={cropState.src} alt="preview" style={{ maxWidth: '70vw', maxHeight: '60vh', objectFit: 'contain', borderRadius: '10px', border: '2px solid #00ff8844' }} />
+            <div style={{ color: '#888', fontSize: '0.8rem', textAlign: 'center' }}>L'image sera compressee et appliquee telle quelle.</div>
             <div style={{ display: 'flex', gap: '12px' }}>
               <button onClick={() => {
-                if (!cropState) return
-                const { src, target, imgW, imgH, dispW, dispH, box } = cropState
-                const scale = imgW / dispW
-                const sx = Math.round(box.x * scale), sy = Math.round(box.y * scale)
-                const sw = Math.round(box.w * scale), sh = Math.round(box.h * scale)
+                const { src, target } = cropState
                 const img = new Image()
                 img.onload = () => {
                   const MAX = target === 'photo' ? 440 : 1920
-                  const ratio = Math.min(MAX / sw, MAX / sh, 1)
+                  const ratio = Math.min(MAX / img.width, MAX / img.height, 1)
                   const canvas = document.createElement('canvas')
-                  canvas.width = Math.round(sw * ratio); canvas.height = Math.round(sh * ratio)
+                  canvas.width = Math.round(img.width * ratio)
+                  canvas.height = Math.round(img.height * ratio)
                   const ctx = canvas.getContext('2d')
-                  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'
-                  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height)
+                  ctx.imageSmoothingEnabled = true
+                  ctx.imageSmoothingQuality = 'high'
+                  ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
                   const dataUrl = canvas.toDataURL('image/jpeg', 0.88)
                   if (target === 'photo') {
                     const newData = { ...data, photo: dataUrl }
-                    up('photo', dataUrl); save(newData)
+                    up('photo', dataUrl)
+                    save(newData)
                   } else {
                     const newBg = isMobile
                       ? { ...(data.backgroundsMobile||{}), [section]: dataUrl }
