@@ -1575,8 +1575,8 @@ const persistData = (next) => {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%', maxWidth: '420px' }}>
               {[
-                { label: 'X', key: 'x', min: 0, max: cropState.dispW - cropState.box.w },
-                { label: 'Y', key: 'y', min: 0, max: cropState.dispH - cropState.box.h },
+                { label: 'X', key: 'x', min: 0, max: Math.max(0, cropState.dispW - 30) },
+                { label: 'Y', key: 'y', min: 0, max: Math.max(0, cropState.dispH - 30) },
                 { label: 'Largeur', key: 'w', min: 30, max: cropState.dispW - cropState.box.x },
                 { label: 'Hauteur', key: 'h', min: 30, max: cropState.dispH - cropState.box.y },
               ].map(sl => (
@@ -1687,7 +1687,7 @@ const persistData = (next) => {
             <button onClick={undo} style={{ ...S.aBtn, borderColor: '#00aaff33', color: '#00aaff' }}>⟲ Annuler{undoRef.current.length ? ` (${undoRef.current.length})` : ''}</button>
             <button onClick={redo} style={{ ...S.aBtn, borderColor: '#ffaa0033', color: '#ffaa00' }}>⟳ Refaire{redoRef.current.length ? ` (${redoRef.current.length})` : ''}</button>
             <button onClick={reset} style={{ ...S.aBtn, borderColor: '#ff444433', color: '#ff4444' }}>↺ Reset tout</button>
-            <button onClick={save} style={{ ...S.aSave, background: saved ? '#003300' : '#00ff88', color: saved ? '#00ff88' : '#000', border: saved ? '1px solid #00ff88' : 'none' }}>
+            <button onClick={() => save()} style={{ ...S.aSave, background: saved ? '#003300' : '#00ff88', color: saved ? '#00ff88' : '#000', border: saved ? '1px solid #00ff88' : 'none' }}>
               {saved ? '✅ Sauvegardé !' : '💾 Sauvegarder'}
             </button>
             <button onClick={() => setIsAdmin(false)} style={{ ...S.aBtn, borderColor: '#1a1a1a', color: '#333' }}>🔒 Quitter</button>
